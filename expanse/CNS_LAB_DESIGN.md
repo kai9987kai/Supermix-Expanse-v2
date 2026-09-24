@@ -1,5 +1,11 @@
 # Expanse Connectome Laboratory — spec
 
+> **Status (2026-09-24):** implemented (`src/connectome_lab.py`, `cns_lab/`, tests `tests/test_connectome_lab.py` 29 passed,
+> `tests/test_cns_lab.py` 7 passed). Hypotheses H-CNS-001..003 and the exploratory X-CNS-001 were **locked** (commit
+> 83c98d0) before any lab run; the sweep (`bash expanse/cns_lab/run_sweep.sh`) runs 15 pre-registered runs, then 13
+> exploratory ones. Results: `checkpoints/cns_lab/analysis/summary.md`, verdicts: `cns_lab/verdicts/`.
+> See "As built" at the end for what changed from the plan below.
+
 Purpose: turn Expanse's male-CNS core from "a biological graft" into a **controlled, pre-registered experiment** that can show whether the fly's wiring matters, following the method of QuixiAI/FlyGPT (fixed topology, one learnable value per real edge, degree-preserving scrambled control, pre-registered verdict) at Expanse's scale.
 
 Repo: `C:/Users/kai99/Desktop/supermix-expanse/Supermix-expanse`, local branch `expanse-cns-lab` (from `expanse-v3-subword`; do NOT push, do NOT switch branches). Base model for lab runs: `expanse/checkpoints/supermix_expanse_v3.pt` (v1 schema + BPE tokenizer; `ec.load_expanse` loads it). Existing core: `expanse/src/connectome_full.py` (`build_full_graph`, `CSRMatmul`, `FullConnectomeCore`, `rewired_graph`) — read it first. CPU only, fp32, 16 GB RAM; `torch.set_num_threads(2)` in tests; no long jobs (the orchestrator runs benchmarks and lab runs).
@@ -50,3 +56,43 @@ Requirements:
 * **H-CNS-002** — a trained CNS core (real, learned edges) beats no core (`topology=none`). Same rule.
 * **H-CNS-003** — persistent CNS state beats per-token reset (real, learned edges): primary metric temporal-task exact match (higher is better; all seeds same sign and mean Δ ≥ 2 points), val nats/char secondary.
 Exploratory (reported, no claims): unsigned edges, random strengths, random sparse topology, `sqrt_indeg` vs `frac` norm, `tanh` vs `relu`, `fixed` vs `dale_softplus`.
+
+## As built
+
+**Scale.** Measured with `cns_lab/bench_connectome.py` (`checkpoints/cns_lab/bench.md`; core alone, 8 x 128 tokens, 8 threads):
+on the full graph a learned-edge step costs 5.9 s (1.7 s with fixed edges) and a persistent-state step 9.3 s; the custom
+CSR path is 10-30x faster than `torch.sparse` on this CPU and the only one that fits the full graph. A whole lab step
+(frozen v3 trunk + core) measured 4.7 s on the full graph and 7.8 s for the persistent scan on a 3,000-type subgraph.
+Five to ten seeds x four full-scale arms is out of reach on this laptop, so the pre-registration uses **3 seeds x 250
+steps**, core-only training:
+
+| protocol | used by | graph | data |
+|---|---|---|---|
+| `P_full` | H-CNS-001, H-CNS-002 | full male-CNS type graph (11,751 types, 3,830,931 edges) | v3 corpus (replay, code, bio, connectome, fresh; v3's split seed 2026, so eval rows are v3 dev rows it never trained on) |
+| `P_sub` | H-CNS-003, X-CNS-001 | 3,000-type subgraph (629,875 edges; synapse-mass core + proportional inputs/outputs) | v3 corpus, 2 of every 8 rows synthetic temporal-memory rows |
+
+Both: AdamW, core lr 1e-3, per-edge lr 3e-4 (FlyGPT), 5% warm-up, cosine to 5%, clip 1.0, batch 8, eval at steps 125
+and 250 on 60 dev rows per source (+160 held-out temporal rows for `P_sub`), `edge_param = dale_softplus` unless the
+arm says otherwise.
+
+**Hypotheses as locked** (rules are the verdict's only input):
+
+* **H-CNS-001** real wiring vs degree-preserving shuffle (both learned Dale edges), `P_full`; SUPPORTED iff all 3 seeds
+  favour real and mean delta >= 0.5% of the shuffle's pooled nats/char.
+* **H-CNS-002** trained real core vs no core, `P_full`; all seeds and >= 1% (positive control: if this fails, H-CNS-001
+  cannot be informative).
+* **H-CNS-003** persistent vs reset CNS state, `P_sub`; primary metric held-out temporal-task nats/char, all seeds and
+  >= 2%; temporal exact match and pooled loss secondary.
+* **X-CNS-001** (no claims, seed 1): fixed edges, shuffled, random sparse, unsigned, random strengths, sqrt(in-degree)
+  and raw-count normalisation, tanh, residual edges, dynamic gate, window:8, learned decay — against the `P_sub` reset arm.
+
+**Deviations from the plan above.**
+* Degree normalisation "learned" is the per-type input gain `g_in` every variant already trains; "Sigma|W|" is `frac`.
+* Every graph variant is scaled to the same |W| spectral radius (0.9) so arms differ in structure, not gain; `frac` on
+  the real/shuffled graph keeps its exact v3 values (rows sum to 0.9).
+* The persistent-state hypothesis uses temporal-task *loss* as its primary metric (exact match is too coarse for 250
+  core-only steps on a frozen trunk) and is run on a subgraph (cost).
+* Runs restart rather than resume mid-run (each is 10-40 min).
+* Expert routing is not tracked: the trunk (and so its MoE router) is frozen in every arm.
+* Caveat for H-CNS-002: the v3 trunk was trained with its own core, so "no core" is a damaged v3, and part of any gain
+  is the fresh core re-learning that role.
