@@ -1,0 +1,93 @@
+{
+ "id": "X-CNS-001",
+ "exploratory": true,
+ "claim": "Exploratory (no claims, one seed): which parts of the core matter on the 3,000-type subgraph protocol.",
+ "protocol": {
+  "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+  "train_scope": "core",
+  "steps": 250,
+  "batch": 8,
+  "seq": 128,
+  "lr_core": 0.001,
+  "lr_edge": 0.0003,
+  "warmup_frac": 0.05,
+  "min_lr_frac": 0.05,
+  "grad_clip": 1.0,
+  "sources": [
+   "replay",
+   "code",
+   "bio",
+   "connectome",
+   "fresh"
+  ],
+  "corpus": {
+   "seed": 2026,
+   "dev_frac": 0.05,
+   "dev_cap": 200,
+   "max_rows_per_source": 6000,
+   "fly_rows": 0
+  },
+  "eval_steps": [
+   125,
+   250
+  ],
+  "eval_per_source": 60,
+  "temporal": {
+   "train_rows": 4000,
+   "eval_rows": 160,
+   "per_batch": 2,
+   "seed": 7,
+   "exact_match_items": 160
+  },
+  "base_config": {
+   "edge_param": "dale_softplus",
+   "subgraph": 3000
+  },
+  "notes": "3,000-type subgraph (synapse-mass core + proportional inputs/outputs; 629,875 edges): the per-token persistent scan costs ~4x a reset step, which the full graph cannot afford here. 2 of every 8 rows are synthetic temporal-memory rows (recall at a distance, pattern, count, first item) in every arm."
+ },
+ "arms": {
+  "reset": {
+   "state": "reset"
+  },
+  "fixed_edges": {
+   "edge_param": "fixed"
+  },
+  "shuffled": {
+   "topology": "shuffled"
+  },
+  "random_sparse": {
+   "topology": "random"
+  },
+  "unsigned": {
+   "sign_mode": "unsigned"
+  },
+  "random_strengths": {
+   "strength_init": "random"
+  },
+  "sqrt_indeg": {
+   "norm": "sqrt_indeg"
+  },
+  "raw_counts": {
+   "norm": "raw"
+  },
+  "tanh": {
+   "activation": "tanh"
+  },
+  "residual_edges": {
+   "edge_param": "residual"
+  },
+  "dynamic_gate": {
+   "gate": "dynamic"
+  },
+  "window8": {
+   "state": "window:8"
+  },
+  "learned_decay": {
+   "state": "learned_decay"
+  }
+ },
+ "seeds": [
+  1
+ ],
+ "notes": "'reset' is the H-CNS-003 control (same run). Exploratory results are reported without a verdict."
+}

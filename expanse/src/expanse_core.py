@@ -506,7 +506,13 @@ class ExpanseModel(ArchimedesModel):
         steps = int(spec.get("cns_steps") or (cns_meta or {}).get("steps") or 4)
         self.cns_full: Optional[nn.Module] = None
         self.cns_meta: Optional[Dict[str, Any]] = None
-        if graph is not None:
+        if graph is None and cns_meta and cns_meta.get("lab"):
+            # a Connectome Lab core (src/connectome_lab.py): shapes + config from its spec,
+            # buffers (graph + anatomy) from the state dict
+            from connectome_lab import ConnectomeLabCore  # noqa: WPS433
+            self.cns_full = ConnectomeLabCore.from_spec(hidden, cns_meta["lab"])
+            self.cns_meta = dict(cns_meta)
+        elif graph is not None:
             self.cns_meta = graph_metadata(graph, steps)
         elif cns_meta:
             # loading: FullConnectomeCore accepts a shape-only dict, its buffers
@@ -514,7 +520,7 @@ class ExpanseModel(ArchimedesModel):
             self.cns_meta = dict(cns_meta)
             self.cns_meta["steps"] = steps
             graph = {k: int(self.cns_meta[k]) for k in ("n", "n_in", "n_out", "nnz")}
-        if graph is not None:
+        if graph is not None and self.cns_full is None:
             cls = graft_class("cns_full")
             try:
                 self.cns_full = cls(hidden, graph, steps=steps)
@@ -553,7 +559,10 @@ class ExpanseModel(ArchimedesModel):
             hidden, o7_info = self.omni7(hidden, ctx["omni7_state"])
             info["omni7"] = o7_info
         if self.cns_full is not None and ctx.get("cns_full", True):
-            hidden, cns_info = self.cns_full(hidden, ctx.get("token_mask"))
+            if getattr(self.cns_full, "wants_past_length", False):  # lab core: persistent state across decode
+                hidden, cns_info = self.cns_full(hidden, ctx.get("token_mask"), past_length=ctx.get("past_length"))
+            else:
+                hidden, cns_info = self.cns_full(hidden, ctx.get("token_mask"))
             info["cns_full"] = cns_info
         ctx["info"] = info
         return hidden, present
@@ -564,7 +573,7 @@ class ExpanseModel(ArchimedesModel):
             token_mask = input_ids != text_utils.PAD
         self._ctx = {"fly_obs": fly_obs, "omni_features": omni_features, "omni7_state": omni7_state,
                      "fly": use_fly, "omni7": use_omni7, "cns_full": use_cns_full, "skip": skip_grafts,
-                     "token_mask": token_mask}
+                     "token_mask": token_mask, "past_length": kwargs.get("past_length")}
         try:
             out = MiMoMixModel.forward(self, input_ids, *args, **kwargs)
             info = self._ctx.get("info", {})
@@ -725,6 +734,14 @@ def expanse_from_archimedes(arch_payload: Dict[str, Any], *, n_new: int = 16, gr
     return model, info
 
 
+def attach_lab_core(model: ExpanseModel, core: Optional[nn.Module]) -> None:
+    """Install a ``connectome_lab.ConnectomeLabCore`` as the model's CNS core (``None`` removes
+    the core: the ``topology="none"`` arm). ``save_expanse``/``load_expanse`` round-trip it:
+    its spec (config + anatomy) is saved as ``payload['expanse']['cns']['lab']``."""
+    model.cns_full = core
+    model.cns_meta = None if core is None else core.graph_meta()
+
+
 # ---------------------------------------------------------------------------
 # 5. decoding (greedy, non-speculative, KV-cached; grafts held constant)
 # ---------------------------------------------------------------------------
@@ -820,5 +837,5 @@ __all__ = [
     "EXP_SCHEMA", "ARCH_SCHEMA", "PATHS", "GRAFT_CLASSES", "ExpanseModel", "grow_moe_slots", "fly_forward_causal",
     "expanse_from_archimedes", "graph_metadata", "skeleton_graph", "greedy_decode", "save_expanse", "load_expanse",
     "load_archimedes", "row_key", "jsonable", "moe_layers_in_state_dict", "text_utils", "ExpanseSparseMoE",
-    "read_jsonl", "load_replay", "append_embedding_rows", "tokenizer_from_dict",
+    "read_jsonl", "load_replay", "append_embedding_rows", "tokenizer_from_dict", "attach_lab_core",
 ]

@@ -1,0 +1,74 @@
+{
+ "id": "H-CNS-003",
+ "claim": "Carrying the CNS state across tokens (persist) lowers held-out loss on temporal-memory tasks compared with resetting it every token, for a real-wiring core with learned Dale-preserving edges.",
+ "protocol": {
+  "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+  "train_scope": "core",
+  "steps": 250,
+  "batch": 8,
+  "seq": 128,
+  "lr_core": 0.001,
+  "lr_edge": 0.0003,
+  "warmup_frac": 0.05,
+  "min_lr_frac": 0.05,
+  "grad_clip": 1.0,
+  "sources": [
+   "replay",
+   "code",
+   "bio",
+   "connectome",
+   "fresh"
+  ],
+  "corpus": {
+   "seed": 2026,
+   "dev_frac": 0.05,
+   "dev_cap": 200,
+   "max_rows_per_source": 6000,
+   "fly_rows": 0
+  },
+  "eval_steps": [
+   125,
+   250
+  ],
+  "eval_per_source": 60,
+  "temporal": {
+   "train_rows": 4000,
+   "eval_rows": 160,
+   "per_batch": 2,
+   "seed": 7,
+   "exact_match_items": 160
+  },
+  "base_config": {
+   "edge_param": "dale_softplus",
+   "subgraph": 3000
+  },
+  "notes": "3,000-type subgraph (synapse-mass core + proportional inputs/outputs; 629,875 edges): the per-token persistent scan costs ~4x a reset step, which the full graph cannot afford here. 2 of every 8 rows are synthetic temporal-memory rows (recall at a distance, pattern, count, first item) in every arm."
+ },
+ "arms": {
+  "persist": {
+   "state": "persist"
+  },
+  "reset": {
+   "state": "reset"
+  }
+ },
+ "control_arm": "reset",
+ "treatment_arm": "persist",
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "primary_metric": "temporal_nats_per_char",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.02
+ },
+ "secondary_metrics": [
+  "temporal_exact_match",
+  "val_nats_per_char_pooled",
+  "state_autocorr"
+ ],
+ "notes": "Both arms: 4 microsteps per token, same subgraph, same rows (incl. temporal rows). The trunk's attention already sees the whole prompt, so the question is whether a recurrent CNS state adds anything on top of it."
+}

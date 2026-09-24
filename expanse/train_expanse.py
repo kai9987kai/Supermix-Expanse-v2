@@ -365,7 +365,8 @@ def constant_state_keys(model) -> List[str]:
             keys.append(k)
         elif k.startswith("omni_core.") and not k.startswith(("omni_core.to_trunk", "omni_core.gate", "omni_core.bridge_norm")):
             keys.append(k)
-        elif k.startswith("cns_full.") and k.split(".")[1] in ("crow", "col", "val", "crow_t", "col_t", "val_t", "in_idx", "out_idx", "sign"):
+        elif k.startswith("cns_full.") and k.split(".")[1] in ("crow", "col", "val", "crow_t", "col_t", "val_t", "in_idx", "out_idx", "sign",
+                                                               "perm_t", "edge_dst", "bio_weight", "synapse_count", "type_sign"):
             keys.append(k)
     return keys
 

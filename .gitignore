@@ -23,3 +23,7 @@ __pycache__/
 .pytest_cache/
 .venv/
 .claude/
+# Connectome Lab: regenerable graph caches, smoke runs, logs (metrics.json and reports are kept)
+expanse/checkpoints/cns_lab/graphs/
+expanse/checkpoints/cns_lab/runs/*_smoke/
+expanse/checkpoints/cns_lab/*.log

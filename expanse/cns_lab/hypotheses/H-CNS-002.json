@@ -1,0 +1,75 @@
+{
+ "id": "H-CNS-002",
+ "claim": "Training a fresh real-wiring male-CNS core (learned Dale-preserving edges) into the frozen v3 trunk lowers held-out loss compared with the trunk with no CNS core.",
+ "protocol": {
+  "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+  "train_scope": "core",
+  "steps": 250,
+  "batch": 8,
+  "seq": 128,
+  "lr_core": 0.001,
+  "lr_edge": 0.0003,
+  "warmup_frac": 0.05,
+  "min_lr_frac": 0.05,
+  "grad_clip": 1.0,
+  "sources": [
+   "replay",
+   "code",
+   "bio",
+   "connectome",
+   "fresh"
+  ],
+  "corpus": {
+   "seed": 2026,
+   "dev_frac": 0.05,
+   "dev_cap": 200,
+   "max_rows_per_source": 6000,
+   "fly_rows": 0
+  },
+  "eval_steps": [
+   125,
+   250
+  ],
+  "eval_per_source": 60,
+  "temporal": {
+   "train_rows": 0,
+   "eval_rows": 0,
+   "per_batch": 0,
+   "seed": 7,
+   "exact_match_items": 0
+  },
+  "base_config": {
+   "edge_param": "dale_softplus"
+  },
+  "notes": "Full male-CNS type graph (11,751 types, 3,830,931 edges). Only the lab core trains; trunk frozen (v3). Every arm starts from the same function (gate 0) with the same seed-determined core init, rows, order and schedule."
+ },
+ "arms": {
+  "real": {
+   "topology": "real"
+  },
+  "none": {
+   "topology": "none"
+  }
+ },
+ "control_arm": "none",
+ "treatment_arm": "real",
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.01
+ },
+ "secondary_metrics": [
+  "val_replay_nats_per_char",
+  "val_code_nats_per_char",
+  "val_bio_nats_per_char",
+  "val_connectome_nats_per_char",
+  "val_fresh_nats_per_char"
+ ],
+ "notes": "Positive control / sanity check: if a trained core does not beat no core, H-CNS-001 cannot be informative. The 'none' arm has nothing to train (its metrics do not depend on the seed). Caveat: the v3 trunk was trained with its own core, so part of any gain is the fresh core re-learning that role."
+}

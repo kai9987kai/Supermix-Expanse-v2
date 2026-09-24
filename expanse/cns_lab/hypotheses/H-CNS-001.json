@@ -1,0 +1,77 @@
+{
+ "id": "H-CNS-001",
+ "claim": "In Expanse v3, a male-CNS core with the real type-to-type wiring and learned Dale-preserving edge strengths reaches lower held-out loss than the same core on a degree-preserving, sign- and role-stratified shuffle of that wiring.",
+ "protocol": {
+  "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+  "train_scope": "core",
+  "steps": 250,
+  "batch": 8,
+  "seq": 128,
+  "lr_core": 0.001,
+  "lr_edge": 0.0003,
+  "warmup_frac": 0.05,
+  "min_lr_frac": 0.05,
+  "grad_clip": 1.0,
+  "sources": [
+   "replay",
+   "code",
+   "bio",
+   "connectome",
+   "fresh"
+  ],
+  "corpus": {
+   "seed": 2026,
+   "dev_frac": 0.05,
+   "dev_cap": 200,
+   "max_rows_per_source": 6000,
+   "fly_rows": 0
+  },
+  "eval_steps": [
+   125,
+   250
+  ],
+  "eval_per_source": 60,
+  "temporal": {
+   "train_rows": 0,
+   "eval_rows": 0,
+   "per_batch": 0,
+   "seed": 7,
+   "exact_match_items": 0
+  },
+  "base_config": {
+   "edge_param": "dale_softplus"
+  },
+  "notes": "Full male-CNS type graph (11,751 types, 3,830,931 edges). Only the lab core trains; trunk frozen (v3). Every arm starts from the same function (gate 0) with the same seed-determined core init, rows, order and schedule."
+ },
+ "arms": {
+  "real": {
+   "topology": "real"
+  },
+  "shuffled": {
+   "topology": "shuffled"
+  }
+ },
+ "control_arm": "shuffled",
+ "treatment_arm": "real",
+ "seeds": [
+  1,
+  2,
+  3
+ ],
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.005
+ },
+ "secondary_metrics": [
+  "val_replay_nats_per_char",
+  "val_code_nats_per_char",
+  "val_bio_nats_per_char",
+  "val_connectome_nats_per_char",
+  "val_fresh_nats_per_char",
+  "gate_abs_mean",
+  "state_autocorr"
+ ],
+ "notes": "FlyGPT's question at Expanse scale. The shuffle keeps every type's in-degree, out-degree, self-loop and multiset of input magnitudes (and so |W| row sums), and every edge's Dale sign; only which same-kind type an input comes from is destroyed. The shuffle is redrawn per seed. Threshold: 0.5% of the control's pooled nats/char, fixed before any lab run."
+}
