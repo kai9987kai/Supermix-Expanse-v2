@@ -60,7 +60,8 @@ class PreregError(RuntimeError):
 
 
 def sha256_bytes(b: bytes) -> str:
-    return hashlib.sha256(b).hexdigest()
+    """sha256 of file bytes with line endings normalised (a CRLF checkout must not break a lock)."""
+    return hashlib.sha256(b.replace(b"\r\n", b"\n")).hexdigest()
 
 
 def hyp_path(hid: str, hyp_dir: Path = HYP_DIR) -> Path:
