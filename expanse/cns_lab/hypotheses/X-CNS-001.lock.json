@@ -1,0 +1,10 @@
+{
+ "id": "X-CNS-001",
+ "sha256": "a147ad3ab24cd83bd8b0da65ba078c5a5c03969cf3b436223c0c90d19becccdd",
+ "locked_utc": "2026-09-24T20:05:04+00:00",
+ "git": {
+  "commit": "56b4fd7a7e5ccde9126a974117fc83b39ff7db72",
+  "dirty": true
+ },
+ "file": "X-CNS-001.json"
+}

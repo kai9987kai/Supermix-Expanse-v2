@@ -1,0 +1,10 @@
+{
+ "id": "H-CNS-003",
+ "sha256": "afdc6eb7d17186642e372e72ee1959e441511e35a55d2b5c6633048213c57ee4",
+ "locked_utc": "2026-09-24T20:05:04+00:00",
+ "git": {
+  "commit": "56b4fd7a7e5ccde9126a974117fc83b39ff7db72",
+  "dirty": true
+ },
+ "file": "H-CNS-003.json"
+}
