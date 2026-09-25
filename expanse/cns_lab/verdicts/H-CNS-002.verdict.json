@@ -1,0 +1,50 @@
+{
+ "schema": "supermix-expanse-cns-lab-verdict-v1",
+ "id": "H-CNS-002",
+ "claim": "Training a fresh real-wiring male-CNS core (learned Dale-preserving edges) into the frozen v3 trunk lowers held-out loss compared with the trunk with no CNS core.",
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.01
+ },
+ "per_seed": [
+  {
+   "seed": 1,
+   "control": 0.43118004476524174,
+   "control_run": "22bc052237ce977e",
+   "treatment": 0.4232084670116402,
+   "treatment_run": "12f2acbabde7eb00",
+   "delta": 0.007971577753601522
+  },
+  {
+   "seed": 2,
+   "control": 0.43118004476524174,
+   "control_run": "6431dd24fe013f04",
+   "treatment": 0.4233434791570337,
+   "treatment_run": "316c6fce5a6a4057",
+   "delta": 0.007836565608208057
+  },
+  {
+   "seed": 3,
+   "control": 0.43118004476524174,
+   "control_run": "2c608263451dff09",
+   "treatment": 0.42312620845426724,
+   "treatment_run": "3e1482ac02577406",
+   "delta": 0.008053836310974505
+  }
+ ],
+ "problems": [],
+ "hypothesis_sha256": "4d187e1e753edc417c93d51e2b29b3713a4fdf23c9d5b5190f99c73410cd9e8b",
+ "mean_delta": 0.00795399322426136,
+ "threshold": 0.004311800447652418,
+ "all_same_sign": true,
+ "n_favour_treatment": 3,
+ "n_seeds": 3,
+ "verdict": "SUPPORTED",
+ "issued_utc": "2026-09-25T02:06:29+00:00",
+ "git": {
+  "commit": "23ec1abba9b9887094d4dfd3f4701afce1f80f96",
+  "dirty": true
+ }
+}

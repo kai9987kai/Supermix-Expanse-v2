@@ -1,0 +1,942 @@
+[run_all 21:05:17] plan: 27 runs for ['H-CNS-001', 'H-CNS-002', 'H-CNS-003', 'X-CNS-001'] (exploratory on)
+[run_all 21:05:17]      H-CNS-001               real seed 1 [12f2acbabde7eb00] todo
+[run_all 21:05:17]      H-CNS-001           shuffled seed 1 [f9083b63f4905fca] todo
+[run_all 21:05:17]      H-CNS-002               none seed 1 [22bc052237ce977e] todo
+[run_all 21:05:17]      H-CNS-003            persist seed 1 [a2e953b493aac457] todo
+[run_all 21:05:17]      H-CNS-003              reset seed 1 [e5871e1d9e532a3c] todo
+[run_all 21:05:17]      X-CNS-001        fixed_edges seed 1 [93d304843b6f8c49] todo
+[run_all 21:05:17]      X-CNS-001           shuffled seed 1 [9ea28cf0c886b7a3] todo
+[run_all 21:05:17]      X-CNS-001      random_sparse seed 1 [922553248fc1207e] todo
+[run_all 21:05:17]      X-CNS-001           unsigned seed 1 [758db2163992dacf] todo
+[run_all 21:05:17]      X-CNS-001   random_strengths seed 1 [7808e7f5761b8764] todo
+[run_all 21:05:17]      X-CNS-001         sqrt_indeg seed 1 [1e50ba158832082c] todo
+[run_all 21:05:17]      X-CNS-001         raw_counts seed 1 [9357f0f248b7294f] todo
+[run_all 21:05:17]      X-CNS-001               tanh seed 1 [01c86b86b34f8d10] todo
+[run_all 21:05:17]      X-CNS-001     residual_edges seed 1 [304fa88adcf1b221] todo
+[run_all 21:05:17]      X-CNS-001       dynamic_gate seed 1 [6ff5391b57b20081] todo
+[run_all 21:05:17]      X-CNS-001            window8 seed 1 [eedeef4e253dfb2c] todo
+[run_all 21:05:17]      X-CNS-001      learned_decay seed 1 [7c2498a040c05b51] todo
+[run_all 21:05:17]      H-CNS-001               real seed 2 [316c6fce5a6a4057] todo
+[run_all 21:05:17]      H-CNS-001           shuffled seed 2 [54b356d94da86abe] todo
+[run_all 21:05:17]      H-CNS-002               none seed 2 [6431dd24fe013f04] todo
+[run_all 21:05:17]      H-CNS-003            persist seed 2 [1c37a91e68758a2a] todo
+[run_all 21:05:17]      H-CNS-003              reset seed 2 [0dfb98798992e356] todo
+[run_all 21:05:17]      H-CNS-001               real seed 3 [3e1482ac02577406] todo
+[run_all 21:05:17]      H-CNS-001           shuffled seed 3 [fb28d89fd1344ccc] todo
+[run_all 21:05:17]      H-CNS-002               none seed 3 [2c608263451dff09] todo
+[run_all 21:05:17]      H-CNS-003            persist seed 3 [35f1816f6a191e7f] todo
+[run_all 21:05:17]      H-CNS-003              reset seed 3 [5775b202467c24b4] todo
+[run_all 21:05:50] plan: 15 runs for ['H-CNS-001', 'H-CNS-002', 'H-CNS-003'] (exploratory off)
+[run_all 21:05:50]      H-CNS-001               real seed 1 [12f2acbabde7eb00] todo
+[run_all 21:05:50]      H-CNS-001           shuffled seed 1 [f9083b63f4905fca] todo
+[run_all 21:05:50]      H-CNS-002               none seed 1 [22bc052237ce977e] todo
+[run_all 21:05:50]      H-CNS-003            persist seed 1 [a2e953b493aac457] todo
+[run_all 21:05:50]      H-CNS-003              reset seed 1 [e5871e1d9e532a3c] todo
+[run_all 21:05:50]      H-CNS-001               real seed 2 [316c6fce5a6a4057] todo
+[run_all 21:05:50]      H-CNS-001           shuffled seed 2 [54b356d94da86abe] todo
+[run_all 21:05:50]      H-CNS-002               none seed 2 [6431dd24fe013f04] todo
+[run_all 21:05:50]      H-CNS-003            persist seed 2 [1c37a91e68758a2a] todo
+[run_all 21:05:50]      H-CNS-003              reset seed 2 [0dfb98798992e356] todo
+[run_all 21:05:50]      H-CNS-001               real seed 3 [3e1482ac02577406] todo
+[run_all 21:05:50]      H-CNS-001           shuffled seed 3 [fb28d89fd1344ccc] todo
+[run_all 21:05:50]      H-CNS-002               none seed 3 [2c608263451dff09] todo
+[run_all 21:05:50]      H-CNS-003            persist seed 3 [35f1816f6a191e7f] todo
+[run_all 21:05:50]      H-CNS-003              reset seed 3 [5775b202467c24b4] todo
+[run_all 21:05:50] run 1/15: H-CNS-001 real seed 1
+[lab] H-CNS-001 arm real seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': None, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 11751 types / 3,830,931 edges | trainable 4,515,375
+[lab] data: {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 0.5959 gnorm 0.002 |gate| 0.0001 10.27s/step eta 42.6m
+[lab] [step 10/250] loss 1.1258 gnorm 0.003 |gate| 0.0014 7.41s/step eta 29.6m
+[lab] [step 20/250] loss 1.6176 gnorm 0.024 |gate| 0.0045 7.06s/step eta 27.0m
+[lab] [step 30/250] loss 0.7120 gnorm 0.021 |gate| 0.0073 7.32s/step eta 26.8m
+[lab] [step 40/250] loss 0.8173 gnorm 0.036 |gate| 0.0107 7.16s/step eta 25.1m
+[lab] [step 50/250] loss 0.5362 gnorm 0.024 |gate| 0.0139 8.21s/step eta 27.4m
+[lab] [step 60/250] loss 0.0219 gnorm 0.008 |gate| 0.0163 7.72s/step eta 24.5m
+[lab] [step 70/250] loss 1.4882 gnorm 0.078 |gate| 0.0183 8.59s/step eta 25.8m
+[lab] [step 80/250] loss 0.2395 gnorm 0.040 |gate| 0.0203 7.89s/step eta 22.3m
+[lab] [step 90/250] loss 0.0252 gnorm 0.014 |gate| 0.0215 8.34s/step eta 22.2m
+[lab] [step 100/250] loss 0.1732 gnorm 0.023 |gate| 0.0222 5.42s/step eta 13.5m
+[lab] [step 110/250] loss 0.8476 gnorm 0.081 |gate| 0.0229 27.31s/step eta 63.7m
+[lab] [step 120/250] loss 0.5170 gnorm 0.068 |gate| 0.0234 34.36s/step eta 74.4m
+[lab] [eval 125] pooled 0.4242 nats/char
+[lab] [step 130/250] loss 1.4067 gnorm 0.072 |gate| 0.0240 40.11s/step eta 80.2m
+[lab] [step 140/250] loss 0.3986 gnorm 0.059 |gate| 0.0242 24.75s/step eta 45.4m
+[lab] [step 150/250] loss 1.0936 gnorm 0.038 |gate| 0.0244 13.76s/step eta 22.9m
+[lab] [step 160/250] loss 0.2744 gnorm 0.069 |gate| 0.0245 26.41s/step eta 39.6m
+[lab] [step 170/250] loss 1.1097 gnorm 0.068 |gate| 0.0246 22.38s/step eta 29.8m
+[lab] [step 180/250] loss 1.4502 gnorm 0.078 |gate| 0.0247 21.94s/step eta 25.6m
+[lab] [step 190/250] loss 0.7041 gnorm 0.045 |gate| 0.0250 18.84s/step eta 18.8m
+[lab] [step 200/250] loss 0.0888 gnorm 0.031 |gate| 0.0251 19.27s/step eta 16.1m
+[lab] [step 210/250] loss 0.2566 gnorm 0.036 |gate| 0.0252 17.90s/step eta 11.9m
+[lab] [step 220/250] loss 0.4615 gnorm 0.064 |gate| 0.0252 10.08s/step eta 5.0m
+[lab] [step 230/250] loss 0.7421 gnorm 0.052 |gate| 0.0253 9.71s/step eta 3.2m
+[lab] [step 240/250] loss 0.4890 gnorm 0.063 |gate| 0.0253 10.08s/step eta 1.7m
+[lab] [step 250/250] loss 0.2919 gnorm 0.043 |gate| 0.0254 8.95s/step eta 0.0m
+[lab] [eval 250] pooled 0.4232 nats/char
+[lab] done H-CNS-001 real seed 1 in 76.44 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\12f2acbabde7eb00\metrics.json
+[run_all 22:22:30] run 1/15 exit 0 after 76.7 min
+[run_all 22:22:30] run 2/15: H-CNS-001 shuffled seed 1
+[lab] H-CNS-001 arm shuffled seed 1: {'topology': 'shuffled', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': None, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 11751 types / 3,830,931 edges | trainable 4,515,375
+[lab] data: {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 0.5959 gnorm 0.002 |gate| 0.0001 6.44s/step eta 26.7m
+[lab] [step 10/250] loss 1.1258 gnorm 0.002 |gate| 0.0014 7.95s/step eta 31.8m
+[lab] [step 20/250] loss 1.6177 gnorm 0.023 |gate| 0.0045 9.99s/step eta 38.3m
+[lab] [step 30/250] loss 0.7107 gnorm 0.021 |gate| 0.0072 8.68s/step eta 31.8m
+[lab] [step 40/250] loss 0.8175 gnorm 0.036 |gate| 0.0107 8.03s/step eta 28.1m
+[lab] [step 50/250] loss 0.5363 gnorm 0.023 |gate| 0.0139 8.51s/step eta 28.4m
+[lab] [step 60/250] loss 0.0219 gnorm 0.008 |gate| 0.0164 7.75s/step eta 24.5m
+[lab] [step 70/250] loss 1.4886 gnorm 0.077 |gate| 0.0184 8.66s/step eta 26.0m
+[lab] [step 80/250] loss 0.2407 gnorm 0.039 |gate| 0.0204 7.82s/step eta 22.2m
+[lab] [step 90/250] loss 0.0251 gnorm 0.013 |gate| 0.0216 8.92s/step eta 23.8m
+[lab] [step 100/250] loss 0.1731 gnorm 0.023 |gate| 0.0223 8.04s/step eta 20.1m
+[lab] [step 110/250] loss 0.8472 gnorm 0.082 |gate| 0.0230 8.97s/step eta 20.9m
+[lab] [step 120/250] loss 0.5175 gnorm 0.068 |gate| 0.0235 7.98s/step eta 17.3m
+[lab] [eval 125] pooled 0.4244 nats/char
+[lab] [step 130/250] loss 1.4077 gnorm 0.070 |gate| 0.0241 6.19s/step eta 12.4m
+[lab] [step 140/250] loss 0.3984 gnorm 0.058 |gate| 0.0243 5.35s/step eta 9.8m
+[lab] [step 150/250] loss 1.0932 gnorm 0.037 |gate| 0.0245 4.62s/step eta 7.7m
+[lab] [step 160/250] loss 0.2748 gnorm 0.067 |gate| 0.0246 5.03s/step eta 7.5m
+[lab] [step 170/250] loss 1.1109 gnorm 0.068 |gate| 0.0247 3.80s/step eta 5.1m
+[lab] [step 180/250] loss 1.4506 gnorm 0.077 |gate| 0.0248 3.17s/step eta 3.7m
+[lab] [step 190/250] loss 0.7049 gnorm 0.044 |gate| 0.0250 3.12s/step eta 3.1m
+[lab] [step 200/250] loss 0.0890 gnorm 0.029 |gate| 0.0252 3.05s/step eta 2.5m
+[lab] [step 210/250] loss 0.2565 gnorm 0.036 |gate| 0.0253 3.24s/step eta 2.2m
+[lab] [step 220/250] loss 0.4616 gnorm 0.064 |gate| 0.0254 3.27s/step eta 1.6m
+[lab] [step 230/250] loss 0.7418 gnorm 0.052 |gate| 0.0254 4.10s/step eta 1.4m
+[lab] [step 240/250] loss 0.4892 gnorm 0.063 |gate| 0.0254 5.06s/step eta 0.8m
+[lab] [step 250/250] loss 0.2917 gnorm 0.042 |gate| 0.0255 4.60s/step eta 0.0m
+[lab] [eval 250] pooled 0.4235 nats/char
+[lab] done H-CNS-001 shuffled seed 1 in 32.12 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\f9083b63f4905fca\metrics.json
+[run_all 22:54:57] run 2/15 exit 0 after 32.4 min
+[run_all 22:54:57] run 3/15: H-CNS-002 none seed 1
+[lab] H-CNS-002 arm none seed 1: {'topology': 'none', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': None, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph none | trainable 0
+[lab] data: {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60}}
+[lab] done H-CNS-002 none seed 1 in 1.24 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\22bc052237ce977e\metrics.json
+[run_all 22:56:21] run 3/15 exit 0 after 1.4 min
+[run_all 22:56:21] run 4/15: H-CNS-003 persist seed 1
+[lab] H-CNS-003 arm persist seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'persist', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 5.19s/step eta 21.5m
+[lab] [step 10/250] loss 0.7898 gnorm 0.005 |gate| 0.0019 5.47s/step eta 21.9m
+[lab] [step 20/250] loss 0.6707 gnorm 0.008 |gate| 0.0057 5.97s/step eta 22.9m
+[lab] [step 30/250] loss 1.2340 gnorm 0.020 |gate| 0.0096 5.65s/step eta 20.7m
+[lab] [step 40/250] loss 0.9527 gnorm 0.015 |gate| 0.0131 6.31s/step eta 22.1m
+[lab] [step 50/250] loss 0.6447 gnorm 0.019 |gate| 0.0170 5.77s/step eta 19.2m
+[lab] [step 60/250] loss 0.8378 gnorm 0.019 |gate| 0.0209 5.47s/step eta 17.3m
+[lab] [step 70/250] loss 0.5976 gnorm 0.034 |gate| 0.0249 5.41s/step eta 16.2m
+[lab] [step 80/250] loss 0.5015 gnorm 0.045 |gate| 0.0287 5.12s/step eta 14.5m
+[lab] [step 90/250] loss 1.1497 gnorm 0.050 |gate| 0.0318 5.83s/step eta 15.5m
+[lab] [step 100/250] loss 0.6778 gnorm 0.056 |gate| 0.0346 5.76s/step eta 14.4m
+[lab] [step 110/250] loss 1.0748 gnorm 0.067 |gate| 0.0371 5.77s/step eta 13.5m
+[lab] [step 120/250] loss 0.2369 gnorm 0.048 |gate| 0.0394 5.25s/step eta 11.4m
+[lab] [eval 125] pooled 0.4278 nats/char, temporal 7.1185
+[lab] [step 130/250] loss 1.0947 gnorm 0.055 |gate| 0.0416 6.68s/step eta 13.4m
+[lab] [step 140/250] loss 0.1967 gnorm 0.038 |gate| 0.0436 6.21s/step eta 11.4m
+[lab] [step 150/250] loss 0.9383 gnorm 0.072 |gate| 0.0453 5.62s/step eta 9.4m
+[lab] [step 160/250] loss 1.0840 gnorm 0.073 |gate| 0.0466 4.82s/step eta 7.2m
+[lab] [step 170/250] loss 0.7994 gnorm 0.073 |gate| 0.0476 4.61s/step eta 6.1m
+[lab] [step 180/250] loss 1.1781 gnorm 0.046 |gate| 0.0485 6.26s/step eta 7.3m
+[lab] [step 190/250] loss 0.5313 gnorm 0.058 |gate| 0.0493 5.69s/step eta 5.7m
+[lab] [step 200/250] loss 0.9974 gnorm 0.084 |gate| 0.0498 5.53s/step eta 4.6m
+[lab] [step 210/250] loss 0.6233 gnorm 0.051 |gate| 0.0502 5.75s/step eta 3.8m
+[lab] [step 220/250] loss 0.3041 gnorm 0.057 |gate| 0.0505 5.68s/step eta 2.8m
+[lab] [step 230/250] loss 1.4252 gnorm 0.052 |gate| 0.0508 4.12s/step eta 1.4m
+[lab] [step 240/250] loss 1.7964 gnorm 0.057 |gate| 0.0510 4.56s/step eta 0.8m
+[lab] [step 250/250] loss 1.5403 gnorm 0.106 |gate| 0.0512 5.57s/step eta 0.0m
+[lab] [eval 250] pooled 0.4273 nats/char, temporal 6.7968, temporal EM 0.000
+[lab] done H-CNS-003 persist seed 1 in 33.72 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\a2e953b493aac457\metrics.json
+[run_all 23:30:13] run 4/15 exit 0 after 33.9 min
+[run_all 23:30:13] run 5/15: H-CNS-003 reset seed 1
+[lab] H-CNS-003 arm reset seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 3.11s/step eta 12.9m
+[lab] [step 10/250] loss 0.7898 gnorm 0.004 |gate| 0.0018 2.68s/step eta 10.7m
+[lab] [step 20/250] loss 0.6707 gnorm 0.008 |gate| 0.0055 2.64s/step eta 10.1m
+[lab] [step 30/250] loss 1.2340 gnorm 0.020 |gate| 0.0094 2.68s/step eta 9.8m
+[lab] [step 40/250] loss 0.9527 gnorm 0.015 |gate| 0.0129 2.82s/step eta 9.9m
+[lab] [step 50/250] loss 0.6446 gnorm 0.020 |gate| 0.0169 2.67s/step eta 8.9m
+[lab] [step 60/250] loss 0.8376 gnorm 0.019 |gate| 0.0209 2.65s/step eta 8.4m
+[lab] [step 70/250] loss 0.5976 gnorm 0.035 |gate| 0.0249 2.60s/step eta 7.8m
+[lab] [step 80/250] loss 0.5014 gnorm 0.047 |gate| 0.0286 2.58s/step eta 7.3m
+[lab] [step 90/250] loss 1.1491 gnorm 0.052 |gate| 0.0318 2.50s/step eta 6.7m
+[lab] [step 100/250] loss 0.6777 gnorm 0.057 |gate| 0.0346 2.68s/step eta 6.7m
+[lab] [step 110/250] loss 1.0738 gnorm 0.069 |gate| 0.0370 2.94s/step eta 6.9m
+[lab] [step 120/250] loss 0.2366 gnorm 0.048 |gate| 0.0393 2.59s/step eta 5.6m
+[lab] [eval 125] pooled 0.4277 nats/char, temporal 7.1090
+[lab] [step 130/250] loss 1.0938 gnorm 0.056 |gate| 0.0415 3.05s/step eta 6.1m
+[lab] [step 140/250] loss 0.1965 gnorm 0.038 |gate| 0.0435 3.54s/step eta 6.5m
+[lab] [step 150/250] loss 0.9370 gnorm 0.072 |gate| 0.0451 3.04s/step eta 5.1m
+[lab] [step 160/250] loss 1.0839 gnorm 0.074 |gate| 0.0465 3.59s/step eta 5.4m
+[lab] [step 170/250] loss 0.7991 gnorm 0.074 |gate| 0.0475 3.37s/step eta 4.5m
+[lab] [step 180/250] loss 1.1771 gnorm 0.046 |gate| 0.0484 2.68s/step eta 3.1m
+[lab] [step 190/250] loss 0.5307 gnorm 0.059 |gate| 0.0492 2.56s/step eta 2.6m
+[lab] [step 200/250] loss 0.9973 gnorm 0.085 |gate| 0.0497 3.45s/step eta 2.9m
+[lab] [step 210/250] loss 0.6229 gnorm 0.052 |gate| 0.0501 3.04s/step eta 2.0m
+[lab] [step 220/250] loss 0.3031 gnorm 0.057 |gate| 0.0504 3.29s/step eta 1.6m
+[lab] [step 230/250] loss 1.4264 gnorm 0.053 |gate| 0.0507 2.79s/step eta 0.9m
+[lab] [step 240/250] loss 1.7970 gnorm 0.058 |gate| 0.0509 3.02s/step eta 0.5m
+[lab] [step 250/250] loss 1.5408 gnorm 0.107 |gate| 0.0511 3.30s/step eta 0.0m
+[lab] [eval 250] pooled 0.4273 nats/char, temporal 6.7834, temporal EM 0.000
+[lab] done H-CNS-003 reset seed 1 in 21.14 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\e5871e1d9e532a3c\metrics.json
+[run_all 23:51:31] run 5/15 exit 0 after 21.3 min
+[run_all 23:51:31] run 6/15: H-CNS-001 real seed 2
+[lab] H-CNS-001 arm real seed 2: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': None, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 11751 types / 3,830,931 edges | trainable 4,515,375
+[lab] data: {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 0.1079 gnorm 0.001 |gate| 0.0001 4.44s/step eta 18.4m
+[lab] [step 10/250] loss 1.0975 gnorm 0.004 |gate| 0.0016 4.10s/step eta 16.4m
+[lab] [step 20/250] loss 0.4251 gnorm 0.015 |gate| 0.0050 4.26s/step eta 16.3m
+[lab] [step 30/250] loss 0.4618 gnorm 0.011 |gate| 0.0084 3.72s/step eta 13.7m
+[lab] [step 40/250] loss 0.3623 gnorm 0.042 |gate| 0.0115 4.34s/step eta 15.2m
+[lab] [step 50/250] loss 0.8906 gnorm 0.025 |gate| 0.0142 3.91s/step eta 13.0m
+[lab] [step 60/250] loss 0.2740 gnorm 0.026 |gate| 0.0163 4.29s/step eta 13.6m
+[lab] [step 70/250] loss 0.7654 gnorm 0.053 |gate| 0.0180 4.51s/step eta 13.5m
+[lab] [step 80/250] loss 1.1558 gnorm 0.062 |gate| 0.0195 4.45s/step eta 12.6m
+[lab] [step 90/250] loss 0.8326 gnorm 0.058 |gate| 0.0206 3.89s/step eta 10.4m
+[lab] [step 100/250] loss 0.2834 gnorm 0.021 |gate| 0.0215 4.13s/step eta 10.3m
+[lab] [step 110/250] loss 0.8627 gnorm 0.079 |gate| 0.0225 4.59s/step eta 10.7m
+[lab] [step 120/250] loss 0.2341 gnorm 0.042 |gate| 0.0235 4.43s/step eta 9.6m
+[lab] [eval 125] pooled 0.4243 nats/char
+[lab] [step 130/250] loss 0.7963 gnorm 0.087 |gate| 0.0241 4.43s/step eta 8.9m
+[lab] [step 140/250] loss 0.8633 gnorm 0.064 |gate| 0.0245 4.44s/step eta 8.1m
+[lab] [step 150/250] loss 0.4062 gnorm 0.033 |gate| 0.0247 3.47s/step eta 5.8m
+[lab] [step 160/250] loss 1.7252 gnorm 0.114 |gate| 0.0249 4.47s/step eta 6.7m
+[lab] [step 170/250] loss 0.8332 gnorm 0.071 |gate| 0.0251 4.45s/step eta 5.9m
+[lab] [step 180/250] loss 0.0795 gnorm 0.017 |gate| 0.0253 3.92s/step eta 4.6m
+[lab] [step 190/250] loss 1.0019 gnorm 0.111 |gate| 0.0254 4.33s/step eta 4.3m
+[lab] [step 200/250] loss 0.7188 gnorm 0.032 |gate| 0.0255 4.34s/step eta 3.6m
+[lab] [step 210/250] loss 1.1648 gnorm 0.062 |gate| 0.0256 3.79s/step eta 2.5m
+[lab] [step 220/250] loss 1.2775 gnorm 0.057 |gate| 0.0257 3.91s/step eta 2.0m
+[lab] [step 230/250] loss 0.7657 gnorm 0.059 |gate| 0.0257 4.64s/step eta 1.5m
+[lab] [step 240/250] loss 1.4745 gnorm 0.065 |gate| 0.0258 3.82s/step eta 0.6m
+[lab] [step 250/250] loss 0.5632 gnorm 0.070 |gate| 0.0258 4.20s/step eta 0.0m
+[lab] [eval 250] pooled 0.4233 nats/char
+[lab] done H-CNS-001 real seed 2 in 19.94 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\316c6fce5a6a4057\metrics.json
+[run_all 00:11:40] run 6/15 exit 0 after 20.1 min
+[run_all 00:11:40] run 7/15: H-CNS-001 shuffled seed 2
+[lab] H-CNS-001 arm shuffled seed 2: {'topology': 'shuffled', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': None, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 11751 types / 3,830,931 edges | trainable 4,515,375
+[lab] data: {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 0.1079 gnorm 0.001 |gate| 0.0001 3.71s/step eta 15.4m
+[lab] [step 10/250] loss 1.0975 gnorm 0.004 |gate| 0.0015 4.25s/step eta 17.0m
+[lab] [step 20/250] loss 0.4251 gnorm 0.015 |gate| 0.0050 4.10s/step eta 15.7m
+[lab] [step 30/250] loss 0.4618 gnorm 0.011 |gate| 0.0084 4.28s/step eta 15.7m
+[lab] [step 40/250] loss 0.3625 gnorm 0.041 |gate| 0.0115 4.56s/step eta 16.0m
+[lab] [step 50/250] loss 0.8903 gnorm 0.025 |gate| 0.0142 4.34s/step eta 14.5m
+[lab] [step 60/250] loss 0.2739 gnorm 0.025 |gate| 0.0164 4.85s/step eta 15.4m
+[lab] [step 70/250] loss 0.7651 gnorm 0.052 |gate| 0.0182 4.74s/step eta 14.2m
+[lab] [step 80/250] loss 1.1557 gnorm 0.061 |gate| 0.0196 4.56s/step eta 12.9m
+[lab] [step 90/250] loss 0.8328 gnorm 0.057 |gate| 0.0208 4.04s/step eta 10.8m
+[lab] [step 100/250] loss 0.2833 gnorm 0.021 |gate| 0.0217 4.51s/step eta 11.3m
+[lab] [step 110/250] loss 0.8625 gnorm 0.078 |gate| 0.0227 4.24s/step eta 9.9m
+[lab] [step 120/250] loss 0.2341 gnorm 0.042 |gate| 0.0237 4.15s/step eta 9.0m
+[lab] [eval 125] pooled 0.4244 nats/char
+[lab] [step 130/250] loss 0.7966 gnorm 0.086 |gate| 0.0242 4.34s/step eta 8.7m
+[lab] [step 140/250] loss 0.8634 gnorm 0.064 |gate| 0.0246 4.41s/step eta 8.1m
+[lab] [step 150/250] loss 0.4051 gnorm 0.032 |gate| 0.0249 4.51s/step eta 7.5m
+[lab] [step 160/250] loss 1.7247 gnorm 0.113 |gate| 0.0252 3.86s/step eta 5.8m
+[lab] [step 170/250] loss 0.8333 gnorm 0.070 |gate| 0.0253 4.12s/step eta 5.5m
+[lab] [step 180/250] loss 0.0793 gnorm 0.017 |gate| 0.0255 4.50s/step eta 5.2m
+[lab] [step 190/250] loss 1.0002 gnorm 0.108 |gate| 0.0256 3.95s/step eta 4.0m
+[lab] [step 200/250] loss 0.7188 gnorm 0.030 |gate| 0.0257 4.49s/step eta 3.7m
+[lab] [step 210/250] loss 1.1652 gnorm 0.061 |gate| 0.0258 3.95s/step eta 2.6m
+[lab] [step 220/250] loss 1.2780 gnorm 0.056 |gate| 0.0259 4.19s/step eta 2.1m
+[lab] [step 230/250] loss 0.7644 gnorm 0.058 |gate| 0.0260 4.40s/step eta 1.5m
+[lab] [step 240/250] loss 1.4730 gnorm 0.064 |gate| 0.0260 4.14s/step eta 0.7m
+[lab] [step 250/250] loss 0.5629 gnorm 0.070 |gate| 0.0261 4.77s/step eta 0.0m
+[lab] [eval 250] pooled 0.4233 nats/char
+[lab] done H-CNS-001 shuffled seed 2 in 21.88 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\54b356d94da86abe\metrics.json
+[run_all 00:33:42] run 7/15 exit 0 after 22.0 min
+[run_all 00:33:42] run 8/15: H-CNS-002 none seed 2
+[lab] H-CNS-002 arm none seed 2: {'topology': 'none', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': None, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph none | trainable 0
+[lab] data: {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60}}
+[lab] done H-CNS-002 none seed 2 in 1.16 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\6431dd24fe013f04\metrics.json
+[run_all 00:35:00] run 8/15 exit 0 after 1.3 min
+[run_all 00:35:00] run 9/15: H-CNS-003 persist seed 2
+[lab] H-CNS-003 arm persist seed 2: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'persist', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 0.4037 gnorm 0.003 |gate| 0.0001 4.20s/step eta 17.4m
+[lab] [step 10/250] loss 0.2234 gnorm 0.003 |gate| 0.0019 5.73s/step eta 22.9m
+[lab] [step 20/250] loss 1.0404 gnorm 0.012 |gate| 0.0055 5.85s/step eta 22.4m
+[lab] [step 30/250] loss 1.5500 gnorm 0.015 |gate| 0.0096 5.14s/step eta 18.8m
+[lab] [step 40/250] loss 0.9042 gnorm 0.020 |gate| 0.0137 5.65s/step eta 19.8m
+[lab] [step 50/250] loss 1.4827 gnorm 0.031 |gate| 0.0180 5.65s/step eta 18.8m
+[lab] [step 60/250] loss 0.2247 gnorm 0.024 |gate| 0.0221 5.66s/step eta 17.9m
+[lab] [step 70/250] loss 0.8725 gnorm 0.049 |gate| 0.0258 5.49s/step eta 16.5m
+[lab] [step 80/250] loss 0.5958 gnorm 0.034 |gate| 0.0293 5.29s/step eta 15.0m
+[lab] [step 90/250] loss 0.4513 gnorm 0.038 |gate| 0.0326 5.80s/step eta 15.5m
+[lab] [step 100/250] loss 0.5206 gnorm 0.033 |gate| 0.0356 5.86s/step eta 14.7m
+[lab] [step 110/250] loss 0.7439 gnorm 0.038 |gate| 0.0383 4.95s/step eta 11.5m
+[lab] [step 120/250] loss 1.5414 gnorm 0.077 |gate| 0.0409 5.04s/step eta 10.9m
+[lab] [eval 125] pooled 0.4277 nats/char, temporal 7.0820
+[lab] [step 130/250] loss 0.7032 gnorm 0.043 |gate| 0.0430 4.55s/step eta 9.1m
+[lab] [step 140/250] loss 1.1315 gnorm 0.057 |gate| 0.0448 4.59s/step eta 8.4m
+[lab] [step 150/250] loss 0.5467 gnorm 0.037 |gate| 0.0463 5.56s/step eta 9.3m
+[lab] [step 160/250] loss 0.6681 gnorm 0.083 |gate| 0.0477 5.36s/step eta 8.0m
+[lab] [step 170/250] loss 0.4678 gnorm 0.058 |gate| 0.0488 5.32s/step eta 7.1m
+[lab] [step 180/250] loss 0.8505 gnorm 0.063 |gate| 0.0497 4.98s/step eta 5.8m
+[lab] [step 190/250] loss 0.3515 gnorm 0.055 |gate| 0.0504 5.70s/step eta 5.7m
+[lab] [step 200/250] loss 1.0095 gnorm 0.065 |gate| 0.0510 5.03s/step eta 4.2m
+[lab] [step 210/250] loss 2.2295 gnorm 0.076 |gate| 0.0514 5.46s/step eta 3.6m
+[lab] [step 220/250] loss 0.3190 gnorm 0.036 |gate| 0.0517 5.43s/step eta 2.7m
+[lab] [step 230/250] loss 0.7645 gnorm 0.102 |gate| 0.0520 5.31s/step eta 1.8m
+[lab] [step 240/250] loss 0.3486 gnorm 0.054 |gate| 0.0522 4.99s/step eta 0.8m
+[lab] [step 250/250] loss 1.4538 gnorm 0.111 |gate| 0.0523 4.50s/step eta 0.0m
+[lab] [eval 250] pooled 0.4271 nats/char, temporal 6.7647, temporal EM 0.000
+[lab] done H-CNS-003 persist seed 2 in 32.12 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\1c37a91e68758a2a\metrics.json
+[run_all 01:07:17] run 9/15 exit 0 after 32.3 min
+[run_all 01:07:17] run 10/15: H-CNS-003 reset seed 2
+[lab] H-CNS-003 arm reset seed 2: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 0.4037 gnorm 0.003 |gate| 0.0001 2.04s/step eta 8.5m
+[lab] [step 10/250] loss 0.2234 gnorm 0.003 |gate| 0.0020 2.79s/step eta 11.2m
+[lab] [step 20/250] loss 1.0405 gnorm 0.012 |gate| 0.0055 3.17s/step eta 12.2m
+[lab] [step 30/250] loss 1.5501 gnorm 0.015 |gate| 0.0095 3.80s/step eta 13.9m
+[lab] [step 40/250] loss 0.9041 gnorm 0.020 |gate| 0.0136 2.47s/step eta 8.6m
+[lab] [step 50/250] loss 1.4826 gnorm 0.031 |gate| 0.0179 3.61s/step eta 12.0m
+[lab] [step 60/250] loss 0.2248 gnorm 0.025 |gate| 0.0219 2.78s/step eta 8.8m
+[lab] [step 70/250] loss 0.8716 gnorm 0.049 |gate| 0.0256 3.06s/step eta 9.2m
+[lab] [step 80/250] loss 0.5956 gnorm 0.034 |gate| 0.0291 3.16s/step eta 9.0m
+[lab] [step 90/250] loss 0.4512 gnorm 0.038 |gate| 0.0323 2.64s/step eta 7.0m
+[lab] [step 100/250] loss 0.5203 gnorm 0.033 |gate| 0.0353 3.44s/step eta 8.6m
+[lab] [step 110/250] loss 0.7437 gnorm 0.038 |gate| 0.0379 2.48s/step eta 5.8m
+[lab] [step 120/250] loss 1.5432 gnorm 0.078 |gate| 0.0405 3.54s/step eta 7.7m
+[lab] [eval 125] pooled 0.4278 nats/char, temporal 7.0821
+[lab] [step 130/250] loss 0.7034 gnorm 0.043 |gate| 0.0425 3.11s/step eta 6.2m
+[lab] [step 140/250] loss 1.1315 gnorm 0.058 |gate| 0.0444 2.83s/step eta 5.2m
+[lab] [step 150/250] loss 0.5469 gnorm 0.039 |gate| 0.0459 3.76s/step eta 6.3m
+[lab] [step 160/250] loss 0.6611 gnorm 0.085 |gate| 0.0472 2.94s/step eta 4.4m
+[lab] [step 170/250] loss 0.4676 gnorm 0.058 |gate| 0.0483 2.73s/step eta 3.6m
+[lab] [step 180/250] loss 0.8493 gnorm 0.063 |gate| 0.0492 3.27s/step eta 3.8m
+[lab] [step 190/250] loss 0.3516 gnorm 0.055 |gate| 0.0499 2.69s/step eta 2.7m
+[lab] [step 200/250] loss 1.0096 gnorm 0.065 |gate| 0.0504 3.26s/step eta 2.7m
+[lab] [step 210/250] loss 2.2304 gnorm 0.076 |gate| 0.0508 2.43s/step eta 1.6m
+[lab] [step 220/250] loss 0.3194 gnorm 0.037 |gate| 0.0511 3.59s/step eta 1.8m
+[lab] [step 230/250] loss 0.7655 gnorm 0.102 |gate| 0.0513 2.51s/step eta 0.8m
+[lab] [step 240/250] loss 0.3494 gnorm 0.054 |gate| 0.0515 3.25s/step eta 0.5m
+[lab] [step 250/250] loss 1.4537 gnorm 0.112 |gate| 0.0517 2.49s/step eta 0.0m
+[lab] [eval 250] pooled 0.4272 nats/char, temporal 6.7640, temporal EM 0.000
+[lab] done H-CNS-003 reset seed 2 in 21.19 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\0dfb98798992e356\metrics.json
+[run_all 01:28:36] run 10/15 exit 0 after 21.3 min
+[run_all 01:28:36] run 11/15: H-CNS-001 real seed 3
+[lab] H-CNS-001 arm real seed 3: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': None, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 11751 types / 3,830,931 edges | trainable 4,515,375
+[lab] data: {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 0.5633 gnorm 0.001 |gate| 0.0001 1.92s/step eta 8.0m
+[lab] [step 10/250] loss 0.4582 gnorm 0.003 |gate| 0.0017 3.96s/step eta 15.8m
+[lab] [step 20/250] loss 0.1291 gnorm 0.004 |gate| 0.0049 4.04s/step eta 15.5m
+[lab] [step 30/250] loss 1.1097 gnorm 0.017 |gate| 0.0080 4.04s/step eta 14.8m
+[lab] [step 40/250] loss 0.3477 gnorm 0.026 |gate| 0.0109 4.16s/step eta 14.5m
+[lab] [step 50/250] loss 0.9835 gnorm 0.064 |gate| 0.0139 4.08s/step eta 13.6m
+[lab] [step 60/250] loss 0.5530 gnorm 0.050 |gate| 0.0173 4.04s/step eta 12.8m
+[lab] [step 70/250] loss 0.6105 gnorm 0.061 |gate| 0.0195 4.28s/step eta 12.8m
+[lab] [step 80/250] loss 0.3522 gnorm 0.041 |gate| 0.0210 4.47s/step eta 12.7m
+[lab] [step 90/250] loss 0.6834 gnorm 0.068 |gate| 0.0222 4.24s/step eta 11.3m
+[lab] [step 100/250] loss 0.6003 gnorm 0.051 |gate| 0.0231 4.26s/step eta 10.6m
+[lab] [step 110/250] loss 1.2063 gnorm 0.066 |gate| 0.0239 3.95s/step eta 9.2m
+[lab] [step 120/250] loss 0.7156 gnorm 0.050 |gate| 0.0245 4.47s/step eta 9.7m
+[lab] [eval 125] pooled 0.4242 nats/char
+[lab] [step 130/250] loss 0.0259 gnorm 0.009 |gate| 0.0251 4.16s/step eta 8.3m
+[lab] [step 140/250] loss 0.7816 gnorm 0.069 |gate| 0.0254 4.30s/step eta 7.9m
+[lab] [step 150/250] loss 0.2692 gnorm 0.049 |gate| 0.0256 4.29s/step eta 7.1m
+[lab] [step 160/250] loss 0.8235 gnorm 0.063 |gate| 0.0258 4.06s/step eta 6.1m
+[lab] [step 170/250] loss 0.3738 gnorm 0.055 |gate| 0.0261 4.15s/step eta 5.5m
+[lab] [step 180/250] loss 1.4353 gnorm 0.086 |gate| 0.0264 4.13s/step eta 4.8m
+[lab] [step 190/250] loss 0.7995 gnorm 0.086 |gate| 0.0266 4.45s/step eta 4.5m
+[lab] [step 200/250] loss 0.5695 gnorm 0.047 |gate| 0.0267 3.90s/step eta 3.2m
+[lab] [step 210/250] loss 1.3097 gnorm 0.192 |gate| 0.0268 4.08s/step eta 2.7m
+[lab] [step 220/250] loss 0.2160 gnorm 0.040 |gate| 0.0268 3.97s/step eta 2.0m
+[lab] [step 230/250] loss 0.1455 gnorm 0.032 |gate| 0.0269 4.43s/step eta 1.5m
+[lab] [step 240/250] loss 0.7625 gnorm 0.050 |gate| 0.0269 4.48s/step eta 0.7m
+[lab] [step 250/250] loss 0.2923 gnorm 0.041 |gate| 0.0269 4.05s/step eta 0.0m
+[lab] [eval 250] pooled 0.4231 nats/char
+[lab] done H-CNS-001 real seed 3 in 19.96 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\3e1482ac02577406\metrics.json
+[run_all 01:48:41] run 11/15 exit 0 after 20.1 min
+[run_all 01:48:41] run 12/15: H-CNS-001 shuffled seed 3
+[lab] H-CNS-001 arm shuffled seed 3: {'topology': 'shuffled', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': None, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 11751 types / 3,830,931 edges | trainable 4,515,375
+[lab] data: {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 0.5633 gnorm 0.001 |gate| 0.0001 1.98s/step eta 8.2m
+[lab] [step 10/250] loss 0.4582 gnorm 0.003 |gate| 0.0017 4.04s/step eta 16.2m
+[lab] [step 20/250] loss 0.1289 gnorm 0.004 |gate| 0.0050 4.21s/step eta 16.1m
+[lab] [step 30/250] loss 1.1097 gnorm 0.017 |gate| 0.0081 4.15s/step eta 15.2m
+[lab] [step 40/250] loss 0.3477 gnorm 0.026 |gate| 0.0110 4.62s/step eta 16.2m
+[lab] [step 50/250] loss 0.9836 gnorm 0.064 |gate| 0.0139 4.14s/step eta 13.8m
+[lab] [step 60/250] loss 0.5528 gnorm 0.050 |gate| 0.0173 4.21s/step eta 13.3m
+[lab] [step 70/250] loss 0.6107 gnorm 0.062 |gate| 0.0195 4.37s/step eta 13.1m
+[lab] [step 80/250] loss 0.3523 gnorm 0.041 |gate| 0.0209 4.49s/step eta 12.7m
+[lab] [step 90/250] loss 0.6838 gnorm 0.068 |gate| 0.0221 4.25s/step eta 11.3m
+[lab] [step 100/250] loss 0.6015 gnorm 0.053 |gate| 0.0230 4.46s/step eta 11.1m
+[lab] [step 110/250] loss 1.2053 gnorm 0.066 |gate| 0.0239 3.84s/step eta 9.0m
+[lab] [step 120/250] loss 0.7156 gnorm 0.050 |gate| 0.0246 4.77s/step eta 10.3m
+[lab] [eval 125] pooled 0.4241 nats/char
+[lab] [step 130/250] loss 0.0258 gnorm 0.009 |gate| 0.0251 4.14s/step eta 8.3m
+[lab] [step 140/250] loss 0.7824 gnorm 0.068 |gate| 0.0253 4.16s/step eta 7.6m
+[lab] [step 150/250] loss 0.2708 gnorm 0.051 |gate| 0.0255 4.14s/step eta 6.9m
+[lab] [step 160/250] loss 0.8230 gnorm 0.063 |gate| 0.0258 4.04s/step eta 6.1m
+[lab] [step 170/250] loss 0.3736 gnorm 0.055 |gate| 0.0261 4.06s/step eta 5.4m
+[lab] [step 180/250] loss 1.4356 gnorm 0.085 |gate| 0.0263 4.11s/step eta 4.8m
+[lab] [step 190/250] loss 0.7997 gnorm 0.085 |gate| 0.0265 4.44s/step eta 4.4m
+[lab] [step 200/250] loss 0.5697 gnorm 0.045 |gate| 0.0266 3.86s/step eta 3.2m
+[lab] [step 210/250] loss 1.3101 gnorm 0.190 |gate| 0.0268 4.46s/step eta 3.0m
+[lab] [step 220/250] loss 0.2163 gnorm 0.040 |gate| 0.0268 4.07s/step eta 2.0m
+[lab] [step 230/250] loss 0.1458 gnorm 0.032 |gate| 0.0269 4.33s/step eta 1.4m
+[lab] [step 240/250] loss 0.7603 gnorm 0.049 |gate| 0.0269 4.41s/step eta 0.7m
+[lab] [step 250/250] loss 0.2933 gnorm 0.040 |gate| 0.0269 4.26s/step eta 0.0m
+[lab] [eval 250] pooled 0.4231 nats/char
+[lab] done H-CNS-001 shuffled seed 3 in 21.55 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\fb28d89fd1344ccc\metrics.json
+[run_all 02:10:22] run 12/15 exit 0 after 21.7 min
+[run_all 02:10:22] run 13/15: H-CNS-002 none seed 3
+[lab] H-CNS-002 arm none seed 3: {'topology': 'none', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': None, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph none | trainable 0
+[lab] data: {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60}}
+[lab] done H-CNS-002 none seed 3 in 1.09 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\2c608263451dff09\metrics.json
+[run_all 02:11:35] run 13/15 exit 0 after 1.2 min
+[run_all 02:11:35] run 14/15: H-CNS-003 persist seed 3
+[lab] H-CNS-003 arm persist seed 3: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'persist', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.2448 gnorm 0.003 |gate| 0.0001 4.25s/step eta 17.7m
+[lab] [step 10/250] loss 2.9312 gnorm 0.008 |gate| 0.0019 4.93s/step eta 19.7m
+[lab] [step 20/250] loss 0.5357 gnorm 0.008 |gate| 0.0059 5.81s/step eta 22.3m
+[lab] [step 30/250] loss 2.2448 gnorm 0.020 |gate| 0.0101 5.90s/step eta 21.6m
+[lab] [step 40/250] loss 0.7446 gnorm 0.012 |gate| 0.0139 4.81s/step eta 16.8m
+[lab] [step 50/250] loss 0.6933 gnorm 0.021 |gate| 0.0180 6.27s/step eta 20.9m
+[lab] [step 60/250] loss 0.9587 gnorm 0.026 |gate| 0.0218 5.74s/step eta 18.2m
+[lab] [step 70/250] loss 1.1458 gnorm 0.043 |gate| 0.0259 5.82s/step eta 17.4m
+[lab] [step 80/250] loss 0.8355 gnorm 0.036 |gate| 0.0299 5.38s/step eta 15.3m
+[lab] [step 90/250] loss 1.3967 gnorm 0.061 |gate| 0.0333 4.98s/step eta 13.3m
+[lab] [step 100/250] loss 1.2886 gnorm 0.100 |gate| 0.0362 6.11s/step eta 15.3m
+[lab] [step 110/250] loss 0.6241 gnorm 0.035 |gate| 0.0389 5.89s/step eta 13.7m
+[lab] [step 120/250] loss 1.0581 gnorm 0.061 |gate| 0.0413 5.13s/step eta 11.1m
+[lab] [eval 125] pooled 0.4278 nats/char, temporal 7.0967
+[lab] [step 130/250] loss 1.0147 gnorm 0.084 |gate| 0.0434 5.99s/step eta 12.0m
+[lab] [step 140/250] loss 0.4870 gnorm 0.042 |gate| 0.0454 5.43s/step eta 10.0m
+[lab] [step 150/250] loss 0.7521 gnorm 0.049 |gate| 0.0470 5.24s/step eta 8.7m
+[lab] [step 160/250] loss 0.5872 gnorm 0.065 |gate| 0.0484 5.53s/step eta 8.3m
+[lab] [step 170/250] loss 0.7374 gnorm 0.037 |gate| 0.0495 5.11s/step eta 6.8m
+[lab] [step 180/250] loss 0.4468 gnorm 0.061 |gate| 0.0505 5.08s/step eta 5.9m
+[lab] [step 190/250] loss 0.1960 gnorm 0.039 |gate| 0.0512 5.73s/step eta 5.7m
+[lab] [step 200/250] loss 0.2957 gnorm 0.057 |gate| 0.0518 5.10s/step eta 4.2m
+[lab] [step 210/250] loss 1.0073 gnorm 0.098 |gate| 0.0522 5.36s/step eta 3.6m
+[lab] [step 220/250] loss 1.1988 gnorm 0.059 |gate| 0.0525 4.96s/step eta 2.5m
+[lab] [step 230/250] loss 0.8031 gnorm 0.076 |gate| 0.0528 5.69s/step eta 1.9m
+[lab] [step 240/250] loss 1.2893 gnorm 0.078 |gate| 0.0530 5.99s/step eta 1.0m
+[lab] [step 250/250] loss 0.5862 gnorm 0.057 |gate| 0.0532 5.94s/step eta 0.0m
+[lab] [eval 250] pooled 0.4270 nats/char, temporal 6.7598, temporal EM 0.000
+[lab] done H-CNS-003 persist seed 3 in 33.11 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\35f1816f6a191e7f\metrics.json
+[run_all 02:44:52] run 14/15 exit 0 after 33.3 min
+[run_all 02:44:52] run 15/15: H-CNS-003 reset seed 3
+[lab] H-CNS-003 arm reset seed 3: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.2448 gnorm 0.003 |gate| 0.0001 2.97s/step eta 12.3m
+[lab] [step 10/250] loss 2.9312 gnorm 0.008 |gate| 0.0019 2.91s/step eta 11.6m
+[lab] [step 20/250] loss 0.5357 gnorm 0.008 |gate| 0.0059 3.42s/step eta 13.1m
+[lab] [step 30/250] loss 2.2449 gnorm 0.019 |gate| 0.0100 3.10s/step eta 11.4m
+[lab] [step 40/250] loss 0.7445 gnorm 0.012 |gate| 0.0139 3.07s/step eta 10.7m
+[lab] [step 50/250] loss 0.6932 gnorm 0.021 |gate| 0.0181 3.18s/step eta 10.6m
+[lab] [step 60/250] loss 0.9586 gnorm 0.026 |gate| 0.0218 2.92s/step eta 9.2m
+[lab] [step 70/250] loss 1.1455 gnorm 0.043 |gate| 0.0260 2.99s/step eta 9.0m
+[lab] [step 80/250] loss 0.8354 gnorm 0.036 |gate| 0.0299 2.93s/step eta 8.3m
+[lab] [step 90/250] loss 1.3970 gnorm 0.061 |gate| 0.0332 3.03s/step eta 8.1m
+[lab] [step 100/250] loss 1.2895 gnorm 0.100 |gate| 0.0362 3.14s/step eta 7.8m
+[lab] [step 110/250] loss 0.6240 gnorm 0.035 |gate| 0.0388 3.37s/step eta 7.9m
+[lab] [step 120/250] loss 1.0581 gnorm 0.061 |gate| 0.0411 2.72s/step eta 5.9m
+[lab] [eval 125] pooled 0.4277 nats/char, temporal 7.0925
+[lab] [step 130/250] loss 1.0140 gnorm 0.084 |gate| 0.0432 3.61s/step eta 7.2m
+[lab] [step 140/250] loss 0.4869 gnorm 0.042 |gate| 0.0452 3.33s/step eta 6.1m
+[lab] [step 150/250] loss 0.7517 gnorm 0.049 |gate| 0.0468 2.60s/step eta 4.3m
+[lab] [step 160/250] loss 0.5872 gnorm 0.066 |gate| 0.0482 3.12s/step eta 4.7m
+[lab] [step 170/250] loss 0.7373 gnorm 0.037 |gate| 0.0493 2.98s/step eta 4.0m
+[lab] [step 180/250] loss 0.4434 gnorm 0.059 |gate| 0.0503 2.86s/step eta 3.3m
+[lab] [step 190/250] loss 0.1957 gnorm 0.040 |gate| 0.0510 3.29s/step eta 3.3m
+[lab] [step 200/250] loss 0.2960 gnorm 0.058 |gate| 0.0516 3.17s/step eta 2.6m
+[lab] [step 210/250] loss 1.0066 gnorm 0.096 |gate| 0.0520 2.85s/step eta 1.9m
+[lab] [step 220/250] loss 1.1988 gnorm 0.059 |gate| 0.0523 2.54s/step eta 1.3m
+[lab] [step 230/250] loss 0.8029 gnorm 0.076 |gate| 0.0526 3.32s/step eta 1.1m
+[lab] [step 240/250] loss 1.2881 gnorm 0.079 |gate| 0.0528 3.38s/step eta 0.6m
+[lab] [step 250/250] loss 0.5838 gnorm 0.055 |gate| 0.0529 2.86s/step eta 0.0m
+[lab] [eval 250] pooled 0.4270 nats/char, temporal 6.7535, temporal EM 0.000
+[lab] done H-CNS-003 reset seed 3 in 21.47 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\5775b202467c24b4\metrics.json
+[run_all 03:06:28] run 15/15 exit 0 after 21.6 min
+[run_all 03:06:29] verdict H-CNS-001: NOT SUPPORTED (mean delta 0.00006, threshold 0.00212, 1/3 seeds favour treatment)
+[run_all 03:06:29] verdict H-CNS-002: SUPPORTED (mean delta 0.00795, threshold 0.00431, 3/3 seeds favour treatment)
+[run_all 03:06:29] verdict H-CNS-003: NOT SUPPORTED (mean delta -0.00682, threshold 0.13534, 0/3 seeds favour treatment)
+[run_all 03:09:23] finished; failed runs: none
+[run_all 03:09:29] plan: 13 runs for ['X-CNS-001'] (exploratory on)
+[run_all 03:09:29]      X-CNS-001              reset seed 1 [e5871e1d9e532a3c] done
+[run_all 03:09:29]      X-CNS-001        fixed_edges seed 1 [93d304843b6f8c49] todo
+[run_all 03:09:29]      X-CNS-001           shuffled seed 1 [9ea28cf0c886b7a3] todo
+[run_all 03:09:29]      X-CNS-001      random_sparse seed 1 [922553248fc1207e] todo
+[run_all 03:09:29]      X-CNS-001           unsigned seed 1 [758db2163992dacf] todo
+[run_all 03:09:29]      X-CNS-001   random_strengths seed 1 [7808e7f5761b8764] todo
+[run_all 03:09:29]      X-CNS-001         sqrt_indeg seed 1 [1e50ba158832082c] todo
+[run_all 03:09:29]      X-CNS-001         raw_counts seed 1 [9357f0f248b7294f] todo
+[run_all 03:09:29]      X-CNS-001               tanh seed 1 [01c86b86b34f8d10] todo
+[run_all 03:09:29]      X-CNS-001     residual_edges seed 1 [304fa88adcf1b221] todo
+[run_all 03:09:29]      X-CNS-001       dynamic_gate seed 1 [6ff5391b57b20081] todo
+[run_all 03:09:29]      X-CNS-001            window8 seed 1 [eedeef4e253dfb2c] todo
+[run_all 03:09:29]      X-CNS-001      learned_decay seed 1 [7c2498a040c05b51] todo
+[run_all 03:09:29] run 2/13: X-CNS-001 fixed_edges seed 1
+[lab] X-CNS-001 arm fixed_edges seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'fixed', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 175,200
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 1.60s/step eta 6.7m
+[lab] [step 10/250] loss 0.7898 gnorm 0.004 |gate| 0.0018 2.17s/step eta 8.7m
+[lab] [step 20/250] loss 0.6707 gnorm 0.008 |gate| 0.0055 2.94s/step eta 11.3m
+[lab] [step 30/250] loss 1.2340 gnorm 0.020 |gate| 0.0094 5.51s/step eta 20.2m
+[lab] [step 40/250] loss 0.9527 gnorm 0.015 |gate| 0.0129 3.36s/step eta 11.8m
+[lab] [step 50/250] loss 0.6446 gnorm 0.020 |gate| 0.0169 4.98s/step eta 16.6m
+[lab] [step 60/250] loss 0.8376 gnorm 0.019 |gate| 0.0209 3.45s/step eta 10.9m
+[lab] [step 70/250] loss 0.5976 gnorm 0.035 |gate| 0.0249 4.90s/step eta 14.7m
+[lab] [step 80/250] loss 0.5014 gnorm 0.047 |gate| 0.0287 4.98s/step eta 14.1m
+[lab] [step 90/250] loss 1.1491 gnorm 0.052 |gate| 0.0318 3.71s/step eta 9.9m
+[lab] [step 100/250] loss 0.6777 gnorm 0.057 |gate| 0.0346 4.09s/step eta 10.2m
+[lab] [step 110/250] loss 1.0738 gnorm 0.069 |gate| 0.0370 3.88s/step eta 9.1m
+[lab] [step 120/250] loss 0.2366 gnorm 0.048 |gate| 0.0393 5.02s/step eta 10.9m
+[lab] [eval 125] pooled 0.4277 nats/char, temporal 7.1090
+[lab] [step 130/250] loss 1.0938 gnorm 0.056 |gate| 0.0415 8.77s/step eta 17.5m
+[lab] [step 140/250] loss 0.1965 gnorm 0.038 |gate| 0.0435 12.88s/step eta 23.6m
+[lab] [step 150/250] loss 0.9370 gnorm 0.072 |gate| 0.0451 6.90s/step eta 11.5m
+[lab] [step 160/250] loss 1.0839 gnorm 0.074 |gate| 0.0464 6.27s/step eta 9.4m
+[lab] [step 170/250] loss 0.7991 gnorm 0.074 |gate| 0.0475 11.54s/step eta 15.4m
+[lab] [step 180/250] loss 1.1771 gnorm 0.046 |gate| 0.0484 8.90s/step eta 10.4m
+[lab] [step 190/250] loss 0.5307 gnorm 0.059 |gate| 0.0492 7.74s/step eta 7.7m
+[lab] [step 200/250] loss 0.9973 gnorm 0.085 |gate| 0.0497 24.28s/step eta 20.2m
+[lab] [step 210/250] loss 0.6229 gnorm 0.052 |gate| 0.0501 19.40s/step eta 12.9m
+[lab] [step 220/250] loss 0.3031 gnorm 0.057 |gate| 0.0504 8.10s/step eta 4.1m
+[lab] [step 230/250] loss 1.4264 gnorm 0.053 |gate| 0.0507 5.41s/step eta 1.8m
+[lab] [step 240/250] loss 1.7970 gnorm 0.058 |gate| 0.0509 4.48s/step eta 0.7m
+[lab] [step 250/250] loss 1.5408 gnorm 0.107 |gate| 0.0511 3.47s/step eta 0.0m
+[lab] [eval 250] pooled 0.4273 nats/char, temporal 6.7836, temporal EM 0.000
+[lab] done X-CNS-001 fixed_edges seed 1 in 39.66 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\93d304843b6f8c49\metrics.json
+[run_all 03:49:15] run 2/13 exit 0 after 39.8 min
+[run_all 03:49:15] run 3/13: X-CNS-001 shuffled seed 1
+[lab] X-CNS-001 arm shuffled seed 1: {'topology': 'shuffled', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 3.26s/step eta 13.5m
+[lab] [step 10/250] loss 0.7898 gnorm 0.004 |gate| 0.0020 2.91s/step eta 11.6m
+[lab] [step 20/250] loss 0.6708 gnorm 0.008 |gate| 0.0058 2.92s/step eta 11.2m
+[lab] [step 30/250] loss 1.2339 gnorm 0.018 |gate| 0.0099 3.31s/step eta 12.1m
+[lab] [step 40/250] loss 0.9528 gnorm 0.015 |gate| 0.0136 3.50s/step eta 12.2m
+[lab] [step 50/250] loss 0.6445 gnorm 0.019 |gate| 0.0177 3.09s/step eta 10.3m
+[lab] [step 60/250] loss 0.8377 gnorm 0.018 |gate| 0.0220 3.33s/step eta 10.5m
+[lab] [step 70/250] loss 0.5982 gnorm 0.033 |gate| 0.0262 2.96s/step eta 8.9m
+[lab] [step 80/250] loss 0.5015 gnorm 0.044 |gate| 0.0301 2.70s/step eta 7.6m
+[lab] [step 90/250] loss 1.1503 gnorm 0.049 |gate| 0.0334 3.38s/step eta 9.0m
+[lab] [step 100/250] loss 0.6777 gnorm 0.055 |gate| 0.0363 2.80s/step eta 7.0m
+[lab] [step 110/250] loss 1.0738 gnorm 0.066 |gate| 0.0388 3.24s/step eta 7.6m
+[lab] [step 120/250] loss 0.2372 gnorm 0.047 |gate| 0.0412 2.74s/step eta 5.9m
+[lab] [eval 125] pooled 0.4278 nats/char, temporal 7.1223
+[lab] [step 130/250] loss 1.0947 gnorm 0.054 |gate| 0.0435 2.97s/step eta 5.9m
+[lab] [step 140/250] loss 0.1970 gnorm 0.037 |gate| 0.0455 3.19s/step eta 5.8m
+[lab] [step 150/250] loss 0.9390 gnorm 0.071 |gate| 0.0472 3.48s/step eta 5.8m
+[lab] [step 160/250] loss 1.0844 gnorm 0.072 |gate| 0.0486 2.83s/step eta 4.2m
+[lab] [step 170/250] loss 0.7995 gnorm 0.071 |gate| 0.0497 3.13s/step eta 4.2m
+[lab] [step 180/250] loss 1.1778 gnorm 0.045 |gate| 0.0507 2.93s/step eta 3.4m
+[lab] [step 190/250] loss 0.5312 gnorm 0.058 |gate| 0.0514 2.81s/step eta 2.8m
+[lab] [step 200/250] loss 0.9972 gnorm 0.083 |gate| 0.0520 2.46s/step eta 2.1m
+[lab] [step 210/250] loss 0.6232 gnorm 0.050 |gate| 0.0525 3.22s/step eta 2.1m
+[lab] [step 220/250] loss 0.3048 gnorm 0.055 |gate| 0.0528 2.85s/step eta 1.4m
+[lab] [step 230/250] loss 1.4259 gnorm 0.052 |gate| 0.0530 3.12s/step eta 1.0m
+[lab] [step 240/250] loss 1.7971 gnorm 0.056 |gate| 0.0533 3.17s/step eta 0.5m
+[lab] [step 250/250] loss 1.5418 gnorm 0.104 |gate| 0.0534 2.27s/step eta 0.0m
+[lab] [eval 250] pooled 0.4272 nats/char, temporal 6.7988, temporal EM 0.000
+[lab] done X-CNS-001 shuffled seed 1 in 21.33 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\9ea28cf0c886b7a3\metrics.json
+[run_all 04:10:44] run 3/13 exit 0 after 21.5 min
+[run_all 04:10:44] run 4/13: X-CNS-001 random_sparse seed 1
+[lab] X-CNS-001 arm random_sparse seed 1: {'topology': 'random', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 4.34s/step eta 18.0m
+[lab] [step 10/250] loss 0.7898 gnorm 0.004 |gate| 0.0019 2.61s/step eta 10.4m
+[lab] [step 20/250] loss 0.6707 gnorm 0.008 |gate| 0.0058 3.48s/step eta 13.3m
+[lab] [step 30/250] loss 1.2340 gnorm 0.019 |gate| 0.0099 2.97s/step eta 10.9m
+[lab] [step 40/250] loss 0.9526 gnorm 0.016 |gate| 0.0136 3.37s/step eta 11.8m
+[lab] [step 50/250] loss 0.6444 gnorm 0.020 |gate| 0.0178 2.41s/step eta 8.0m
+[lab] [step 60/250] loss 0.8376 gnorm 0.019 |gate| 0.0220 3.30s/step eta 10.5m
+[lab] [step 70/250] loss 0.5980 gnorm 0.034 |gate| 0.0262 2.61s/step eta 7.8m
+[lab] [step 80/250] loss 0.5015 gnorm 0.045 |gate| 0.0301 3.27s/step eta 9.3m
+[lab] [step 90/250] loss 1.1499 gnorm 0.050 |gate| 0.0334 2.43s/step eta 6.5m
+[lab] [step 100/250] loss 0.6777 gnorm 0.057 |gate| 0.0363 3.17s/step eta 7.9m
+[lab] [step 110/250] loss 1.0740 gnorm 0.067 |gate| 0.0388 2.42s/step eta 5.7m
+[lab] [step 120/250] loss 0.2367 gnorm 0.047 |gate| 0.0412 2.70s/step eta 5.8m
+[lab] [eval 125] pooled 0.4279 nats/char, temporal 7.1100
+[lab] [step 130/250] loss 1.0936 gnorm 0.055 |gate| 0.0434 2.95s/step eta 5.9m
+[lab] [step 140/250] loss 0.1968 gnorm 0.038 |gate| 0.0454 2.91s/step eta 5.3m
+[lab] [step 150/250] loss 0.9374 gnorm 0.071 |gate| 0.0471 2.52s/step eta 4.2m
+[lab] [step 160/250] loss 1.0847 gnorm 0.073 |gate| 0.0485 3.10s/step eta 4.6m
+[lab] [step 170/250] loss 0.8004 gnorm 0.071 |gate| 0.0496 2.68s/step eta 3.6m
+[lab] [step 180/250] loss 1.1778 gnorm 0.045 |gate| 0.0505 3.28s/step eta 3.8m
+[lab] [step 190/250] loss 0.5310 gnorm 0.058 |gate| 0.0513 3.15s/step eta 3.1m
+[lab] [step 200/250] loss 0.9957 gnorm 0.086 |gate| 0.0519 2.94s/step eta 2.5m
+[lab] [step 210/250] loss 0.6232 gnorm 0.051 |gate| 0.0523 3.39s/step eta 2.3m
+[lab] [step 220/250] loss 0.3036 gnorm 0.057 |gate| 0.0526 2.83s/step eta 1.4m
+[lab] [step 230/250] loss 1.4260 gnorm 0.053 |gate| 0.0528 3.06s/step eta 1.0m
+[lab] [step 240/250] loss 1.7965 gnorm 0.057 |gate| 0.0530 2.71s/step eta 0.5m
+[lab] [step 250/250] loss 1.5395 gnorm 0.106 |gate| 0.0532 2.91s/step eta 0.0m
+[lab] [eval 250] pooled 0.4274 nats/char, temporal 6.7869, temporal EM 0.000
+[lab] done X-CNS-001 random_sparse seed 1 in 20.59 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\922553248fc1207e\metrics.json
+[run_all 04:31:28] run 4/13 exit 0 after 20.7 min
+[run_all 04:31:28] run 5/13: X-CNS-001 unsigned seed 1
+[lab] X-CNS-001 arm unsigned seed 1: {'topology': 'real', 'sign_mode': 'unsigned', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 2.67s/step eta 11.1m
+[lab] [step 10/250] loss 0.7898 gnorm 0.005 |gate| 0.0019 2.78s/step eta 11.1m
+[lab] [step 20/250] loss 0.6703 gnorm 0.010 |gate| 0.0058 3.13s/step eta 12.0m
+[lab] [step 30/250] loss 1.2336 gnorm 0.024 |gate| 0.0097 2.83s/step eta 10.4m
+[lab] [step 40/250] loss 0.9522 gnorm 0.018 |gate| 0.0131 3.27s/step eta 11.4m
+[lab] [step 50/250] loss 0.6441 gnorm 0.022 |gate| 0.0168 2.57s/step eta 8.6m
+[lab] [step 60/250] loss 0.8385 gnorm 0.021 |gate| 0.0207 2.83s/step eta 9.0m
+[lab] [step 70/250] loss 0.5972 gnorm 0.038 |gate| 0.0246 3.18s/step eta 9.5m
+[lab] [step 80/250] loss 0.5000 gnorm 0.050 |gate| 0.0281 2.60s/step eta 7.4m
+[lab] [step 90/250] loss 1.1477 gnorm 0.055 |gate| 0.0312 3.15s/step eta 8.4m
+[lab] [step 100/250] loss 0.6771 gnorm 0.061 |gate| 0.0339 2.69s/step eta 6.7m
+[lab] [step 110/250] loss 1.0721 gnorm 0.072 |gate| 0.0362 3.55s/step eta 8.3m
+[lab] [step 120/250] loss 0.2353 gnorm 0.051 |gate| 0.0384 2.42s/step eta 5.2m
+[lab] [eval 125] pooled 0.4278 nats/char, temporal 7.0822
+[lab] [step 130/250] loss 1.0922 gnorm 0.058 |gate| 0.0405 3.56s/step eta 7.1m
+[lab] [step 140/250] loss 0.1952 gnorm 0.040 |gate| 0.0424 2.62s/step eta 4.8m
+[lab] [step 150/250] loss 0.9353 gnorm 0.075 |gate| 0.0440 3.07s/step eta 5.1m
+[lab] [step 160/250] loss 1.0812 gnorm 0.077 |gate| 0.0453 3.57s/step eta 5.3m
+[lab] [step 170/250] loss 0.7966 gnorm 0.077 |gate| 0.0463 2.59s/step eta 3.5m
+[lab] [step 180/250] loss 1.1764 gnorm 0.047 |gate| 0.0472 3.63s/step eta 4.2m
+[lab] [step 190/250] loss 0.5287 gnorm 0.061 |gate| 0.0478 2.64s/step eta 2.6m
+[lab] [step 200/250] loss 0.9943 gnorm 0.090 |gate| 0.0484 3.19s/step eta 2.7m
+[lab] [step 210/250] loss 0.6223 gnorm 0.053 |gate| 0.0488 3.14s/step eta 2.1m
+[lab] [step 220/250] loss 0.3024 gnorm 0.059 |gate| 0.0490 2.61s/step eta 1.3m
+[lab] [step 230/250] loss 1.4244 gnorm 0.055 |gate| 0.0493 3.16s/step eta 1.1m
+[lab] [step 240/250] loss 1.7978 gnorm 0.060 |gate| 0.0494 3.15s/step eta 0.5m
+[lab] [step 250/250] loss 1.5373 gnorm 0.111 |gate| 0.0496 2.84s/step eta 0.0m
+[lab] [eval 250] pooled 0.4273 nats/char, temporal 6.7543, temporal EM 0.000
+[lab] done X-CNS-001 unsigned seed 1 in 20.48 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\758db2163992dacf\metrics.json
+[run_all 04:52:06] run 5/13 exit 0 after 20.6 min
+[run_all 04:52:06] run 6/13: X-CNS-001 random_strengths seed 1
+[lab] X-CNS-001 arm random_strengths seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'random', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 2.62s/step eta 10.9m
+[lab] [step 10/250] loss 0.7898 gnorm 0.004 |gate| 0.0019 2.38s/step eta 9.5m
+[lab] [step 20/250] loss 0.6707 gnorm 0.008 |gate| 0.0057 2.53s/step eta 9.7m
+[lab] [step 30/250] loss 1.2340 gnorm 0.019 |gate| 0.0095 2.46s/step eta 9.0m
+[lab] [step 40/250] loss 0.9529 gnorm 0.014 |gate| 0.0130 2.52s/step eta 8.8m
+[lab] [step 50/250] loss 0.6447 gnorm 0.018 |gate| 0.0170 2.55s/step eta 8.5m
+[lab] [step 60/250] loss 0.8373 gnorm 0.019 |gate| 0.0210 2.43s/step eta 7.7m
+[lab] [step 70/250] loss 0.5984 gnorm 0.033 |gate| 0.0251 2.85s/step eta 8.5m
+[lab] [step 80/250] loss 0.5022 gnorm 0.044 |gate| 0.0289 2.72s/step eta 7.7m
+[lab] [step 90/250] loss 1.1510 gnorm 0.049 |gate| 0.0321 2.92s/step eta 7.8m
+[lab] [step 100/250] loss 0.6786 gnorm 0.055 |gate| 0.0349 2.97s/step eta 7.4m
+[lab] [step 110/250] loss 1.0751 gnorm 0.066 |gate| 0.0375 2.46s/step eta 5.7m
+[lab] [step 120/250] loss 0.2380 gnorm 0.046 |gate| 0.0398 3.10s/step eta 6.7m
+[lab] [eval 125] pooled 0.4279 nats/char, temporal 7.1352
+[lab] [step 130/250] loss 1.0948 gnorm 0.054 |gate| 0.0421 3.36s/step eta 6.7m
+[lab] [step 140/250] loss 0.1972 gnorm 0.037 |gate| 0.0440 2.85s/step eta 5.2m
+[lab] [step 150/250] loss 0.9397 gnorm 0.070 |gate| 0.0458 3.19s/step eta 5.3m
+[lab] [step 160/250] loss 1.0862 gnorm 0.072 |gate| 0.0471 2.58s/step eta 3.9m
+[lab] [step 170/250] loss 0.8021 gnorm 0.069 |gate| 0.0482 3.48s/step eta 4.6m
+[lab] [step 180/250] loss 1.1777 gnorm 0.045 |gate| 0.0492 2.60s/step eta 3.0m
+[lab] [step 190/250] loss 0.5315 gnorm 0.056 |gate| 0.0499 2.49s/step eta 2.5m
+[lab] [step 200/250] loss 0.9989 gnorm 0.082 |gate| 0.0505 3.10s/step eta 2.6m
+[lab] [step 210/250] loss 0.6234 gnorm 0.050 |gate| 0.0509 2.89s/step eta 1.9m
+[lab] [step 220/250] loss 0.3054 gnorm 0.055 |gate| 0.0512 3.10s/step eta 1.6m
+[lab] [step 230/250] loss 1.4270 gnorm 0.052 |gate| 0.0515 2.61s/step eta 0.9m
+[lab] [step 240/250] loss 1.7978 gnorm 0.056 |gate| 0.0517 3.31s/step eta 0.6m
+[lab] [step 250/250] loss 1.5428 gnorm 0.103 |gate| 0.0518 2.71s/step eta 0.0m
+[lab] [eval 250] pooled 0.4275 nats/char, temporal 6.8098, temporal EM 0.000
+[lab] done X-CNS-001 random_strengths seed 1 in 20.16 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\7808e7f5761b8764\metrics.json
+[run_all 05:12:24] run 6/13 exit 0 after 20.3 min
+[run_all 05:12:24] run 7/13: X-CNS-001 sqrt_indeg seed 1
+[lab] X-CNS-001 arm sqrt_indeg seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'sqrt_indeg', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.002 |gate| 0.0001 4.33s/step eta 17.9m
+[lab] [step 10/250] loss 0.7898 gnorm 0.005 |gate| 0.0018 2.92s/step eta 11.7m
+[lab] [step 20/250] loss 0.6704 gnorm 0.009 |gate| 0.0054 3.49s/step eta 13.4m
+[lab] [step 30/250] loss 1.2341 gnorm 0.019 |gate| 0.0091 2.71s/step eta 9.9m
+[lab] [step 40/250] loss 0.9530 gnorm 0.015 |gate| 0.0124 3.27s/step eta 11.5m
+[lab] [step 50/250] loss 0.6451 gnorm 0.018 |gate| 0.0161 2.45s/step eta 8.2m
+[lab] [step 60/250] loss 0.8386 gnorm 0.017 |gate| 0.0199 3.21s/step eta 10.2m
+[lab] [step 70/250] loss 0.5994 gnorm 0.030 |gate| 0.0238 2.70s/step eta 8.1m
+[lab] [step 80/250] loss 0.5041 gnorm 0.039 |gate| 0.0274 3.18s/step eta 9.0m
+[lab] [step 90/250] loss 1.1528 gnorm 0.043 |gate| 0.0304 2.64s/step eta 7.0m
+[lab] [step 100/250] loss 0.6816 gnorm 0.049 |gate| 0.0331 2.86s/step eta 7.2m
+[lab] [step 110/250] loss 1.0797 gnorm 0.058 |gate| 0.0354 2.77s/step eta 6.5m
+[lab] [step 120/250] loss 0.2422 gnorm 0.039 |gate| 0.0376 3.26s/step eta 7.1m
+[lab] [eval 125] pooled 0.4281 nats/char, temporal 7.2264
+[lab] [step 130/250] loss 1.1006 gnorm 0.047 |gate| 0.0398 2.67s/step eta 5.3m
+[lab] [step 140/250] loss 0.2019 gnorm 0.032 |gate| 0.0417 2.89s/step eta 5.3m
+[lab] [step 150/250] loss 0.9476 gnorm 0.062 |gate| 0.0433 3.35s/step eta 5.6m
+[lab] [step 160/250] loss 1.0962 gnorm 0.063 |gate| 0.0447 2.56s/step eta 3.8m
+[lab] [step 170/250] loss 0.8081 gnorm 0.060 |gate| 0.0458 2.84s/step eta 3.8m
+[lab] [step 180/250] loss 1.1825 gnorm 0.039 |gate| 0.0467 2.76s/step eta 3.2m
+[lab] [step 190/250] loss 0.5383 gnorm 0.048 |gate| 0.0474 3.14s/step eta 3.1m
+[lab] [step 200/250] loss 1.0058 gnorm 0.068 |gate| 0.0480 2.95s/step eta 2.5m
+[lab] [step 210/250] loss 0.6271 gnorm 0.044 |gate| 0.0484 3.51s/step eta 2.3m
+[lab] [step 220/250] loss 0.3117 gnorm 0.048 |gate| 0.0487 2.68s/step eta 1.3m
+[lab] [step 230/250] loss 1.4333 gnorm 0.045 |gate| 0.0489 3.37s/step eta 1.1m
+[lab] [step 240/250] loss 1.7987 gnorm 0.051 |gate| 0.0491 2.92s/step eta 0.5m
+[lab] [step 250/250] loss 1.5531 gnorm 0.088 |gate| 0.0493 2.71s/step eta 0.0m
+[lab] [eval 250] pooled 0.4276 nats/char, temporal 6.9584, temporal EM 0.000
+[lab] done X-CNS-001 sqrt_indeg seed 1 in 21.36 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\1e50ba158832082c\metrics.json
+[run_all 05:33:57] run 7/13 exit 0 after 21.5 min
+[run_all 05:33:57] run 8/13: X-CNS-001 raw_counts seed 1
+[lab] X-CNS-001 arm raw_counts seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'raw', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.002 |gate| 0.0001 3.23s/step eta 13.4m
+[lab] [step 10/250] loss 0.7898 gnorm 0.005 |gate| 0.0018 3.86s/step eta 15.5m
+[lab] [step 20/250] loss 0.6707 gnorm 0.009 |gate| 0.0054 6.62s/step eta 25.4m
+[lab] [step 30/250] loss 1.2342 gnorm 0.018 |gate| 0.0091 6.14s/step eta 22.5m
+[lab] [step 40/250] loss 0.9531 gnorm 0.014 |gate| 0.0124 6.57s/step eta 23.0m
+[lab] [step 50/250] loss 0.6454 gnorm 0.016 |gate| 0.0162 6.02s/step eta 20.1m
+[lab] [step 60/250] loss 0.8390 gnorm 0.016 |gate| 0.0200 10.07s/step eta 31.9m
+[lab] [step 70/250] loss 0.5999 gnorm 0.028 |gate| 0.0238 18.01s/step eta 54.0m
+[lab] [step 80/250] loss 0.5050 gnorm 0.037 |gate| 0.0274 15.85s/step eta 44.9m
+[lab] [step 90/250] loss 1.1533 gnorm 0.040 |gate| 0.0304 6.80s/step eta 18.1m
+[lab] [step 100/250] loss 0.6828 gnorm 0.045 |gate| 0.0331 8.37s/step eta 20.9m
+[lab] [step 110/250] loss 1.0812 gnorm 0.054 |gate| 0.0354 10.95s/step eta 25.5m
+[lab] [step 120/250] loss 0.2435 gnorm 0.037 |gate| 0.0377 8.36s/step eta 18.1m
+[lab] [eval 125] pooled 0.4282 nats/char, temporal 7.2616
+[lab] [step 130/250] loss 1.1024 gnorm 0.045 |gate| 0.0398 4.47s/step eta 8.9m
+[lab] [step 140/250] loss 0.2034 gnorm 0.030 |gate| 0.0417 3.57s/step eta 6.5m
+[lab] [step 150/250] loss 0.9503 gnorm 0.059 |gate| 0.0434 3.01s/step eta 5.0m
+[lab] [step 160/250] loss 1.0965 gnorm 0.060 |gate| 0.0448 3.61s/step eta 5.4m
+[lab] [step 170/250] loss 0.8102 gnorm 0.057 |gate| 0.0459 2.84s/step eta 3.8m
+[lab] [step 180/250] loss 1.1825 gnorm 0.037 |gate| 0.0469 3.76s/step eta 4.4m
+[lab] [step 190/250] loss 0.5404 gnorm 0.046 |gate| 0.0476 3.00s/step eta 3.0m
+[lab] [step 200/250] loss 1.0092 gnorm 0.062 |gate| 0.0482 3.26s/step eta 2.7m
+[lab] [step 210/250] loss 0.6281 gnorm 0.041 |gate| 0.0486 3.02s/step eta 2.0m
+[lab] [step 220/250] loss 0.3134 gnorm 0.046 |gate| 0.0489 3.14s/step eta 1.6m
+[lab] [step 230/250] loss 1.4346 gnorm 0.043 |gate| 0.0492 3.85s/step eta 1.3m
+[lab] [step 240/250] loss 1.8005 gnorm 0.049 |gate| 0.0494 3.78s/step eta 0.6m
+[lab] [step 250/250] loss 1.5565 gnorm 0.084 |gate| 0.0496 3.19s/step eta 0.0m
+[lab] [eval 250] pooled 0.4277 nats/char, temporal 7.0030, temporal EM 0.000
+[lab] done X-CNS-001 raw_counts seed 1 in 35.66 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\9357f0f248b7294f\metrics.json
+[run_all 06:09:48] run 8/13 exit 0 after 35.8 min
+[run_all 06:09:48] run 9/13: X-CNS-001 tanh seed 1
+[lab] X-CNS-001 arm tanh seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'tanh', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 1.57s/step eta 6.5m
+[lab] [step 10/250] loss 0.7898 gnorm 0.004 |gate| 0.0018 1.99s/step eta 8.0m
+[lab] [step 20/250] loss 0.6708 gnorm 0.008 |gate| 0.0056 2.32s/step eta 8.9m
+[lab] [step 30/250] loss 1.2339 gnorm 0.020 |gate| 0.0095 2.26s/step eta 8.3m
+[lab] [step 40/250] loss 0.9527 gnorm 0.015 |gate| 0.0132 2.71s/step eta 9.5m
+[lab] [step 50/250] loss 0.6446 gnorm 0.020 |gate| 0.0173 2.41s/step eta 8.0m
+[lab] [step 60/250] loss 0.8376 gnorm 0.019 |gate| 0.0213 2.45s/step eta 7.8m
+[lab] [step 70/250] loss 0.5985 gnorm 0.034 |gate| 0.0254 2.88s/step eta 8.6m
+[lab] [step 80/250] loss 0.5020 gnorm 0.045 |gate| 0.0292 2.09s/step eta 5.9m
+[lab] [step 90/250] loss 1.1495 gnorm 0.050 |gate| 0.0324 2.81s/step eta 7.5m
+[lab] [step 100/250] loss 0.6784 gnorm 0.056 |gate| 0.0354 2.45s/step eta 6.1m
+[lab] [step 110/250] loss 1.0735 gnorm 0.067 |gate| 0.0380 2.96s/step eta 6.9m
+[lab] [step 120/250] loss 0.2376 gnorm 0.048 |gate| 0.0404 2.71s/step eta 5.9m
+[lab] [eval 125] pooled 0.4279 nats/char, temporal 7.1058
+[lab] [step 130/250] loss 1.0934 gnorm 0.055 |gate| 0.0428 2.60s/step eta 5.2m
+[lab] [step 140/250] loss 0.1966 gnorm 0.038 |gate| 0.0448 2.46s/step eta 4.5m
+[lab] [step 150/250] loss 0.9373 gnorm 0.072 |gate| 0.0466 2.62s/step eta 4.4m
+[lab] [step 160/250] loss 1.0841 gnorm 0.073 |gate| 0.0480 2.07s/step eta 3.1m
+[lab] [step 170/250] loss 0.7988 gnorm 0.072 |gate| 0.0491 2.74s/step eta 3.7m
+[lab] [step 180/250] loss 1.1764 gnorm 0.045 |gate| 0.0501 2.38s/step eta 2.8m
+[lab] [step 190/250] loss 0.5312 gnorm 0.058 |gate| 0.0508 2.62s/step eta 2.6m
+[lab] [step 200/250] loss 0.9968 gnorm 0.084 |gate| 0.0514 2.26s/step eta 1.9m
+[lab] [step 210/250] loss 0.6228 gnorm 0.051 |gate| 0.0519 2.17s/step eta 1.4m
+[lab] [step 220/250] loss 0.3045 gnorm 0.056 |gate| 0.0522 2.94s/step eta 1.5m
+[lab] [step 230/250] loss 1.4255 gnorm 0.053 |gate| 0.0524 2.98s/step eta 1.0m
+[lab] [step 240/250] loss 1.7974 gnorm 0.058 |gate| 0.0526 3.07s/step eta 0.5m
+[lab] [step 250/250] loss 1.5388 gnorm 0.098 |gate| 0.0528 3.92s/step eta 0.0m
+[lab] [eval 250] pooled 0.4274 nats/char, temporal 6.7822, temporal EM 0.000
+[lab] done X-CNS-001 tanh seed 1 in 18.9 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\01c86b86b34f8d10\metrics.json
+[run_all 06:28:47] run 9/13 exit 0 after 19.0 min
+[run_all 06:28:47] run 10/13: X-CNS-001 residual_edges seed 1
+[lab] X-CNS-001 arm residual_edges seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'residual', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 2.52s/step eta 10.5m
+[lab] [step 10/250] loss 0.7898 gnorm 0.004 |gate| 0.0018 2.40s/step eta 9.6m
+[lab] [step 20/250] loss 0.6707 gnorm 0.008 |gate| 0.0055 2.91s/step eta 11.1m
+[lab] [step 30/250] loss 1.2340 gnorm 0.020 |gate| 0.0094 2.70s/step eta 9.9m
+[lab] [step 40/250] loss 0.9527 gnorm 0.015 |gate| 0.0129 3.60s/step eta 12.6m
+[lab] [step 50/250] loss 0.6446 gnorm 0.020 |gate| 0.0169 3.85s/step eta 12.8m
+[lab] [step 60/250] loss 0.8376 gnorm 0.019 |gate| 0.0209 2.71s/step eta 8.6m
+[lab] [step 70/250] loss 0.5976 gnorm 0.035 |gate| 0.0249 6.36s/step eta 19.1m
+[lab] [step 80/250] loss 0.5014 gnorm 0.047 |gate| 0.0286 3.36s/step eta 9.5m
+[lab] [step 90/250] loss 1.1491 gnorm 0.052 |gate| 0.0318 2.95s/step eta 7.9m
+[lab] [step 100/250] loss 0.6777 gnorm 0.057 |gate| 0.0345 3.72s/step eta 9.3m
+[lab] [step 110/250] loss 1.0738 gnorm 0.069 |gate| 0.0370 3.02s/step eta 7.0m
+[lab] [step 120/250] loss 0.2366 gnorm 0.048 |gate| 0.0393 3.22s/step eta 7.0m
+[lab] [eval 125] pooled 0.4277 nats/char, temporal 7.1090
+[lab] [step 130/250] loss 1.0938 gnorm 0.056 |gate| 0.0415 3.18s/step eta 6.4m
+[lab] [step 140/250] loss 0.1965 gnorm 0.038 |gate| 0.0434 3.07s/step eta 5.6m
+[lab] [step 150/250] loss 0.9370 gnorm 0.072 |gate| 0.0451 3.10s/step eta 5.2m
+[lab] [step 160/250] loss 1.0839 gnorm 0.074 |gate| 0.0464 3.35s/step eta 5.0m
+[lab] [step 170/250] loss 0.7991 gnorm 0.074 |gate| 0.0475 2.75s/step eta 3.7m
+[lab] [step 180/250] loss 1.1771 gnorm 0.046 |gate| 0.0484 3.24s/step eta 3.8m
+[lab] [step 190/250] loss 0.5307 gnorm 0.059 |gate| 0.0491 2.94s/step eta 2.9m
+[lab] [step 200/250] loss 0.9973 gnorm 0.085 |gate| 0.0497 3.20s/step eta 2.7m
+[lab] [step 210/250] loss 0.6229 gnorm 0.052 |gate| 0.0501 3.19s/step eta 2.1m
+[lab] [step 220/250] loss 0.3031 gnorm 0.057 |gate| 0.0504 2.85s/step eta 1.4m
+[lab] [step 230/250] loss 1.4264 gnorm 0.053 |gate| 0.0507 3.02s/step eta 1.0m
+[lab] [step 240/250] loss 1.7970 gnorm 0.058 |gate| 0.0509 2.34s/step eta 0.4m
+[lab] [step 250/250] loss 1.5409 gnorm 0.107 |gate| 0.0510 2.37s/step eta 0.0m
+[lab] [eval 250] pooled 0.4273 nats/char, temporal 6.7839, temporal EM 0.000
+[lab] done X-CNS-001 residual_edges seed 1 in 21.7 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\304fa88adcf1b221\metrics.json
+[run_all 06:50:37] run 10/13 exit 0 after 21.8 min
+[run_all 06:50:37] run 11/13: X-CNS-001 dynamic_gate seed 1
+[lab] X-CNS-001 arm dynamic_gate seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'reset', 'microsteps': 4, 'gate': 'dynamic', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 907,795
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.067 |gate| 0.0001 2.50s/step eta 10.4m
+[lab] [step 10/250] loss 0.7796 gnorm 0.079 |gate| 0.0018 3.23s/step eta 12.9m
+[lab] [step 20/250] loss 0.6171 gnorm 0.129 |gate| 0.0054 2.77s/step eta 10.6m
+[lab] [step 30/250] loss 1.1347 gnorm 0.216 |gate| 0.0082 3.20s/step eta 11.7m
+[lab] [step 40/250] loss 0.8947 gnorm 0.171 |gate| 0.0103 2.72s/step eta 9.5m
+[lab] [step 50/250] loss 0.5086 gnorm 0.171 |gate| 0.0120 3.05s/step eta 10.2m
+[lab] [step 60/250] loss 0.7021 gnorm 0.162 |gate| 0.0129 2.74s/step eta 8.7m
+[lab] [step 70/250] loss 0.4199 gnorm 0.179 |gate| 0.0136 3.43s/step eta 10.3m
+[lab] [step 80/250] loss 0.1782 gnorm 0.203 |gate| 0.0145 2.46s/step eta 7.0m
+[lab] [step 90/250] loss 0.9682 gnorm 0.203 |gate| 0.0155 3.50s/step eta 9.3m
+[lab] [step 100/250] loss 0.4689 gnorm 0.178 |gate| 0.0160 2.70s/step eta 6.8m
+[lab] [step 110/250] loss 0.8689 gnorm 0.145 |gate| 0.0163 3.42s/step eta 8.0m
+[lab] [step 120/250] loss 0.0942 gnorm 0.124 |gate| 0.0167 2.43s/step eta 5.3m
+[lab] [eval 125] pooled 0.4213 nats/char, temporal 2.8142
+[lab] [step 130/250] loss 0.8941 gnorm 0.202 |gate| 0.0170 2.70s/step eta 5.4m
+[lab] [step 140/250] loss 0.0493 gnorm 0.074 |gate| 0.0172 3.08s/step eta 5.6m
+[lab] [step 150/250] loss 0.7802 gnorm 0.320 |gate| 0.0174 3.31s/step eta 5.5m
+[lab] [step 160/250] loss 0.8825 gnorm 0.205 |gate| 0.0174 2.73s/step eta 4.1m
+[lab] [step 170/250] loss 0.5833 gnorm 0.271 |gate| 0.0177 3.27s/step eta 4.4m
+[lab] [step 180/250] loss 1.0768 gnorm 0.172 |gate| 0.0179 2.65s/step eta 3.1m
+[lab] [step 190/250] loss 0.3111 gnorm 0.131 |gate| 0.0179 3.53s/step eta 3.5m
+[lab] [step 200/250] loss 0.7778 gnorm 0.302 |gate| 0.0179 2.25s/step eta 1.9m
+[lab] [step 210/250] loss 0.5268 gnorm 0.169 |gate| 0.0180 2.41s/step eta 1.6m
+[lab] [step 220/250] loss 0.1044 gnorm 0.167 |gate| 0.0180 2.36s/step eta 1.2m
+[lab] [step 230/250] loss 1.2416 gnorm 0.182 |gate| 0.0180 2.51s/step eta 0.8m
+[lab] [step 240/250] loss 1.6580 gnorm 0.195 |gate| 0.0181 2.41s/step eta 0.4m
+[lab] [step 250/250] loss 1.3094 gnorm 0.208 |gate| 0.0181 2.18s/step eta 0.0m
+[lab] [eval 250] pooled 0.4197 nats/char, temporal 2.5992, temporal EM 0.100
+[lab] done X-CNS-001 dynamic_gate seed 1 in 16.74 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\6ff5391b57b20081\metrics.json
+[run_all 07:07:27] run 11/13 exit 0 after 16.8 min
+[run_all 07:07:27] run 12/13: X-CNS-001 window8 seed 1
+[lab] X-CNS-001 arm window8 seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'window:8', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 805,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 3.81s/step eta 15.8m
+[lab] [step 10/250] loss 0.7898 gnorm 0.004 |gate| 0.0018 4.67s/step eta 18.7m
+[lab] [step 20/250] loss 0.6707 gnorm 0.008 |gate| 0.0056 5.48s/step eta 21.0m
+[lab] [step 30/250] loss 1.2340 gnorm 0.019 |gate| 0.0095 5.75s/step eta 21.1m
+[lab] [step 40/250] loss 0.9527 gnorm 0.015 |gate| 0.0129 5.95s/step eta 20.8m
+[lab] [step 50/250] loss 0.6448 gnorm 0.019 |gate| 0.0168 5.58s/step eta 18.6m
+[lab] [step 60/250] loss 0.8378 gnorm 0.019 |gate| 0.0208 4.77s/step eta 15.1m
+[lab] [step 70/250] loss 0.5978 gnorm 0.034 |gate| 0.0249 5.63s/step eta 16.9m
+[lab] [step 80/250] loss 0.5017 gnorm 0.045 |gate| 0.0286 4.37s/step eta 12.4m
+[lab] [step 90/250] loss 1.1497 gnorm 0.050 |gate| 0.0317 5.42s/step eta 14.5m
+[lab] [step 100/250] loss 0.6779 gnorm 0.056 |gate| 0.0345 5.76s/step eta 14.4m
+[lab] [step 110/250] loss 1.0747 gnorm 0.067 |gate| 0.0370 5.54s/step eta 12.9m
+[lab] [step 120/250] loss 0.2370 gnorm 0.048 |gate| 0.0393 4.87s/step eta 10.5m
+[lab] [eval 125] pooled 0.4277 nats/char, temporal 7.1150
+[lab] [step 130/250] loss 1.0947 gnorm 0.055 |gate| 0.0415 5.73s/step eta 11.5m
+[lab] [step 140/250] loss 0.1968 gnorm 0.038 |gate| 0.0435 5.45s/step eta 10.0m
+[lab] [step 150/250] loss 0.9386 gnorm 0.072 |gate| 0.0451 4.66s/step eta 7.8m
+[lab] [step 160/250] loss 1.0855 gnorm 0.074 |gate| 0.0465 4.66s/step eta 7.0m
+[lab] [step 170/250] loss 0.7995 gnorm 0.073 |gate| 0.0475 5.76s/step eta 7.7m
+[lab] [step 180/250] loss 1.1778 gnorm 0.045 |gate| 0.0484 4.96s/step eta 5.8m
+[lab] [step 190/250] loss 0.5313 gnorm 0.058 |gate| 0.0491 5.05s/step eta 5.1m
+[lab] [step 200/250] loss 0.9973 gnorm 0.084 |gate| 0.0497 4.97s/step eta 4.1m
+[lab] [step 210/250] loss 0.6234 gnorm 0.051 |gate| 0.0501 4.99s/step eta 3.3m
+[lab] [step 220/250] loss 0.3040 gnorm 0.057 |gate| 0.0504 5.70s/step eta 2.9m
+[lab] [step 230/250] loss 1.4268 gnorm 0.052 |gate| 0.0506 4.69s/step eta 1.6m
+[lab] [step 240/250] loss 1.7967 gnorm 0.057 |gate| 0.0508 4.92s/step eta 0.8m
+[lab] [step 250/250] loss 1.5405 gnorm 0.106 |gate| 0.0510 4.62s/step eta 0.0m
+[lab] [eval 250] pooled 0.4273 nats/char, temporal 6.7957, temporal EM 0.000
+[lab] done X-CNS-001 window8 seed 1 in 31.48 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\eedeef4e253dfb2c\metrics.json
+[run_all 07:39:05] run 12/13 exit 0 after 31.6 min
+[run_all 07:39:05] run 13/13: X-CNS-001 learned_decay seed 1
+[lab] X-CNS-001 arm learned_decay seed 1: {'topology': 'real', 'sign_mode': 'dale', 'strength_init': 'bio', 'edge_param': 'dale_softplus', 'norm': 'frac', 'activation': 'relu', 'state': 'learned_decay', 'microsteps': 4, 'gate': 'static', 'subgraph': 3000, 'radius': 0.9, 'graph_seed': None, 'backend': 'csr_slab'} | graph 3000 types / 629,875 edges | trainable 808,075
+[lab] data: {'train': 33166, 'temporal_train': 4000, 'dropped': 0, 'eval': {'replay': 60, 'code': 60, 'bio': 60, 'connectome': 60, 'fresh': 60, 'temporal': 160}}
+C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\cns_lab\run_lab.py:371: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:837.)
+  if not math.isfinite(float(loss)):
+[lab] [step 1/250] loss 1.1555 gnorm 0.004 |gate| 0.0001 3.69s/step eta 15.3m
+[lab] [step 10/250] loss 0.7898 gnorm 0.004 |gate| 0.0018 4.69s/step eta 18.8m
+[lab] [step 20/250] loss 0.6707 gnorm 0.008 |gate| 0.0055 5.50s/step eta 21.1m
+[lab] [step 30/250] loss 1.2340 gnorm 0.020 |gate| 0.0094 4.87s/step eta 17.9m
+[lab] [step 40/250] loss 0.9528 gnorm 0.015 |gate| 0.0129 5.60s/step eta 19.6m
+[lab] [step 50/250] loss 0.6447 gnorm 0.019 |gate| 0.0168 5.59s/step eta 18.6m
+[lab] [step 60/250] loss 0.8377 gnorm 0.019 |gate| 0.0208 5.29s/step eta 16.7m
+[lab] [step 70/250] loss 0.5977 gnorm 0.035 |gate| 0.0249 4.94s/step eta 14.8m
+[lab] [step 80/250] loss 0.5016 gnorm 0.047 |gate| 0.0286 5.23s/step eta 14.8m
+[lab] [step 90/250] loss 1.1496 gnorm 0.051 |gate| 0.0317 5.60s/step eta 14.9m
+[lab] [step 100/250] loss 0.6776 gnorm 0.056 |gate| 0.0345 5.52s/step eta 13.8m
+[lab] [step 110/250] loss 1.0742 gnorm 0.068 |gate| 0.0370 5.84s/step eta 13.6m
+[lab] [step 120/250] loss 0.2370 gnorm 0.048 |gate| 0.0393 5.74s/step eta 12.4m
+[lab] [eval 125] pooled 0.4278 nats/char, temporal 7.1104
+[lab] [step 130/250] loss 1.0944 gnorm 0.055 |gate| 0.0415 5.24s/step eta 10.5m
+[lab] [step 140/250] loss 0.1966 gnorm 0.038 |gate| 0.0434 5.76s/step eta 10.6m
+[lab] [step 150/250] loss 0.9382 gnorm 0.072 |gate| 0.0451 5.64s/step eta 9.4m
+[lab] [step 160/250] loss 1.0841 gnorm 0.074 |gate| 0.0464 4.84s/step eta 7.3m
+[lab] [step 170/250] loss 0.7992 gnorm 0.074 |gate| 0.0475 4.52s/step eta 6.0m
+[lab] [step 180/250] loss 1.1775 gnorm 0.046 |gate| 0.0484 5.46s/step eta 6.4m
+[lab] [step 190/250] loss 0.5306 gnorm 0.057 |gate| 0.0491 5.30s/step eta 5.3m
+[lab] [step 200/250] loss 0.9974 gnorm 0.085 |gate| 0.0497 5.41s/step eta 4.5m
+[lab] [step 210/250] loss 0.6231 gnorm 0.052 |gate| 0.0501 4.80s/step eta 3.2m
+[lab] [step 220/250] loss 0.3037 gnorm 0.057 |gate| 0.0504 5.38s/step eta 2.7m
+[lab] [step 230/250] loss 1.4264 gnorm 0.053 |gate| 0.0506 4.52s/step eta 1.5m
+[lab] [step 240/250] loss 1.7974 gnorm 0.058 |gate| 0.0508 3.73s/step eta 0.6m
+[lab] [step 250/250] loss 1.5404 gnorm 0.107 |gate| 0.0510 3.70s/step eta 0.0m
+[lab] [eval 250] pooled 0.4274 nats/char, temporal 6.7899, temporal EM 0.000
+[lab] done X-CNS-001 learned_decay seed 1 in 30.14 min -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\runs\7c2498a040c05b51\metrics.json
+[run_all 08:09:23] run 13/13 exit 0 after 30.3 min
+[run_all 08:10:09] finished; failed runs: none

@@ -1,0 +1,490 @@
+{
+  "schema": "supermix-expanse-cns-lab-run-v1",
+  "hypothesis": "X-CNS-001",
+  "arm": "dynamic_gate",
+  "seed": 1,
+  "run_key": "6ff5391b57b20081",
+  "config": {
+    "topology": "real",
+    "sign_mode": "dale",
+    "strength_init": "bio",
+    "edge_param": "dale_softplus",
+    "norm": "frac",
+    "activation": "relu",
+    "state": "reset",
+    "microsteps": 4,
+    "gate": "dynamic",
+    "subgraph": 3000,
+    "radius": 0.9,
+    "graph_seed": null,
+    "backend": "csr_slab"
+  },
+  "protocol": {
+    "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+    "train_scope": "core",
+    "steps": 250,
+    "batch": 8,
+    "seq": 128,
+    "lr_core": 0.001,
+    "lr_edge": 0.0003,
+    "warmup_frac": 0.05,
+    "min_lr_frac": 0.05,
+    "grad_clip": 1.0,
+    "sources": [
+      "replay",
+      "code",
+      "bio",
+      "connectome",
+      "fresh"
+    ],
+    "corpus": {
+      "seed": 2026,
+      "dev_frac": 0.05,
+      "dev_cap": 200,
+      "max_rows_per_source": 6000,
+      "fly_rows": 0
+    },
+    "eval_steps": [
+      125,
+      250
+    ],
+    "eval_per_source": 60,
+    "temporal": {
+      "train_rows": 4000,
+      "eval_rows": 160,
+      "per_batch": 2,
+      "seed": 7,
+      "exact_match_items": 160
+    },
+    "base_config": {
+      "edge_param": "dale_softplus",
+      "subgraph": 3000
+    },
+    "notes": "3,000-type subgraph (synapse-mass core + proportional inputs/outputs; 629,875 edges): the per-token persistent scan costs ~4x a reset step, which the full graph cannot afford here. 2 of every 8 rows are synthetic temporal-memory rows (recall at a distance, pattern, count, first item) in every arm."
+  },
+  "status": "done",
+  "unlocked": false,
+  "lock": {
+    "id": "X-CNS-001",
+    "sha256": "a147ad3ab24cd83bd8b0da65ba078c5a5c03969cf3b436223c0c90d19becccdd",
+    "locked_utc": "2026-09-24T20:05:04+00:00",
+    "git": {
+      "commit": "56b4fd7a7e5ccde9126a974117fc83b39ff7db72",
+      "dirty": true
+    },
+    "file": "X-CNS-001.json"
+  },
+  "evals": [
+    {
+      "step": 125,
+      "val_replay_nats_per_char": 0.019502595135399092,
+      "val_replay_nats_per_token": 0.057332718972679525,
+      "val_code_nats_per_char": 0.5951251143787064,
+      "val_code_nats_per_token": 2.1558103633106205,
+      "val_bio_nats_per_char": 1.3472281156121337,
+      "val_bio_nats_per_token": 5.7855470556961865,
+      "val_connectome_nats_per_char": 0.1478652737505079,
+      "val_connectome_nats_per_token": 0.49173021172468756,
+      "val_fresh_nats_per_char": 0.01623328263581265,
+      "val_fresh_nats_per_token": 0.03938494848074816,
+      "temporal_nats_per_char": 2.814206245906948,
+      "temporal_nats_per_token": 3.9609514105592596,
+      "val_nats_per_char_pooled": 0.4212976643948278,
+      "val_nats_per_token_pooled": 1.3477141210739192,
+      "gate_abs_mean": 0.016855625435709953,
+      "gate_by_source": {
+        "replay": 0.5245670249064763,
+        "code": 0.5626887847979863,
+        "bio": 0.5492537269989649,
+        "connectome": 0.5563225577274958,
+        "fresh": 0.5260232125719388,
+        "temporal": 0.6247657831758261
+      },
+      "state_autocorr": 0.8527471443017324,
+      "mean_rate": 0.08495766570170721,
+      "fraction_active": 0.7457870026429494,
+      "eval_seconds": 100.7
+    },
+    {
+      "step": 250,
+      "val_replay_nats_per_char": 0.018954101397233403,
+      "val_replay_nats_per_token": 0.05572028549240648,
+      "val_code_nats_per_char": 0.5926583665490062,
+      "val_code_nats_per_token": 2.1468746951520123,
+      "val_bio_nats_per_char": 1.343663695213759,
+      "val_bio_nats_per_token": 5.770239980597245,
+      "val_connectome_nats_per_char": 0.14717557596505135,
+      "val_connectome_nats_per_token": 0.48943660194420024,
+      "val_fresh_nats_per_char": 0.015359700236304525,
+      "val_fresh_nats_per_token": 0.037265475878058923,
+      "temporal_nats_per_char": 2.599166599651207,
+      "temporal_nats_per_token": 3.6582864614633412,
+      "val_nats_per_char_pooled": 0.41965106794987733,
+      "val_nats_per_token_pooled": 1.3424467259086563,
+      "gate_abs_mean": 0.01807684823870659,
+      "gate_by_source": {
+        "replay": 0.5319080879290898,
+        "code": 0.5669587810834249,
+        "bio": 0.5653490056594213,
+        "connectome": 0.5598270426193873,
+        "fresh": 0.5327840641140937,
+        "temporal": 0.6244553212076426
+      },
+      "state_autocorr": 0.843887914220492,
+      "mean_rate": 0.08072179642816385,
+      "fraction_active": 0.7238163520892461,
+      "temporal_exact_match": 0.1,
+      "temporal_exact_match_by_task": {
+        "recall": 0.125,
+        "pattern": 0.0,
+        "count": 0.275,
+        "first": 0.0
+      },
+      "eval_seconds": 170.5
+    }
+  ],
+  "train_log": [
+    {
+      "step": 1,
+      "loss": 1.1554604768753052,
+      "grad_norm": 0.06741395592689514,
+      "gate_abs_mean": 8.331125718541443e-05,
+      "s_per_step": 2.4989552999904845
+    },
+    {
+      "step": 10,
+      "loss": 0.7796301245689392,
+      "grad_norm": 0.07877907902002335,
+      "gate_abs_mean": 0.0017631195951253176,
+      "s_per_step": 3.2307671900023704
+    },
+    {
+      "step": 20,
+      "loss": 0.6171010732650757,
+      "grad_norm": 0.12924614548683167,
+      "gate_abs_mean": 0.005361761432141066,
+      "s_per_step": 2.7691683800017928
+    },
+    {
+      "step": 30,
+      "loss": 1.13467538356781,
+      "grad_norm": 0.2157793790102005,
+      "gate_abs_mean": 0.00824650563299656,
+      "s_per_step": 3.197684910002863
+    },
+    {
+      "step": 40,
+      "loss": 0.8946610689163208,
+      "grad_norm": 0.17071795463562012,
+      "gate_abs_mean": 0.010279642418026924,
+      "s_per_step": 2.7206571499991696
+    },
+    {
+      "step": 50,
+      "loss": 0.5085644721984863,
+      "grad_norm": 0.17134664952754974,
+      "gate_abs_mean": 0.012039576657116413,
+      "s_per_step": 3.04992888000852
+    },
+    {
+      "step": 60,
+      "loss": 0.7021186351776123,
+      "grad_norm": 0.16181080043315887,
+      "gate_abs_mean": 0.012907400727272034,
+      "s_per_step": 2.739759039998171
+    },
+    {
+      "step": 70,
+      "loss": 0.4198685586452484,
+      "grad_norm": 0.17929211258888245,
+      "gate_abs_mean": 0.013649212196469307,
+      "s_per_step": 3.4311529100028566
+    },
+    {
+      "step": 80,
+      "loss": 0.1782463639974594,
+      "grad_norm": 0.20346404612064362,
+      "gate_abs_mean": 0.014488466084003448,
+      "s_per_step": 2.4579953699983887
+    },
+    {
+      "step": 90,
+      "loss": 0.9682332873344421,
+      "grad_norm": 0.2027032971382141,
+      "gate_abs_mean": 0.015473483130335808,
+      "s_per_step": 3.503624530002708
+    },
+    {
+      "step": 100,
+      "loss": 0.46889573335647583,
+      "grad_norm": 0.17756474018096924,
+      "gate_abs_mean": 0.016013484448194504,
+      "s_per_step": 2.703408929993748
+    },
+    {
+      "step": 110,
+      "loss": 0.86890709400177,
+      "grad_norm": 0.1450863480567932,
+      "gate_abs_mean": 0.01627941057085991,
+      "s_per_step": 3.419452319998527
+    },
+    {
+      "step": 120,
+      "loss": 0.09424994140863419,
+      "grad_norm": 0.12424392998218536,
+      "gate_abs_mean": 0.016701210290193558,
+      "s_per_step": 2.428475619998062
+    },
+    {
+      "step": 130,
+      "loss": 0.8941457271575928,
+      "grad_norm": 0.20236742496490479,
+      "gate_abs_mean": 0.017016464844346046,
+      "s_per_step": 2.70072027000424
+    },
+    {
+      "step": 140,
+      "loss": 0.0493115670979023,
+      "grad_norm": 0.07429187744855881,
+      "gate_abs_mean": 0.01716301217675209,
+      "s_per_step": 3.077555829999619
+    },
+    {
+      "step": 150,
+      "loss": 0.7802254557609558,
+      "grad_norm": 0.31955486536026,
+      "gate_abs_mean": 0.017358053475618362,
+      "s_per_step": 3.311161729999003
+    },
+    {
+      "step": 160,
+      "loss": 0.8824504613876343,
+      "grad_norm": 0.20450152456760406,
+      "gate_abs_mean": 0.017420686781406403,
+      "s_per_step": 2.729517369999667
+    },
+    {
+      "step": 170,
+      "loss": 0.5833182334899902,
+      "grad_norm": 0.2711757719516754,
+      "gate_abs_mean": 0.017662953585386276,
+      "s_per_step": 3.274588049997692
+    },
+    {
+      "step": 180,
+      "loss": 1.0768377780914307,
+      "grad_norm": 0.17158587276935577,
+      "gate_abs_mean": 0.0178535096347332,
+      "s_per_step": 2.65038945999695
+    },
+    {
+      "step": 190,
+      "loss": 0.31114625930786133,
+      "grad_norm": 0.13064059615135193,
+      "gate_abs_mean": 0.017918942496180534,
+      "s_per_step": 3.5278379300056257
+    },
+    {
+      "step": 200,
+      "loss": 0.7777819633483887,
+      "grad_norm": 0.30181077122688293,
+      "gate_abs_mean": 0.017941489815711975,
+      "s_per_step": 2.2534444299992176
+    },
+    {
+      "step": 210,
+      "loss": 0.526842474937439,
+      "grad_norm": 0.16909360885620117,
+      "gate_abs_mean": 0.017978403717279434,
+      "s_per_step": 2.4127932500006866
+    },
+    {
+      "step": 220,
+      "loss": 0.10436122119426727,
+      "grad_norm": 0.16731473803520203,
+      "gate_abs_mean": 0.018007416278123856,
+      "s_per_step": 2.3640490399935516
+    },
+    {
+      "step": 230,
+      "loss": 1.2416472434997559,
+      "grad_norm": 0.18195289373397827,
+      "gate_abs_mean": 0.018023774027824402,
+      "s_per_step": 2.5141075999941678
+    },
+    {
+      "step": 240,
+      "loss": 1.658005714416504,
+      "grad_norm": 0.19479981064796448,
+      "gate_abs_mean": 0.018053313717246056,
+      "s_per_step": 2.4059392900060628
+    },
+    {
+      "step": 250,
+      "loss": 1.309384822845459,
+      "grad_norm": 0.2075406014919281,
+      "gate_abs_mean": 0.01807684823870659,
+      "s_per_step": 2.1845376799989027
+    }
+  ],
+  "graph": {
+    "schema": "supermix-expanse-cns-lab-graph-v1",
+    "config": {
+      "topology": "real",
+      "sign_mode": "dale",
+      "strength_init": "bio",
+      "edge_param": "dale_softplus",
+      "norm": "frac",
+      "activation": "relu",
+      "state": "persist",
+      "microsteps": 4,
+      "gate": "static",
+      "subgraph": 3000,
+      "radius": 0.9,
+      "graph_seed": null,
+      "backend": "csr_slab"
+    },
+    "graph_seed": null,
+    "base_npz_sha256": "a582ac7da0c86221c654c0793aef78f3049d5fc4fa4f8c264e9a1f3eda2b0271",
+    "n_types": 3000,
+    "n_edges": 629875,
+    "n_in": 326,
+    "n_out": 182,
+    "subgraph": {
+      "n_types": 3000,
+      "n_edges": 629875,
+      "synapse_mass_kept": 0.624317,
+      "selection": "top other types by synapse mass + inputs into / outputs from them"
+    },
+    "topology_info": {},
+    "edge_overlap_with_real": 1.0,
+    "scale": 0.9,
+    "abs_spectral_radius_before_scale": null,
+    "abs_spectral_radius": 0.9000000001347845,
+    "edge_sign_counts": {
+      "positive": 376247,
+      "negative": 253628
+    },
+    "arrays_sha256": "e0cda65f68acd4c59de6501cd0f0d5361422f5bc81d2c84d2f266e8573fa3d90",
+    "seconds": 0.49
+  },
+  "trainable_params": {
+    "core": 277920,
+    "edges": 629875
+  },
+  "data": {
+    "train": 33166,
+    "temporal_train": 4000,
+    "dropped": 0,
+    "eval": {
+      "replay": 60,
+      "code": 60,
+      "bio": 60,
+      "connectome": 60,
+      "fresh": 60,
+      "temporal": 160
+    }
+  },
+  "untrainable": false,
+  "steps_done": 250,
+  "throughput": {
+    "s_per_step_mean": 2.8423486864001024,
+    "s_per_step_median": 2.4714321000064956,
+    "train_tokens_per_s": 144.63531584531677
+  },
+  "core_report": {
+    "leak_by_superclass": {
+      "ascending_neuron": {
+        "mean": 0.4999164488721401,
+        "std": 0.0032671307930129804,
+        "n": 94
+      },
+      "cb_endocrine": {
+        "mean": 0.5030706524848938,
+        "std": 0.0,
+        "n": 1
+      },
+      "cb_intrinsic": {
+        "mean": 0.5001012270222036,
+        "std": 0.003208040669442406,
+        "n": 1523
+      },
+      "cb_motor": {
+        "mean": 0.502458244562149,
+        "std": 0.0002073347568511963,
+        "n": 2
+      },
+      "cb_sensory": {
+        "mean": 0.5008833656708399,
+        "std": 0.0022988423861157316,
+        "n": 60
+      },
+      "descending_neuron": {
+        "mean": 0.5007266520875172,
+        "std": 0.0035673628597086503,
+        "n": 103
+      },
+      "ol_intrinsic": {
+        "mean": 0.4997429997368432,
+        "std": 0.0011558791425617585,
+        "n": 233
+      },
+      "ol_sensory": {
+        "mean": 0.5008979903327094,
+        "std": 0.0016822125170801604,
+        "n": 9
+      },
+      "sensory_ascending": {
+        "mean": 0.49783290922641754,
+        "std": 0.0004320889711380005,
+        "n": 2
+      },
+      "visual_centrifugal": {
+        "mean": 0.5001580147324381,
+        "std": 0.0025242132884632337,
+        "n": 74
+      },
+      "visual_projection": {
+        "mean": 0.5012219413541831,
+        "std": 0.0030031752192150327,
+        "n": 104
+      },
+      "vnc_efferent": {
+        "mean": 0.5011659264564514,
+        "std": 0.0,
+        "n": 1
+      },
+      "vnc_endocrine": {
+        "mean": 0.5023147463798523,
+        "std": 0.0,
+        "n": 1
+      },
+      "vnc_intrinsic": {
+        "mean": 0.4992841537085185,
+        "std": 0.004917106797753838,
+        "n": 662
+      },
+      "vnc_motor": {
+        "mean": 0.5006750499879992,
+        "std": 0.003462937897982648,
+        "n": 74
+      },
+      "vnc_sensory": {
+        "mean": 0.5001110329962614,
+        "std": 0.0034673681571036805,
+        "n": 57
+      }
+    },
+    "leak_mean": 0.499983549118042,
+    "edge_multiplier": {
+      "mean": 0.9999921143495462,
+      "std": 0.0008858863018833068,
+      "min": 0.9866325855255127,
+      "max": 1.0106689929962158,
+      "frac_changed_10pct": 0.0,
+      "sign_flips": 0
+    }
+  },
+  "peak_rss_mb": 1910.3,
+  "wall_minutes": 16.74
+}

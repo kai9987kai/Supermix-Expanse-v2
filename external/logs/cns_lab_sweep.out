@@ -1,0 +1,116 @@
+[run_all 21:05:50] plan: 15 runs for ['H-CNS-001', 'H-CNS-002', 'H-CNS-003'] (exploratory off)
+[run_all 21:05:50]      H-CNS-001               real seed 1 [12f2acbabde7eb00] todo
+[run_all 21:05:50]      H-CNS-001           shuffled seed 1 [f9083b63f4905fca] todo
+[run_all 21:05:50]      H-CNS-002               none seed 1 [22bc052237ce977e] todo
+[run_all 21:05:50]      H-CNS-003            persist seed 1 [a2e953b493aac457] todo
+[run_all 21:05:50]      H-CNS-003              reset seed 1 [e5871e1d9e532a3c] todo
+[run_all 21:05:50]      H-CNS-001               real seed 2 [316c6fce5a6a4057] todo
+[run_all 21:05:50]      H-CNS-001           shuffled seed 2 [54b356d94da86abe] todo
+[run_all 21:05:50]      H-CNS-002               none seed 2 [6431dd24fe013f04] todo
+[run_all 21:05:50]      H-CNS-003            persist seed 2 [1c37a91e68758a2a] todo
+[run_all 21:05:50]      H-CNS-003              reset seed 2 [0dfb98798992e356] todo
+[run_all 21:05:50]      H-CNS-001               real seed 3 [3e1482ac02577406] todo
+[run_all 21:05:50]      H-CNS-001           shuffled seed 3 [fb28d89fd1344ccc] todo
+[run_all 21:05:50]      H-CNS-002               none seed 3 [2c608263451dff09] todo
+[run_all 21:05:50]      H-CNS-003            persist seed 3 [35f1816f6a191e7f] todo
+[run_all 21:05:50]      H-CNS-003              reset seed 3 [5775b202467c24b4] todo
+[run_all 21:05:50] run 1/15: H-CNS-001 real seed 1
+[run_all 22:22:30] run 1/15 exit 0 after 76.7 min
+[run_all 22:22:30] run 2/15: H-CNS-001 shuffled seed 1
+[run_all 22:54:57] run 2/15 exit 0 after 32.4 min
+[run_all 22:54:57] run 3/15: H-CNS-002 none seed 1
+[run_all 22:56:21] run 3/15 exit 0 after 1.4 min
+[run_all 22:56:21] run 4/15: H-CNS-003 persist seed 1
+[run_all 23:30:13] run 4/15 exit 0 after 33.9 min
+[run_all 23:30:13] run 5/15: H-CNS-003 reset seed 1
+[run_all 23:51:31] run 5/15 exit 0 after 21.3 min
+[run_all 23:51:31] run 6/15: H-CNS-001 real seed 2
+[run_all 00:11:40] run 6/15 exit 0 after 20.1 min
+[run_all 00:11:40] run 7/15: H-CNS-001 shuffled seed 2
+[run_all 00:33:42] run 7/15 exit 0 after 22.0 min
+[run_all 00:33:42] run 8/15: H-CNS-002 none seed 2
+[run_all 00:35:00] run 8/15 exit 0 after 1.3 min
+[run_all 00:35:00] run 9/15: H-CNS-003 persist seed 2
+[run_all 01:07:17] run 9/15 exit 0 after 32.3 min
+[run_all 01:07:17] run 10/15: H-CNS-003 reset seed 2
+[run_all 01:28:36] run 10/15 exit 0 after 21.3 min
+[run_all 01:28:36] run 11/15: H-CNS-001 real seed 3
+[run_all 01:48:41] run 11/15 exit 0 after 20.1 min
+[run_all 01:48:41] run 12/15: H-CNS-001 shuffled seed 3
+[run_all 02:10:22] run 12/15 exit 0 after 21.7 min
+[run_all 02:10:22] run 13/15: H-CNS-002 none seed 3
+[run_all 02:11:35] run 13/15 exit 0 after 1.2 min
+[run_all 02:11:35] run 14/15: H-CNS-003 persist seed 3
+[run_all 02:44:52] run 14/15 exit 0 after 33.3 min
+[run_all 02:44:52] run 15/15: H-CNS-003 reset seed 3
+[run_all 03:06:28] run 15/15 exit 0 after 21.6 min
+[run_all 03:06:29] verdict H-CNS-001: NOT SUPPORTED (mean delta 0.00006, threshold 0.00212, 1/3 seeds favour treatment)
+[run_all 03:06:29] verdict H-CNS-002: SUPPORTED (mean delta 0.00795, threshold 0.00431, 3/3 seeds favour treatment)
+[run_all 03:06:29] verdict H-CNS-003: NOT SUPPORTED (mean delta -0.00682, threshold 0.13534, 0/3 seeds favour treatment)
+[analyze] 0dfb98798992e356: reset seed 2
+[analyze] 12f2acbabde7eb00: real seed 1
+[analyze] 1c37a91e68758a2a: persist seed 2
+[analyze] 316c6fce5a6a4057: real seed 2
+[analyze] 35f1816f6a191e7f: persist seed 3
+[analyze] 3e1482ac02577406: real seed 3
+[analyze] 54b356d94da86abe: shuffled seed 2
+[analyze] 5775b202467c24b4: reset seed 3
+[analyze] a2e953b493aac457: persist seed 1
+[analyze] e5871e1d9e532a3c: reset seed 1
+[analyze] f9083b63f4905fca: shuffled seed 1
+[analyze] fb28d89fd1344ccc: shuffled seed 3
+[analyze] 15 finished runs -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\analysis\summary.md
+[run_all 03:09:23] finished; failed runs: none
+[run_all 03:09:29] plan: 13 runs for ['X-CNS-001'] (exploratory on)
+[run_all 03:09:29]      X-CNS-001              reset seed 1 [e5871e1d9e532a3c] done
+[run_all 03:09:29]      X-CNS-001        fixed_edges seed 1 [93d304843b6f8c49] todo
+[run_all 03:09:29]      X-CNS-001           shuffled seed 1 [9ea28cf0c886b7a3] todo
+[run_all 03:09:29]      X-CNS-001      random_sparse seed 1 [922553248fc1207e] todo
+[run_all 03:09:29]      X-CNS-001           unsigned seed 1 [758db2163992dacf] todo
+[run_all 03:09:29]      X-CNS-001   random_strengths seed 1 [7808e7f5761b8764] todo
+[run_all 03:09:29]      X-CNS-001         sqrt_indeg seed 1 [1e50ba158832082c] todo
+[run_all 03:09:29]      X-CNS-001         raw_counts seed 1 [9357f0f248b7294f] todo
+[run_all 03:09:29]      X-CNS-001               tanh seed 1 [01c86b86b34f8d10] todo
+[run_all 03:09:29]      X-CNS-001     residual_edges seed 1 [304fa88adcf1b221] todo
+[run_all 03:09:29]      X-CNS-001       dynamic_gate seed 1 [6ff5391b57b20081] todo
+[run_all 03:09:29]      X-CNS-001            window8 seed 1 [eedeef4e253dfb2c] todo
+[run_all 03:09:29]      X-CNS-001      learned_decay seed 1 [7c2498a040c05b51] todo
+[run_all 03:09:29] run 2/13: X-CNS-001 fixed_edges seed 1
+[run_all 03:49:15] run 2/13 exit 0 after 39.8 min
+[run_all 03:49:15] run 3/13: X-CNS-001 shuffled seed 1
+[run_all 04:10:44] run 3/13 exit 0 after 21.5 min
+[run_all 04:10:44] run 4/13: X-CNS-001 random_sparse seed 1
+[run_all 04:31:28] run 4/13 exit 0 after 20.7 min
+[run_all 04:31:28] run 5/13: X-CNS-001 unsigned seed 1
+[run_all 04:52:06] run 5/13 exit 0 after 20.6 min
+[run_all 04:52:06] run 6/13: X-CNS-001 random_strengths seed 1
+[run_all 05:12:24] run 6/13 exit 0 after 20.3 min
+[run_all 05:12:24] run 7/13: X-CNS-001 sqrt_indeg seed 1
+[run_all 05:33:57] run 7/13 exit 0 after 21.5 min
+[run_all 05:33:57] run 8/13: X-CNS-001 raw_counts seed 1
+[run_all 06:09:48] run 8/13 exit 0 after 35.8 min
+[run_all 06:09:48] run 9/13: X-CNS-001 tanh seed 1
+[run_all 06:28:47] run 9/13 exit 0 after 19.0 min
+[run_all 06:28:47] run 10/13: X-CNS-001 residual_edges seed 1
+[run_all 06:50:37] run 10/13 exit 0 after 21.8 min
+[run_all 06:50:37] run 11/13: X-CNS-001 dynamic_gate seed 1
+[run_all 07:07:27] run 11/13 exit 0 after 16.8 min
+[run_all 07:07:27] run 12/13: X-CNS-001 window8 seed 1
+[run_all 07:39:05] run 12/13 exit 0 after 31.6 min
+[run_all 07:39:05] run 13/13: X-CNS-001 learned_decay seed 1
+[run_all 08:09:23] run 13/13 exit 0 after 30.3 min
+[analyze] 01c86b86b34f8d10: tanh seed 1
+[analyze] 1e50ba158832082c: sqrt_indeg seed 1
+[analyze] 304fa88adcf1b221: residual_edges seed 1
+[analyze] 6ff5391b57b20081: dynamic_gate seed 1
+[analyze] 758db2163992dacf: unsigned seed 1
+[analyze] 7808e7f5761b8764: random_strengths seed 1
+[analyze] 7c2498a040c05b51: learned_decay seed 1
+[analyze] 922553248fc1207e: random_sparse seed 1
+[analyze] 9357f0f248b7294f: raw_counts seed 1
+[analyze] 93d304843b6f8c49: fixed_edges seed 1
+[analyze] 9ea28cf0c886b7a3: shuffled seed 1
+[analyze] eedeef4e253dfb2c: window8 seed 1
+[analyze] 27 finished runs -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\analysis\summary.md
+[run_all 08:10:09] finished; failed runs: none
+[sweep] done

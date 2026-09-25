@@ -1,0 +1,50 @@
+{
+ "schema": "supermix-expanse-cns-lab-verdict-v1",
+ "id": "H-CNS-001",
+ "claim": "In Expanse v3, a male-CNS core with the real type-to-type wiring and learned Dale-preserving edge strengths reaches lower held-out loss than the same core on a degree-preserving, sign- and role-stratified shuffle of that wiring.",
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.005
+ },
+ "per_seed": [
+  {
+   "seed": 1,
+   "control": 0.42346275907773023,
+   "control_run": "f9083b63f4905fca",
+   "treatment": 0.4232084670116402,
+   "treatment_run": "12f2acbabde7eb00",
+   "delta": 0.00025429206609001165
+  },
+  {
+   "seed": 2,
+   "control": 0.4232942281711996,
+   "control_run": "54b356d94da86abe",
+   "treatment": 0.4233434791570337,
+   "treatment_run": "316c6fce5a6a4057",
+   "delta": -4.925098583408172e-05
+  },
+  {
+   "seed": 3,
+   "control": 0.42310190437268475,
+   "control_run": "fb28d89fd1344ccc",
+   "treatment": 0.42312620845426724,
+   "treatment_run": "3e1482ac02577406",
+   "delta": -2.430408158249353e-05
+  }
+ ],
+ "problems": [],
+ "hypothesis_sha256": "f7f18dc959b532006e5cb3689df00d827184789afcba8e9496ab6954c4850d25",
+ "mean_delta": 6.02456662244788e-05,
+ "threshold": 0.002116431486036024,
+ "all_same_sign": false,
+ "n_favour_treatment": 1,
+ "n_seeds": 3,
+ "verdict": "NOT SUPPORTED",
+ "issued_utc": "2026-09-25T02:06:28+00:00",
+ "git": {
+  "commit": "23ec1abba9b9887094d4dfd3f4701afce1f80f96",
+  "dirty": true
+ }
+}

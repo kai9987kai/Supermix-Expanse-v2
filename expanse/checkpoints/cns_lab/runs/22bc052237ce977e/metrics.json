@@ -1,0 +1,130 @@
+{
+  "schema": "supermix-expanse-cns-lab-run-v1",
+  "hypothesis": "H-CNS-002",
+  "arm": "none",
+  "seed": 1,
+  "run_key": "22bc052237ce977e",
+  "config": {
+    "topology": "none",
+    "sign_mode": "dale",
+    "strength_init": "bio",
+    "edge_param": "dale_softplus",
+    "norm": "frac",
+    "activation": "relu",
+    "state": "reset",
+    "microsteps": 4,
+    "gate": "static",
+    "subgraph": null,
+    "radius": 0.9,
+    "graph_seed": null,
+    "backend": "csr_slab"
+  },
+  "protocol": {
+    "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+    "train_scope": "core",
+    "steps": 250,
+    "batch": 8,
+    "seq": 128,
+    "lr_core": 0.001,
+    "lr_edge": 0.0003,
+    "warmup_frac": 0.05,
+    "min_lr_frac": 0.05,
+    "grad_clip": 1.0,
+    "sources": [
+      "replay",
+      "code",
+      "bio",
+      "connectome",
+      "fresh"
+    ],
+    "corpus": {
+      "seed": 2026,
+      "dev_frac": 0.05,
+      "dev_cap": 200,
+      "max_rows_per_source": 6000,
+      "fly_rows": 0
+    },
+    "eval_steps": [
+      125,
+      250
+    ],
+    "eval_per_source": 60,
+    "temporal": {
+      "train_rows": 0,
+      "eval_rows": 0,
+      "per_batch": 0,
+      "seed": 7,
+      "exact_match_items": 0
+    },
+    "base_config": {
+      "edge_param": "dale_softplus"
+    },
+    "notes": "Full male-CNS type graph (11,751 types, 3,830,931 edges). Only the lab core trains; trunk frozen (v3). Every arm starts from the same function (gate 0) with the same seed-determined core init, rows, order and schedule."
+  },
+  "status": "done",
+  "unlocked": false,
+  "lock": {
+    "id": "H-CNS-002",
+    "sha256": "4d187e1e753edc417c93d51e2b29b3713a4fdf23c9d5b5190f99c73410cd9e8b",
+    "locked_utc": "2026-09-24T20:05:03+00:00",
+    "git": {
+      "commit": "56b4fd7a7e5ccde9126a974117fc83b39ff7db72",
+      "dirty": true
+    },
+    "file": "H-CNS-002.json"
+  },
+  "evals": [
+    {
+      "step": 125,
+      "val_replay_nats_per_char": 0.020598495542620183,
+      "val_replay_nats_per_token": 0.060554390223763827,
+      "val_code_nats_per_char": 0.6157692357113487,
+      "val_code_nats_per_token": 2.2305926395666202,
+      "val_bio_nats_per_char": 1.371115396325043,
+      "val_bio_nats_per_token": 5.888128782573499,
+      "val_connectome_nats_per_char": 0.14954976366239328,
+      "val_connectome_nats_per_token": 0.49733203127304954,
+      "val_fresh_nats_per_char": 0.016405909621320696,
+      "val_fresh_nats_per_token": 0.039803773501118474,
+      "val_nats_per_char_pooled": 0.43118004476524174,
+      "val_nats_per_token_pooled": 1.3793274545923049,
+      "eval_seconds": 54.4
+    },
+    {
+      "step": 250,
+      "val_replay_nats_per_char": 0.020598495542620183,
+      "val_replay_nats_per_token": 0.060554390223763827,
+      "val_code_nats_per_char": 0.6157692357113487,
+      "val_code_nats_per_token": 2.2305926395666202,
+      "val_bio_nats_per_char": 1.371115396325043,
+      "val_bio_nats_per_token": 5.888128782573499,
+      "val_connectome_nats_per_char": 0.14954976366239328,
+      "val_connectome_nats_per_token": 0.49733203127304954,
+      "val_fresh_nats_per_char": 0.016405909621320696,
+      "val_fresh_nats_per_token": 0.039803773501118474,
+      "val_nats_per_char_pooled": 0.43118004476524174,
+      "val_nats_per_token_pooled": 1.3793274545923049,
+      "eval_seconds": 54.4
+    }
+  ],
+  "train_log": [],
+  "graph": null,
+  "trainable_params": {},
+  "data": {
+    "train": 33166,
+    "temporal_train": 0,
+    "dropped": 0,
+    "eval": {
+      "replay": 60,
+      "code": 60,
+      "bio": 60,
+      "connectome": 60,
+      "fresh": 60
+    }
+  },
+  "untrainable": true,
+  "steps_done": 0,
+  "core_report": {},
+  "peak_rss_mb": 1683.5,
+  "wall_minutes": 1.24
+}

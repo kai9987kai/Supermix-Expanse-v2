@@ -1,0 +1,50 @@
+{
+ "schema": "supermix-expanse-cns-lab-verdict-v1",
+ "id": "H-CNS-003",
+ "claim": "Carrying the CNS state across tokens (persist) lowers held-out loss on temporal-memory tasks compared with resetting it every token, for a real-wiring core with learned Dale-preserving edges.",
+ "primary_metric": "temporal_nats_per_char",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.02
+ },
+ "per_seed": [
+  {
+   "seed": 1,
+   "control": 6.783414764629685,
+   "control_run": "e5871e1d9e532a3c",
+   "treatment": 6.796831883214954,
+   "treatment_run": "a2e953b493aac457",
+   "delta": -0.013417118585268284
+  },
+  {
+   "seed": 2,
+   "control": 6.764042728936831,
+   "control_run": "0dfb98798992e356",
+   "treatment": 6.76474521924333,
+   "treatment_run": "1c37a91e68758a2a",
+   "delta": -0.0007024903064989374
+  },
+  {
+   "seed": 3,
+   "control": 6.753462032165978,
+   "control_run": "5775b202467c24b4",
+   "treatment": 6.759794812787055,
+   "treatment_run": "35f1816f6a191e7f",
+   "delta": -0.006332780621076672
+  }
+ ],
+ "problems": [],
+ "hypothesis_sha256": "afdc6eb7d17186642e372e72ee1959e441511e35a55d2b5c6633048213c57ee4",
+ "mean_delta": -0.006817463170947964,
+ "threshold": 0.1353394635048833,
+ "all_same_sign": false,
+ "n_favour_treatment": 0,
+ "n_seeds": 3,
+ "verdict": "NOT SUPPORTED",
+ "issued_utc": "2026-09-25T02:06:29+00:00",
+ "git": {
+  "commit": "23ec1abba9b9887094d4dfd3f4701afce1f80f96",
+  "dirty": true
+ }
+}
