@@ -6,7 +6,7 @@ wiring contributes* can be measured instead of assumed (spec:
 ``CNS_LAB_DESIGN.md``; method after QuixiAI/FlyGPT). Every experimental axis is
 one field of :class:`LabConfig`:
 
-    topology       real | shuffled | random | none
+    topology       real | shuffled | random | empty | none
     sign_mode      dale | unsigned
     strength_init  bio | random
     edge_param     fixed | residual | dale_softplus
@@ -107,7 +107,7 @@ CORE_FILE_SCHEMA = "supermix-expanse-cns-lab-core-v1"
 LAB_GRAPH_SCHEMA = "supermix-expanse-cns-lab-graph-v1"
 THETA0 = math.log(math.e - 1.0)  # softplus(THETA0) == 1
 
-TOPOLOGIES = ("real", "shuffled", "random", "none")
+TOPOLOGIES = ("real", "shuffled", "random", "empty", "none")
 SIGN_MODES = ("dale", "unsigned")
 STRENGTH_INITS = ("bio", "random")
 EDGE_PARAMS = ("fixed", "residual", "dale_softplus")
@@ -329,6 +329,12 @@ def lab_graph(base: dict, cfg: LabConfig, seed: int = 0) -> Optional[dict]:
         perm = rng.permutation(e)
         mag, w = mag[perm], w[perm]
         topo_info = {"sampler": "uniform distinct ordered pairs; magnitudes dealt by a random permutation"}
+    elif cfg.topology == "empty":
+        # same cell types and input/output sets, no edges: the output types see only their bias, so the
+        # core's write is a learned constant (with gate="dynamic", a pure input-dependent adapter)
+        post, pre, mag, w = post[:0], pre[:0], mag[:0], w[:0]
+        e = 0
+        topo_info = {"edges": 0, "note": "no-connectome control"}
     if cfg.strength_init == "random":
         perm = np.random.default_rng([gseed, 2]).permutation(e)
         mag, w = mag[perm], w[perm]
@@ -337,7 +343,7 @@ def lab_graph(base: dict, cfg: LabConfig, seed: int = 0) -> Optional[dict]:
     post, pre, mag, w = post[order], pre[order], mag[order], w[order]
     sgn = type_sign[pre].astype(np.float64) if cfg.sign_mode == "dale" else np.ones(e, dtype=np.float64)
     row_stochastic = cfg.norm == "frac" and cfg.topology in ("real", "shuffled") and cfg.strength_init == "bio"
-    if row_stochastic:
+    if row_stochastic or e == 0:
         scale = float(cfg.radius)  # rows of |W| sum to radius (Perron root <= radius): bitwise the v3 values
         rho_raw = None
     else:
@@ -675,6 +681,8 @@ class ConnectomeLabCore(nn.Module):
         """``(matmul, anchor)``: ``matmul(x) = W x``; ``anchor(zeros)`` (learned csr edges under
         autograd, else None) must be added to the first state of every recurrent chain."""
         cfg = self.cfg
+        if self.nnz == 0:  # topology "empty": W x = 0 exactly
+            return (lambda x: torch.zeros_like(x)), None
         track = cfg.learned_edges and torch.is_grad_enabled() and any(p.requires_grad for p in self.edge_parameters())
         if cfg.backend == "csr_slab":
             if not cfg.learned_edges and dtype == self.bio_weight.dtype:

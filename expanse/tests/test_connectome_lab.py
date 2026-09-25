@@ -258,6 +258,28 @@ def test_subgraph(base):
     assert core.anatomy["subgraph"] == [int(k) for k in kept]
 
 
+@pytest.mark.parametrize("gate", ("static", "dynamic"))
+def test_empty_topology_is_the_no_connectome_control(base, gate):
+    """topology="empty": same types, no edges; the write is a constant (static gate) or a pure adapter (dynamic)."""
+    cfg = cl.LabConfig(topology="empty", edge_param="dale_softplus", gate=gate)
+    assert not cfg.graph_is_seeded() and list(cfg.to_dict()) == list(cl.LabConfig().to_dict())
+    g = cl.lab_graph(base, cfg, 0)
+    assert len(g["post"]) == 0 and g["n"] == base["n"] and len(g["in_idx"]) and len(g["out_idx"])
+    core = randomise(cl.fresh_lab_core(H, g, cfg, seed=0))
+    x = torch.randn(2, 6, H)
+    out, _ = core(x)
+    out.sum().backward()
+    assert core.gate.grad is not None and float(core.gate.grad.abs().sum()) > 0
+    with torch.no_grad():
+        write = (core(x)[0] - x).reshape(-1, H)
+    spread = float((write - write.mean(0)).abs().max())
+    if gate == "static":
+        assert spread < 1e-5  # the output types see only their bias
+    else:
+        assert spread > 1e-3 and float(core.gate_proj.weight.grad.abs().sum()) > 0
+    assert cl.export_anatomy(core)["edge_src"].shape == (0,)
+
+
 def test_anatomy_export_and_core_file(base, tmp_path):
     g = cl.lab_graph(base, cl.LabConfig(), 0)
     core = cl.fresh_lab_core(H, g, cl.LabConfig(edge_param="dale_softplus"), seed=4)
