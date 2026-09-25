@@ -1,0 +1,97 @@
+{
+ "schema": "supermix-expanse-cns-lab-verdict-v1",
+ "verdict_schema_version": 2,
+ "id": "H-CNS-005",
+ "claim": "With a dynamic gate, the core on the real wiring lowers held-out loss compared with the same core on an empty graph (same cell types, no edges), i.e. the dynamic-gate gain depends on the connectome and is not just an input-dependent adapter.",
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.0025
+ },
+ "per_seed": [
+  {
+   "seed": 2,
+   "control": 0.4200436611524878,
+   "control_run": "b45b8a52bb7dfb82",
+   "treatment": 0.41961048090022085,
+   "treatment_run": "47db549813d8888c",
+   "delta": 0.00043318025226696255
+  },
+  {
+   "seed": 3,
+   "control": 0.42235729829837304,
+   "control_run": "e332d08e120620cd",
+   "treatment": 0.4204657119644488,
+   "treatment_run": "59d7fcceb5f39290",
+   "delta": 0.0018915863339242223
+  },
+  {
+   "seed": 4,
+   "control": 0.421254131718274,
+   "control_run": "24641a78c2718511",
+   "treatment": 0.41997283035369637,
+   "treatment_run": "15cd3c9cf457400a",
+   "delta": 0.0012813013645776583
+  }
+ ],
+ "problems": [],
+ "hypothesis_sha256": "6810e0fbd90f4d9ebe4c1d4c0f847c11def088b4852ff480aceb43fe90c95394",
+ "inputs": [
+  {
+   "role": "control",
+   "arm": "dynamic_empty",
+   "seed": 2,
+   "run": "b45b8a52bb7dfb82",
+   "metrics_sha256": "6d78a35a5d4e6eb97bb02d1ab31667f8d6e96fe5ad5bf5200f910bad56b567c1"
+  },
+  {
+   "role": "treatment",
+   "arm": "dynamic_real",
+   "seed": 2,
+   "run": "47db549813d8888c",
+   "metrics_sha256": "46ebc832aef68827b1a22b8ce2941d747eeb9df19df6794826bfbf0068f155b0"
+  },
+  {
+   "role": "control",
+   "arm": "dynamic_empty",
+   "seed": 3,
+   "run": "e332d08e120620cd",
+   "metrics_sha256": "5d911bbac5d9080506fddcda237fc1695970d279123efae36bb1d7dbc84e5d89"
+  },
+  {
+   "role": "treatment",
+   "arm": "dynamic_real",
+   "seed": 3,
+   "run": "59d7fcceb5f39290",
+   "metrics_sha256": "2d18e4c0bda3961008db48a2469dabf456bfe3922c237830b28dccc309f21a34"
+  },
+  {
+   "role": "control",
+   "arm": "dynamic_empty",
+   "seed": 4,
+   "run": "24641a78c2718511",
+   "metrics_sha256": "f765e945a777052e74781b9597c46eff81bacf4027c88107d3c1b2ab3d122a3d"
+  },
+  {
+   "role": "treatment",
+   "arm": "dynamic_real",
+   "seed": 4,
+   "run": "15cd3c9cf457400a",
+   "metrics_sha256": "2a3bedce613298f9937cbeea0183ce570c86c309a3ee1b8d902bc47ba2cc9efd"
+  }
+ ],
+ "inputs_hash": "sha256-lf-normalised",
+ "mean_delta": 0.001202022650256281,
+ "threshold": 0.0010530459093076123,
+ "all_same_sign": true,
+ "all_favour_treatment": true,
+ "n_favour_treatment": 3,
+ "n_seeds": 3,
+ "verdict": "SUPPORTED",
+ "issued_utc": "2026-09-25T14:35:22+00:00",
+ "git": {
+  "commit": "0e3e8ce58e431ad23c70ce19b86120c305dae0ee",
+  "dirty": true
+ }
+}

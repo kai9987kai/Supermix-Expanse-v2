@@ -1,0 +1,97 @@
+{
+ "schema": "supermix-expanse-cns-lab-verdict-v1",
+ "verdict_schema_version": 2,
+ "id": "H-CNS-004",
+ "claim": "An input-dependent (dynamic) CNS gate lowers held-out loss compared with the static per-channel gate, for a real-wiring core with learned Dale-preserving edges on the frozen v3 trunk.",
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.01
+ },
+ "per_seed": [
+  {
+   "seed": 2,
+   "control": 0.42715040238117213,
+   "control_run": "0dfb98798992e356",
+   "treatment": 0.41961048090022085,
+   "treatment_run": "47db549813d8888c",
+   "delta": 0.007539921480951284
+  },
+  {
+   "seed": 3,
+   "control": 0.427036812876839,
+   "control_run": "5775b202467c24b4",
+   "treatment": 0.4204657119644488,
+   "treatment_run": "59d7fcceb5f39290",
+   "delta": 0.00657110091239016
+  },
+  {
+   "seed": 4,
+   "control": 0.427095261416588,
+   "control_run": "cc2f1e9897c8d70e",
+   "treatment": 0.41997283035369637,
+   "treatment_run": "15cd3c9cf457400a",
+   "delta": 0.007122431062891621
+  }
+ ],
+ "problems": [],
+ "hypothesis_sha256": "83310d7344283c36935a2297df75d79abc483090f1aa9e7d732a9b9d0493fd58",
+ "inputs": [
+  {
+   "role": "control",
+   "arm": "static",
+   "seed": 2,
+   "run": "0dfb98798992e356",
+   "metrics_sha256": "f676bf75b71b9ec91deed9b391e68f4df3f4bef683d894592f1891311990f37e"
+  },
+  {
+   "role": "treatment",
+   "arm": "dynamic",
+   "seed": 2,
+   "run": "47db549813d8888c",
+   "metrics_sha256": "46ebc832aef68827b1a22b8ce2941d747eeb9df19df6794826bfbf0068f155b0"
+  },
+  {
+   "role": "control",
+   "arm": "static",
+   "seed": 3,
+   "run": "5775b202467c24b4",
+   "metrics_sha256": "684427a952664494f924526d6069111a42462458d14591ac9dee0ce878a0cec3"
+  },
+  {
+   "role": "treatment",
+   "arm": "dynamic",
+   "seed": 3,
+   "run": "59d7fcceb5f39290",
+   "metrics_sha256": "2d18e4c0bda3961008db48a2469dabf456bfe3922c237830b28dccc309f21a34"
+  },
+  {
+   "role": "control",
+   "arm": "static",
+   "seed": 4,
+   "run": "cc2f1e9897c8d70e",
+   "metrics_sha256": "54e18429fc38aa66490805dc1699504e7a9e621b82d7dc0f2233dbb62166d61b"
+  },
+  {
+   "role": "treatment",
+   "arm": "dynamic",
+   "seed": 4,
+   "run": "15cd3c9cf457400a",
+   "metrics_sha256": "2a3bedce613298f9937cbeea0183ce570c86c309a3ee1b8d902bc47ba2cc9efd"
+  }
+ ],
+ "inputs_hash": "sha256-lf-normalised",
+ "mean_delta": 0.007077817818744355,
+ "threshold": 0.004270941588915331,
+ "all_same_sign": true,
+ "all_favour_treatment": true,
+ "n_favour_treatment": 3,
+ "n_seeds": 3,
+ "verdict": "SUPPORTED",
+ "issued_utc": "2026-09-25T14:35:22+00:00",
+ "git": {
+  "commit": "0e3e8ce58e431ad23c70ce19b86120c305dae0ee",
+  "dirty": true
+ }
+}

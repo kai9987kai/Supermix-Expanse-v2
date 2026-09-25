@@ -1,0 +1,97 @@
+{
+ "schema": "supermix-expanse-cns-lab-verdict-v1",
+ "verdict_schema_version": 2,
+ "id": "H-CNS-006",
+ "claim": "With a dynamic gate, the core on the real wiring lowers held-out loss compared with the same core on a degree-preserving, sign- and role-stratified shuffle of that wiring.",
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.0025
+ },
+ "per_seed": [
+  {
+   "seed": 2,
+   "control": 0.41965760194836305,
+   "control_run": "3400ea74bea9bce6",
+   "treatment": 0.41961048090022085,
+   "treatment_run": "47db549813d8888c",
+   "delta": 4.7121048142195754e-05
+  },
+  {
+   "seed": 3,
+   "control": 0.4206458107811939,
+   "control_run": "b3ea765d87cba2d0",
+   "treatment": 0.4204657119644488,
+   "treatment_run": "59d7fcceb5f39290",
+   "delta": 0.00018009881674507788
+  },
+  {
+   "seed": 4,
+   "control": 0.41978769445341757,
+   "control_run": "e0deb7e7e23d0efc",
+   "treatment": 0.41997283035369637,
+   "treatment_run": "15cd3c9cf457400a",
+   "delta": -0.0001851359002787989
+  }
+ ],
+ "problems": [],
+ "hypothesis_sha256": "f3c9868b0487a7460484b424c0ab47ec20c3ae993ba9566423cbc0cbb99bd285",
+ "inputs": [
+  {
+   "role": "control",
+   "arm": "dynamic_shuffled",
+   "seed": 2,
+   "run": "3400ea74bea9bce6",
+   "metrics_sha256": "575e48f6f74daefbcbec382405b1447865d3b20cc485aacd0a0d4b814e17adfe"
+  },
+  {
+   "role": "treatment",
+   "arm": "dynamic_real",
+   "seed": 2,
+   "run": "47db549813d8888c",
+   "metrics_sha256": "46ebc832aef68827b1a22b8ce2941d747eeb9df19df6794826bfbf0068f155b0"
+  },
+  {
+   "role": "control",
+   "arm": "dynamic_shuffled",
+   "seed": 3,
+   "run": "b3ea765d87cba2d0",
+   "metrics_sha256": "5243d14ff7f0e7f3f450bfb5b768d9552a868efc06bc276cf59e76892bafcad3"
+  },
+  {
+   "role": "treatment",
+   "arm": "dynamic_real",
+   "seed": 3,
+   "run": "59d7fcceb5f39290",
+   "metrics_sha256": "2d18e4c0bda3961008db48a2469dabf456bfe3922c237830b28dccc309f21a34"
+  },
+  {
+   "role": "control",
+   "arm": "dynamic_shuffled",
+   "seed": 4,
+   "run": "e0deb7e7e23d0efc",
+   "metrics_sha256": "5e869ac0c05e846d07103ee6ecd7057673cd85daab6b2ee577a3e02258e6fee3"
+  },
+  {
+   "role": "treatment",
+   "arm": "dynamic_real",
+   "seed": 4,
+   "run": "15cd3c9cf457400a",
+   "metrics_sha256": "2a3bedce613298f9937cbeea0183ce570c86c309a3ee1b8d902bc47ba2cc9efd"
+  }
+ ],
+ "inputs_hash": "sha256-lf-normalised",
+ "mean_delta": 1.4027988202824915e-05,
+ "threshold": 0.0010500759226524789,
+ "all_same_sign": false,
+ "all_favour_treatment": false,
+ "n_favour_treatment": 2,
+ "n_seeds": 3,
+ "verdict": "NOT SUPPORTED",
+ "issued_utc": "2026-09-25T14:35:23+00:00",
+ "git": {
+  "commit": "0e3e8ce58e431ad23c70ce19b86120c305dae0ee",
+  "dirty": true
+ }
+}

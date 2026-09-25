@@ -1,0 +1,48 @@
+[run_all 14:06:08] plan: 12 runs for ['H-CNS-004', 'H-CNS-005', 'H-CNS-006'] (exploratory off)
+[run_all 14:06:08]      H-CNS-004            dynamic seed 2 [47db549813d8888c] todo
+[run_all 14:06:08]      H-CNS-004             static seed 2 [0dfb98798992e356] done
+[run_all 14:06:08]      H-CNS-005      dynamic_empty seed 2 [b45b8a52bb7dfb82] todo
+[run_all 14:06:08]      H-CNS-006   dynamic_shuffled seed 2 [3400ea74bea9bce6] todo
+[run_all 14:06:08]      H-CNS-004            dynamic seed 3 [59d7fcceb5f39290] todo
+[run_all 14:06:08]      H-CNS-004             static seed 3 [5775b202467c24b4] done
+[run_all 14:06:08]      H-CNS-005      dynamic_empty seed 3 [e332d08e120620cd] todo
+[run_all 14:06:08]      H-CNS-006   dynamic_shuffled seed 3 [b3ea765d87cba2d0] todo
+[run_all 14:06:08]      H-CNS-004            dynamic seed 4 [15cd3c9cf457400a] todo
+[run_all 14:06:08]      H-CNS-004             static seed 4 [cc2f1e9897c8d70e] todo
+[run_all 14:06:08]      H-CNS-005      dynamic_empty seed 4 [24641a78c2718511] todo
+[run_all 14:06:08]      H-CNS-006   dynamic_shuffled seed 4 [e0deb7e7e23d0efc] todo
+[run_all 14:06:08] run 1/12: H-CNS-004 dynamic seed 2
+[run_all 14:14:54] run 1/12 exit 0 after 8.8 min
+[run_all 14:14:54] run 3/12: H-CNS-005 dynamic_empty seed 2
+[run_all 14:22:51] run 3/12 exit 0 after 7.9 min
+[run_all 14:22:51] run 4/12: H-CNS-006 dynamic_shuffled seed 2
+[run_all 14:32:05] run 4/12 exit 0 after 9.2 min
+[run_all 14:32:05] run 5/12: H-CNS-004 dynamic seed 3
+[run_all 14:41:04] run 5/12 exit 0 after 9.0 min
+[run_all 14:41:04] run 7/12: H-CNS-005 dynamic_empty seed 3
+[run_all 14:49:01] run 7/12 exit 0 after 7.9 min
+[run_all 14:49:01] run 8/12: H-CNS-006 dynamic_shuffled seed 3
+[run_all 14:58:08] run 8/12 exit 0 after 9.1 min
+[run_all 14:58:08] run 9/12: H-CNS-004 dynamic seed 4
+[run_all 15:07:02] run 9/12 exit 0 after 8.9 min
+[run_all 15:07:02] run 10/12: H-CNS-004 static seed 4
+[run_all 15:17:51] run 10/12 exit 0 after 10.8 min
+[run_all 15:17:51] run 11/12: H-CNS-005 dynamic_empty seed 4
+[run_all 15:25:41] run 11/12 exit 0 after 7.8 min
+[run_all 15:25:41] run 12/12: H-CNS-006 dynamic_shuffled seed 4
+[run_all 15:35:22] run 12/12 exit 0 after 9.7 min
+[run_all 15:35:22] verdict H-CNS-004: SUPPORTED (mean delta 0.00708, threshold 0.00427, 3/3 seeds favour treatment)
+[run_all 15:35:23] verdict H-CNS-005: SUPPORTED (mean delta 0.00120, threshold 0.00105, 3/3 seeds favour treatment)
+[run_all 15:35:23] verdict H-CNS-006: NOT SUPPORTED (mean delta 0.00001, threshold 0.00105, 2/3 seeds favour treatment)
+[analyze] 15cd3c9cf457400a: dynamic seed 4
+[analyze] 24641a78c2718511: dynamic_empty seed 4
+[analyze] 3400ea74bea9bce6: dynamic_shuffled seed 2
+[analyze] 47db549813d8888c: dynamic seed 2
+[analyze] 59d7fcceb5f39290: dynamic seed 3
+[analyze] b3ea765d87cba2d0: dynamic_shuffled seed 3
+[analyze] b45b8a52bb7dfb82: dynamic_empty seed 2
+[analyze] cc2f1e9897c8d70e: static seed 4
+[analyze] e0deb7e7e23d0efc: dynamic_shuffled seed 4
+[analyze] e332d08e120620cd: dynamic_empty seed 3
+[analyze] 37 finished runs -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\cns_lab\analysis\summary.md
+[run_all 15:35:59] finished; failed runs: none
