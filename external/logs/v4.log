@@ -1,0 +1,89 @@
+[v4] data {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 100, 'code': 100, 'bio': 100, 'connectome': 100, 'fresh': 100}}
+[v4] lab_from_full conversion exact on real rows: True (max |dlogit| 0.00e+00)
+[v4] [eval 0] pooled 0.41016 (= v3)
+[v4] [step 1/600] loss 0.7283 |gate| 0.1659 2.51s/step eta 25.0m
+[v4] [step 20/600] loss 0.3131 |gate| 0.1660 2.17s/step eta 20.9m
+[v4] [step 40/600] loss 1.5740 |gate| 0.1661 1.81s/step eta 16.9m
+[v4] [step 60/600] loss 0.6128 |gate| 0.1661 1.87s/step eta 16.8m
+[v4] [step 80/600] loss 0.8103 |gate| 0.1662 1.76s/step eta 15.3m
+[v4] [step 100/600] loss 0.4915 |gate| 0.1662 1.84s/step eta 15.4m
+[v4] [step 120/600] loss 0.3488 |gate| 0.1663 1.83s/step eta 14.6m
+[v4] [step 140/600] loss 0.0754 |gate| 0.1662 1.80s/step eta 13.8m
+[v4] [step 160/600] loss 0.3755 |gate| 0.1663 1.69s/step eta 12.4m
+[v4] [step 180/600] loss 0.8449 |gate| 0.1664 1.77s/step eta 12.4m
+[v4] [step 200/600] loss 1.2949 |gate| 0.1663 1.71s/step eta 11.4m
+[v4] [eval 200] pooled 0.40469
+[v4] [step 220/600] loss 0.4578 |gate| 0.1663 1.84s/step eta 11.7m
+[v4] [step 240/600] loss 0.7346 |gate| 0.1664 1.85s/step eta 11.1m
+[v4] [step 260/600] loss 0.1191 |gate| 0.1664 1.84s/step eta 10.4m
+[v4] [step 280/600] loss 1.7026 |gate| 0.1664 1.69s/step eta 9.0m
+[v4] [step 300/600] loss 0.7513 |gate| 0.1665 1.78s/step eta 8.9m
+[v4] [step 320/600] loss 0.9445 |gate| 0.1665 1.73s/step eta 8.1m
+[v4] [step 340/600] loss 0.9345 |gate| 0.1665 1.64s/step eta 7.1m
+[v4] [step 360/600] loss 0.0071 |gate| 0.1665 1.75s/step eta 7.0m
+[v4] [step 380/600] loss 0.5591 |gate| 0.1665 2.96s/step eta 10.9m
+[v4] [step 400/600] loss 0.4425 |gate| 0.1665 2.64s/step eta 8.8m
+[v4] [eval 400] pooled 0.40165
+[v4] [step 420/600] loss 0.5063 |gate| 0.1666 2.21s/step eta 6.6m
+[v4] [step 440/600] loss 0.0261 |gate| 0.1666 2.06s/step eta 5.5m
+[v4] [step 460/600] loss 0.3617 |gate| 0.1666 2.12s/step eta 4.9m
+[v4] [step 480/600] loss 0.1672 |gate| 0.1666 2.04s/step eta 4.1m
+[v4] [step 500/600] loss 1.0130 |gate| 0.1666 2.00s/step eta 3.3m
+[v4] [step 520/600] loss 0.7949 |gate| 0.1666 2.13s/step eta 2.8m
+[v4] [step 540/600] loss 0.8293 |gate| 0.1666 2.05s/step eta 2.0m
+[v4] [step 560/600] loss 0.5539 |gate| 0.1666 2.07s/step eta 1.4m
+[v4] [step 580/600] loss 0.6644 |gate| 0.1666 2.05s/step eta 0.7m
+[v4] [step 600/600] loss 0.4677 |gate| 0.1666 2.02s/step eta 0.0m
+[v4] [eval 600] pooled 0.39970 (delta vs v3 -0.01045)
+[v4] report -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\build_v4.json
+[v4] saved C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\supermix_expanse_v4.pt
+[v4] data {'train': 33166, 'temporal_train': 0, 'dropped': 0, 'eval': {'replay': 100, 'code': 100, 'bio': 100, 'connectome': 100, 'fresh': 100}}
+[v4] lab_from_full conversion exact on real rows: True (max |dlogit| 0.00e+00)
+[v4] [eval 0] pooled 0.41016 (= v3)
+[v4] [step 1/600] loss 0.7283 |gate| 0.1659 2.32s/step eta 23.2m
+[v4] [step 20/600] loss 0.3131 |gate| 0.1660 2.10s/step eta 20.3m
+[v4] [step 40/600] loss 1.5452 |gate| 0.1663 2.05s/step eta 19.1m
+[v4] [step 60/600] loss 0.6071 |gate| 0.1667 1.98s/step eta 17.8m
+[v4] [step 80/600] loss 0.7938 |gate| 0.1669 2.22s/step eta 19.3m
+[v4] [step 100/600] loss 0.5102 |gate| 0.1672 2.69s/step eta 22.4m
+[v4] [step 120/600] loss 0.3525 |gate| 0.1676 112.01s/step eta 896.0m
+[v4] [step 140/600] loss 0.0687 |gate| 0.1678 0.89s/step eta 6.8m
+[v4] [step 160/600] loss 0.3810 |gate| 0.1681 1.47s/step eta 10.8m
+[v4] [step 180/600] loss 0.8590 |gate| 0.1684 0.91s/step eta 6.4m
+[v4] [step 200/600] loss 1.2999 |gate| 0.1686 1.07s/step eta 7.1m
+[v4] [eval 200] pooled 0.40982
+[v4] [step 220/600] loss 0.4810 |gate| 0.1688 1.35s/step eta 8.5m
+[v4] [step 240/600] loss 0.7366 |gate| 0.1690 1.26s/step eta 7.6m
+[v4] [step 260/600] loss 0.1183 |gate| 0.1692 1.36s/step eta 7.7m
+[v4] [step 280/600] loss 1.7187 |gate| 0.1694 1.32s/step eta 7.0m
+[v4] [step 300/600] loss 0.7723 |gate| 0.1696 1.54s/step eta 7.7m
+[v4] [step 320/600] loss 1.0208 |gate| 0.1698 1.34s/step eta 6.3m
+[v4] [step 340/600] loss 0.9722 |gate| 0.1700 1.56s/step eta 6.7m
+[v4] [step 360/600] loss 0.0079 |gate| 0.1701 1.48s/step eta 5.9m
+[v4] [step 380/600] loss 0.5723 |gate| 0.1703 1.52s/step eta 5.6m
+[v4] [step 400/600] loss 0.4974 |gate| 0.1704 1.45s/step eta 4.8m
+[v4] [eval 400] pooled 0.40949
+[v4] [step 420/600] loss 0.5191 |gate| 0.1704 1.59s/step eta 4.8m
+[v4] [step 440/600] loss 0.0274 |gate| 0.1705 1.61s/step eta 4.3m
+[v4] [step 460/600] loss 0.3670 |gate| 0.1706 1.57s/step eta 3.7m
+[v4] [step 480/600] loss 0.1726 |gate| 0.1706 1.54s/step eta 3.1m
+[v4] [step 500/600] loss 1.0446 |gate| 0.1707 1.53s/step eta 2.5m
+[v4] [step 520/600] loss 0.8362 |gate| 0.1707 1.59s/step eta 2.1m
+[v4] [step 540/600] loss 0.8417 |gate| 0.1707 1.51s/step eta 1.5m
+[v4] [step 560/600] loss 0.5886 |gate| 0.1708 1.56s/step eta 1.0m
+[v4] [step 580/600] loss 0.6858 |gate| 0.1708 1.71s/step eta 0.6m
+[v4] [step 600/600] loss 0.4701 |gate| 0.1708 1.54s/step eta 0.0m
+[v4] [eval 600] pooled 0.40938 (delta vs v3 -0.00077)
+[v4] report -> C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\build_v4_control.json
+[compare] dev rows {"replay": 100, "fly": 62, "code": 33, "bio": 59, "connectome": 100, "fresh": 0}; items {"exact": 25, "code": 25, "bio": 25, "pubmedqa": 25, "connectome": 25}
+[compare] v1 dev nats/char {"replay": 0.1656, "fly": 0.3931, "code": 1.1455, "bio": -1, "connectome": 0.181}
+[eval] generation v1: {"exact": {"accuracy": 0.2, "correct": 5, "checked": 25}, "code": {"pass_rate": 0.0, "passed": 0, "items": 25, "reasons": {"no_def": 25}}, "bio": {"token_f1": 0.2849709463257771, "items": 25, "pubmedqa_accuracy": 0.0, "pubmedqa_items": 25, "pubmedqa_majority_baseline": 0.64, "pubmedqa_answers": {"none": 25}}, "connectome": {"exact_match": 0.16, "token_f1": 0.6738434912661917, "items": 25, "answer_hit": 0.2}, "seconds": 364.2}
+[compare] v1 gen {"exact": {"accuracy": 0.2, "correct": 5, "checked": 25}, "code": {"pass_rate": 0.0, "passed": 0, "items": 25}, "bio": {"token_f1": 0.2849709463257771, "items": 25, "pubmedqa_accuracy": 0.0, "pubmedqa_items": 25, "pubmedqa_majority_baseline": 0.64}, "connectome": {"exact_match": 0.16, "token_f1": 0.6738434912661917, "items": 25, "answer_hit": 0.2}}
+[compare] v3 dev nats/char {"replay": 0.0333, "fly": 0.3136, "code": 0.4733, "bio": -1, "connectome": 0.1241}
+[eval] generation v3: {"exact": {"accuracy": 0.32, "correct": 8, "checked": 25}, "code": {"pass_rate": 0.0, "passed": 0, "items": 25, "reasons": {"no_def": 25}}, "bio": {"token_f1": 0.22027179560091764, "items": 25, "pubmedqa_accuracy": 0.0, "pubmedqa_items": 25, "pubmedqa_majority_baseline": 0.64, "pubmedqa_answers": {"none": 25}}, "connectome": {"exact_match": 0.36, "token_f1": 0.8135585550352284, "items": 25, "answer_hit": 0.28}, "seconds": 396.7}
+[compare] v3 gen {"exact": {"accuracy": 0.32, "correct": 8, "checked": 25}, "code": {"pass_rate": 0.0, "passed": 0, "items": 25}, "bio": {"token_f1": 0.22027179560091764, "items": 25, "pubmedqa_accuracy": 0.0, "pubmedqa_items": 25, "pubmedqa_majority_baseline": 0.64}, "connectome": {"exact_match": 0.36, "token_f1": 0.8135585550352284, "items": 25, "answer_hit": 0.28}}
+[compare] v4 dev nats/char {"replay": 0.0323, "fly": 0.3178, "code": 0.4468, "bio": -1, "connectome": 0.1247}
+[eval] generation v4: {"exact": {"accuracy": 0.32, "correct": 8, "checked": 25}, "code": {"pass_rate": 0.0, "passed": 0, "items": 25, "reasons": {"no_def": 25}}, "bio": {"token_f1": 0.23026229973870777, "items": 25, "pubmedqa_accuracy": 0.0, "pubmedqa_items": 25, "pubmedqa_majority_baseline": 0.64, "pubmedqa_answers": {"none": 25}}, "connectome": {"exact_match": 0.36, "token_f1": 0.8172529431352962, "items": 25, "answer_hit": 0.28}, "seconds": 416.8}
+[compare] v4 gen {"exact": {"accuracy": 0.32, "correct": 8, "checked": 25}, "code": {"pass_rate": 0.0, "passed": 0, "items": 25}, "bio": {"token_f1": 0.23026229973870777, "items": 25, "pubmedqa_accuracy": 0.0, "pubmedqa_items": 25, "pubmedqa_majority_baseline": 0.64}, "connectome": {"exact_match": 0.36, "token_f1": 0.8172529431352962, "items": 25, "answer_hit": 0.28}}
+[compare] wrote C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\compare_v1_v3_v4.json and C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\compare_v1_v3_v4.md in 1462s
+[v4] all done

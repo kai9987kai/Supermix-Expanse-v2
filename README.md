@@ -91,6 +91,49 @@ python expanse/train_consolidation_v2.py --steps 800 --batch 4 --threads 8
 bash expanse/run_v3.sh 480
 ```
 
+## Connectome Laboratory: does the fly's wiring matter?
+
+Following the method of [QuixiAI/FlyGPT](https://huggingface.co/QuixiAI/FlyGPT), the male-CNS core was turned into a
+controlled, **pre-registered** experiment (`expanse/src/connectome_lab.py`, `expanse/cns_lab/`;
+[`CNS_LAB_DESIGN.md`](expanse/CNS_LAB_DESIGN.md), full results in [`CNS_LAB_RESULTS.md`](expanse/CNS_LAB_RESULTS.md)).
+One configurable core covers every arm — real / degree-preserving shuffled / random / no wiring, Dale-signed or
+unsigned edges, measured or reshuffled strengths, fixed or learned per-edge weights (Dale-preserving
+`softplus` multipliers that start at exactly 1), three degree normalisations, per-token or persistent CNS state
+(carried through KV-cached decoding), a static or input-dependent gate — and its default is bitwise the v3 core. The
+anatomy (edge endpoints, synapse counts, measured and learned weights, cell-type names) is saved with the core.
+Hypotheses were hash-locked before any run; verdicts are computed from the recorded metrics and never rewritten.
+
+| pre-registered hypothesis (3 paired seeds, frozen v3 trunk, 250 core-only steps) | verdict |
+|---|---|
+| **H-CNS-001** real wiring beats a degree-preserving shuffle (full 3.83M-edge graph) | **NOT SUPPORTED** — mean Δ +0.00006 nats/char vs threshold 0.00212; 1/3 seeds |
+| **H-CNS-002** a trained core beats no core | **SUPPORTED** — 1.8% lower held-out loss, 3/3 seeds |
+| **H-CNS-003** persistent CNS state beats per-token reset on memory tasks | **NOT SUPPORTED** — persistent slightly worse, not significant |
+| **H-CNS-004** an input-dependent (dynamic) CNS gate beats the static gate (new seeds 2–4) | **SUPPORTED** — 1.7% lower loss, 3/3 seeds |
+| **H-CNS-005** with that gate, real wiring beats an empty graph (no edges) | **SUPPORTED, barely** — +0.0012 vs threshold 0.00105 |
+| **H-CNS-006** with that gate, real wiring beats a degree-preserving shuffle | **NOT SUPPORTED** — +0.00001 |
+
+An independent audit reproduced every verdict exactly and explains the nulls: the trained core acts mostly as a
+learned constant bias (79–83% of its gain survives with every edge zeroed), its per-edge weights could not move (their
+gradients sat below the optimiser's epsilon), and neither memory arm learned the tasks. So the result is "the real
+wiring gives no measurable advantage *under this protocol*" — the same null FlyGPT reported — not proof that it is
+useless. Among 12 one-seed exploratory arms only the **input-dependent gate** stood out, and the pre-registered
+follow-up confirmed it: most of its gain (83%) needs no graph (it acts as an adapter on the frozen trunk), the rest
+needs *a* graph, and the fly's own wiring adds nothing over a shuffle of it.
+
+**Expanse v4** (`expanse/build_v4.py`) is v3 with that gate on its full-graph CNS core: converted bitwise-exactly from
+v3, then only the core trained for 600 steps. Held-out loss drops **2.5%** (0.4102 → 0.3997 nats/char; code −0.029,
+bio −0.014), and a matched static-gate control shows 93% of that comes from the gate. On the v1/v3 comparison rows v4
+is better than v3 on replay, code and bio loss and bio F1, equal on generation accuracy, and slightly worse on fly
+([`CNS_LAB_RESULTS.md`](expanse/CNS_LAB_RESULTS.md#expanse-v4-v3--the-dynamic-cns-gate)).
+
+```bash
+python expanse/cns_lab/prereg.py lock H-CNS-001        # freeze a hypothesis before running it
+bash expanse/cns_lab/run_sweep.sh 8                    # every pre-registered run, verdicts, then exploratory arms
+python expanse/cns_lab/analyze.py                      # summary + per-run drift / pathway / leak reports
+python expanse/cns_lab/bench_connectome.py             # CSR vs torch.sparse vs dense backends
+bash expanse/run_v4.sh 8                               # v4 + its static-gate control + v1/v3/v4 comparison
+```
+
 ## Set it up yourself
 
 ### Requirements
@@ -178,6 +221,7 @@ python supermix-archimedes/archimedes/src/malecns_connectome.py build --data_dir
 
 ```
 expanse/                 Expanse code (src/), CLIs, tests, DESIGN.md, run_pipeline.sh, expanse_chat.py
+expanse/cns_lab/         Connectome Laboratory: locked hypotheses, verdicts, run/analysis/benchmark scripts
 expanse/data/            teacher corpora, connectome graph + fact rows, PubMedQA eval set, data receipts
 expanse/checkpoints/     build/training receipts (+ eval report); the .pt lives on Hugging Face
 external/                source fetch scripts, vendored Omni v7 model code, run logs

@@ -1,0 +1,115 @@
+{
+  "run": "b45b8a52bb7dfb82",
+  "arm": "dynamic_empty",
+  "seed": 2,
+  "hypothesis": "H-CNS-005",
+  "config": {
+    "topology": "empty",
+    "sign_mode": "dale",
+    "strength_init": "bio",
+    "edge_param": "dale_softplus",
+    "norm": "frac",
+    "activation": "relu",
+    "state": "reset",
+    "microsteps": 4,
+    "gate": "dynamic",
+    "subgraph": 3000,
+    "radius": 0.9,
+    "graph_seed": null,
+    "backend": "csr_slab"
+  },
+  "n_types": 3000,
+  "n_edges": 0,
+  "leak": {
+    "ascending_neuron": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 94
+    },
+    "cb_endocrine": {
+      "mean": 0.4989425241947174,
+      "std": 0.0,
+      "n": 1
+    },
+    "cb_intrinsic": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 1523
+    },
+    "cb_motor": {
+      "mean": 0.5014058202505112,
+      "std": 0.0017177611589431763,
+      "n": 2
+    },
+    "cb_sensory": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 60
+    },
+    "descending_neuron": {
+      "mean": 0.4997038722616955,
+      "std": 0.0032256901616356695,
+      "n": 103
+    },
+    "ol_intrinsic": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 233
+    },
+    "ol_sensory": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 9
+    },
+    "sensory_ascending": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 2
+    },
+    "visual_centrifugal": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 74
+    },
+    "visual_projection": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 104
+    },
+    "vnc_efferent": {
+      "mean": 0.5035366415977478,
+      "std": 0.0,
+      "n": 1
+    },
+    "vnc_endocrine": {
+      "mean": 0.49599266052246094,
+      "std": 0.0,
+      "n": 1
+    },
+    "vnc_intrinsic": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 662
+    },
+    "vnc_motor": {
+      "mean": 0.5001018385629397,
+      "std": 0.0029589794390776215,
+      "n": 74
+    },
+    "vnc_sensory": {
+      "mean": 0.5,
+      "std": 0.0,
+      "n": 57
+    }
+  },
+  "gate_by_source": {
+    "replay": 0.45098995715379714,
+    "code": 0.4779326399167379,
+    "bio": 0.49257736454407375,
+    "connectome": 0.4712433983882268,
+    "fresh": 0.4519013240933418,
+    "temporal": 0.5451295230537653
+  },
+  "state_autocorr": 0.7338275820016861,
+  "edges": "none (topology 'empty': no-connectome control)"
+}

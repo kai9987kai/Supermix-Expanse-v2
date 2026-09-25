@@ -1,0 +1,245 @@
+{
+  "tag": "v4_control",
+  "gate": "static",
+  "steps": 600,
+  "batch": 8,
+  "lr_new": 0.001,
+  "lr_core": 0.0001,
+  "seed": 2026,
+  "train_scope": "core (trunk frozen)",
+  "edges": "fixed",
+  "conversion_exact": true,
+  "evals": [
+    {
+      "step": 0,
+      "val_replay_nats_per_char": 0.015427024847851878,
+      "val_replay_nats_per_token": 0.041886847284664686,
+      "val_code_nats_per_char": 0.5494259418734386,
+      "val_code_nats_per_token": 1.9630146203726635,
+      "val_bio_nats_per_char": 1.344147239327835,
+      "val_bio_nats_per_token": 5.794709844045206,
+      "val_connectome_nats_per_char": 0.14033502060789232,
+      "val_connectome_nats_per_token": 0.46857290987782896,
+      "val_fresh_nats_per_char": 0.02302980068457627,
+      "val_fresh_nats_per_token": 0.056176131223876394,
+      "val_nats_per_char_pooled": 0.41015547876178465,
+      "val_nats_per_token_pooled": 1.2834186159481544,
+      "gate_abs_mean": 0.16587835550308228,
+      "gate_by_source": {
+        "replay": 0.16587835550308228,
+        "code": 0.16587835550308228,
+        "bio": 0.16587835550308228,
+        "connectome": 0.16587835550308228,
+        "fresh": 0.16587835550308228
+      },
+      "state_autocorr": 0.6923350856854366,
+      "mean_rate": 0.03619838414283899,
+      "fraction_active": 0.5806994190582863,
+      "write_rms_ratio": 0.07975928176533359,
+      "write_token_var_frac": 0.3564997227010224,
+      "eval_seconds": 84.6
+    },
+    {
+      "step": 200,
+      "val_replay_nats_per_char": 0.015370231447396953,
+      "val_replay_nats_per_token": 0.04173264409156077,
+      "val_code_nats_per_char": 0.5487080184463361,
+      "val_code_nats_per_token": 1.960449590081402,
+      "val_bio_nats_per_char": 1.343218741495667,
+      "val_bio_nats_per_token": 5.790707026964743,
+      "val_connectome_nats_per_char": 0.1405277621776192,
+      "val_connectome_nats_per_token": 0.4692164661176765,
+      "val_fresh_nats_per_char": 0.02296600552930852,
+      "val_fresh_nats_per_token": 0.05602051698027728,
+      "val_nats_per_char_pooled": 0.40981592518841004,
+      "val_nats_per_token_pooled": 1.2823561179449672,
+      "gate_abs_mean": 0.16858680546283722,
+      "gate_by_source": {
+        "replay": 0.16858680546283722,
+        "code": 0.16858680546283722,
+        "bio": 0.16858680546283722,
+        "connectome": 0.16858680546283722,
+        "fresh": 0.16858680546283722
+      },
+      "state_autocorr": 0.691133845769442,
+      "mean_rate": 0.03655617025036078,
+      "fraction_active": 0.581324813916133,
+      "write_rms_ratio": 0.08224566495261236,
+      "write_token_var_frac": 0.3382871057486025,
+      "eval_seconds": 33.6
+    },
+    {
+      "step": 400,
+      "val_replay_nats_per_char": 0.015369603859306715,
+      "val_replay_nats_per_token": 0.0417309400892173,
+      "val_code_nats_per_char": 0.5473324395696159,
+      "val_code_nats_per_token": 1.9555348577386402,
+      "val_bio_nats_per_char": 1.3433512144297988,
+      "val_bio_nats_per_token": 5.791278126761717,
+      "val_connectome_nats_per_char": 0.1404867549854462,
+      "val_connectome_nats_per_token": 0.46907954477559666,
+      "val_fresh_nats_per_char": 0.02286568760990059,
+      "val_fresh_nats_per_token": 0.05577581349013634,
+      "val_nats_per_char_pooled": 0.40949052538555974,
+      "val_nats_per_token_pooled": 1.2813379085433407,
+      "gate_abs_mean": 0.17036551237106323,
+      "gate_by_source": {
+        "replay": 0.17036551237106323,
+        "code": 0.17036551237106323,
+        "bio": 0.17036551237106323,
+        "connectome": 0.17036551237106323,
+        "fresh": 0.17036551237106323
+      },
+      "state_autocorr": 0.6905757986582243,
+      "mean_rate": 0.035989866864222744,
+      "fraction_active": 0.5749456983346205,
+      "write_rms_ratio": 0.07848358226573247,
+      "write_token_var_frac": 0.37842128845301926,
+      "eval_seconds": 49.1
+    },
+    {
+      "step": 600,
+      "val_replay_nats_per_char": 0.015368538113768277,
+      "val_replay_nats_per_token": 0.0417280464191122,
+      "val_code_nats_per_char": 0.5469881322012513,
+      "val_code_nats_per_token": 1.9543047003207052,
+      "val_bio_nats_per_char": 1.3431920066890444,
+      "val_bio_nats_per_token": 5.790591771401527,
+      "val_connectome_nats_per_char": 0.14053388513630946,
+      "val_connectome_nats_per_token": 0.4692369104270023,
+      "val_fresh_nats_per_char": 0.02284303932860108,
+      "val_fresh_nats_per_token": 0.055720567991501664,
+      "val_nats_per_char_pooled": 0.40938201196482105,
+      "val_nats_per_token_pooled": 1.2809983589055383,
+      "gate_abs_mean": 0.1708095371723175,
+      "gate_by_source": {
+        "replay": 0.1708095371723175,
+        "code": 0.1708095371723175,
+        "bio": 0.1708095371723175,
+        "connectome": 0.1708095371723175,
+        "fresh": 0.1708095371723175
+      },
+      "state_autocorr": 0.6907297235268813,
+      "mean_rate": 0.03600933849811554,
+      "fraction_active": 0.5763722960765545,
+      "write_rms_ratio": 0.07800892530783181,
+      "write_token_var_frac": 0.3935366773271125,
+      "eval_seconds": 54.4
+    }
+  ],
+  "core_report": {
+    "leak_by_superclass": {
+      "ascending_neuron": {
+        "mean": 0.5057725536886795,
+        "std": 0.005969472987786075,
+        "n": 563
+      },
+      "cb_efferent": {
+        "mean": 0.4981243312358856,
+        "std": 0.0,
+        "n": 1
+      },
+      "cb_endocrine": {
+        "mean": 0.5117116808891297,
+        "std": 0.007583961820077624,
+        "n": 10
+      },
+      "cb_intrinsic": {
+        "mean": 0.5017423164700127,
+        "std": 0.005778459523704495,
+        "n": 6605
+      },
+      "cb_motor": {
+        "mean": 0.5117150683735692,
+        "std": 0.014780824551831528,
+        "n": 43
+      },
+      "cb_sensory": {
+        "mean": 0.5077918103978604,
+        "std": 0.005444856053164809,
+        "n": 158
+      },
+      "descending_neuron": {
+        "mean": 0.5084993914390604,
+        "std": 0.015403665510527978,
+        "n": 480
+      },
+      "efferent_ascending": {
+        "mean": 0.5114443302154541,
+        "std": 0.02015486843263405,
+        "n": 5
+      },
+      "efferent_descending": {
+        "mean": 0.507199764251709,
+        "std": 0.0,
+        "n": 1
+      },
+      "ol_intrinsic": {
+        "mean": 0.5010481538367887,
+        "std": 0.0023927195038247117,
+        "n": 271
+      },
+      "ol_sensory": {
+        "mean": 0.5054011670025912,
+        "std": 0.003397205597893372,
+        "n": 11
+      },
+      "sensory_ascending": {
+        "mean": 0.5052013339904639,
+        "std": 0.006355411364492958,
+        "n": 26
+      },
+      "sensory_descending": {
+        "mean": 0.5031849890947342,
+        "std": 0.0014573967341805151,
+        "n": 4
+      },
+      "visual_centrifugal": {
+        "mean": 0.5017365780141618,
+        "std": 0.0049448796727471185,
+        "n": 108
+      },
+      "visual_projection": {
+        "mean": 0.5079246807649646,
+        "std": 0.0054434457703760285,
+        "n": 346
+      },
+      "vnc_efferent": {
+        "mean": 0.5161300290513922,
+        "std": 0.01678850240405834,
+        "n": 27
+      },
+      "vnc_endocrine": {
+        "mean": 0.5116789937019348,
+        "std": 0.012240808937297997,
+        "n": 4
+      },
+      "vnc_intrinsic": {
+        "mean": 0.5029886039010818,
+        "std": 0.008639323354488049,
+        "n": 2777
+      },
+      "vnc_motor": {
+        "mean": 0.5130372227917255,
+        "std": 0.013561776981247876,
+        "n": 142
+      },
+      "vnc_sensory": {
+        "mean": 0.5084427085501202,
+        "std": 0.005053542640011982,
+        "n": 169
+      }
+    },
+    "leak_mean": 0.5030834078788757
+  },
+  "s_per_step_mean": 5.243471569000151,
+  "wall_minutes": 56.6,
+  "delta_pooled_vs_v3": -0.0007734667969636067,
+  "delta_by_source_vs_v3": {
+    "val_replay_nats_per_char": -5.848673408360115e-05,
+    "val_code_nats_per_char": -0.002437809672187319,
+    "val_bio_nats_per_char": -0.0009552326387907151,
+    "val_connectome_nats_per_char": 0.00019886452841713642,
+    "val_fresh_nats_per_char": -0.00018676135597519086
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "run": "93d304843b6f8c49",
+  "arm": "fixed_edges",
+  "seed": 1,
+  "hypothesis": "X-CNS-001",
+  "config": {
+    "topology": "real",
+    "sign_mode": "dale",
+    "strength_init": "bio",
+    "edge_param": "fixed",
+    "norm": "frac",
+    "activation": "relu",
+    "state": "reset",
+    "microsteps": 4,
+    "gate": "static",
+    "subgraph": 3000,
+    "radius": 0.9,
+    "graph_seed": null,
+    "backend": "csr_slab"
+  },
+  "n_types": 3000,
+  "n_edges": 629875,
+  "leak": {
+    "ascending_neuron": {
+      "mean": 0.5002746477406076,
+      "std": 0.0038289437771922862,
+      "n": 94
+    },
+    "cb_endocrine": {
+      "mean": 0.5080218315124512,
+      "std": 0.0,
+      "n": 1
+    },
+    "cb_intrinsic": {
+      "mean": 0.5007207900461834,
+      "std": 0.0037398443887114376,
+      "n": 1523
+    },
+    "cb_motor": {
+      "mean": 0.506043016910553,
+      "std": 0.0004881620407104492,
+      "n": 2
+    },
+    "cb_sensory": {
+      "mean": 0.5003073920806249,
+      "std": 0.0017534920829940443,
+      "n": 60
+    },
+    "descending_neuron": {
+      "mean": 0.5012095686301444,
+      "std": 0.004880823514867665,
+      "n": 103
+    },
+    "ol_intrinsic": {
+      "mean": 0.4999792692231518,
+      "std": 0.0006149304733396021,
+      "n": 233
+    },
+    "ol_sensory": {
+      "mean": 0.5000336898697747,
+      "std": 0.00036614931414649877,
+      "n": 9
+    },
+    "sensory_ascending": {
+      "mean": 0.49459700286388397,
+      "std": 0.00034384429454803467,
+      "n": 2
+    },
+    "visual_centrifugal": {
+      "mean": 0.5003008717620695,
+      "std": 0.0017707564940629419,
+      "n": 74
+    },
+    "visual_projection": {
+      "mean": 0.5000045121862338,
+      "std": 0.004147467724747471,
+      "n": 104
+    },
+    "vnc_efferent": {
+      "mean": 0.4983764588832855,
+      "std": 0.0,
+      "n": 1
+    },
+    "vnc_endocrine": {
+      "mean": 0.500831663608551,
+      "std": 0.0,
+      "n": 1
+    },
+    "vnc_intrinsic": {
+      "mean": 0.5003060383829105,
+      "std": 0.004935433024164596,
+      "n": 662
+    },
+    "vnc_motor": {
+      "mean": 0.5016002127447644,
+      "std": 0.004942379238829979,
+      "n": 74
+    },
+    "vnc_sensory": {
+      "mean": 0.5019362401544002,
+      "std": 0.0038040359034128076,
+      "n": 57
+    }
+  },
+  "gate_by_source": {
+    "replay": 0.051053307950496674,
+    "code": 0.051053307950496674,
+    "bio": 0.051053307950496674,
+    "connectome": 0.051053307950496674,
+    "fresh": 0.051053307950496674,
+    "temporal": 0.051053307950496674
+  },
+  "state_autocorr": 0.9330678015947342,
+  "edges": "fixed (no drift)"
+}

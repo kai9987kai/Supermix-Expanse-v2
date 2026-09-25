@@ -1,10 +1,11 @@
 # Expanse Connectome Laboratory — spec
 
-> **Status (2026-09-24):** implemented (`src/connectome_lab.py`, `cns_lab/`, tests `tests/test_connectome_lab.py` 29 passed,
-> `tests/test_cns_lab.py` 7 passed). Hypotheses H-CNS-001..003 and the exploratory X-CNS-001 were **locked** (commit
-> 83c98d0) before any lab run; the sweep (`bash expanse/cns_lab/run_sweep.sh`) runs 15 pre-registered runs, then 13
-> exploratory ones. Results: `checkpoints/cns_lab/analysis/summary.md`, verdicts: `cns_lab/verdicts/`.
-> See "As built" at the end for what changed from the plan below.
+> **Status (2026-09-25):** implemented and run. H-CNS-001..003 + exploratory X-CNS-001 locked (83c98d0) and run
+> (28 runs); the dynamic-gate follow-up H-CNS-004..006 locked (0e3e8ce) and run (10 new runs); all verdicts in
+> `cns_lab/verdicts/`, results and audit findings in [`CNS_LAB_RESULTS.md`](CNS_LAB_RESULTS.md), which also covers
+> Expanse v4 (`build_v4.py`). Tests: `tests/test_connectome_lab.py`, `tests/test_cns_lab.py` (79 pass without the
+> v3 checkpoint; + the 2 checkpoint tests with it). See "As built" and "Tooling changes after the first sweep" at the
+> end for what changed from the plan below.
 
 Purpose: turn Expanse's male-CNS core from "a biological graft" into a **controlled, pre-registered experiment** that can show whether the fly's wiring matters, following the method of QuixiAI/FlyGPT (fixed topology, one learnable value per real edge, degree-preserving scrambled control, pre-registered verdict) at Expanse's scale.
 

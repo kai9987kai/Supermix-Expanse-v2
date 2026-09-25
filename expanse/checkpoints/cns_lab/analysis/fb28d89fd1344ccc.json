@@ -1,0 +1,762 @@
+{
+  "run": "fb28d89fd1344ccc",
+  "arm": "shuffled",
+  "seed": 3,
+  "hypothesis": "H-CNS-001",
+  "config": {
+    "topology": "shuffled",
+    "sign_mode": "dale",
+    "strength_init": "bio",
+    "edge_param": "dale_softplus",
+    "norm": "frac",
+    "activation": "relu",
+    "state": "reset",
+    "microsteps": 4,
+    "gate": "static",
+    "subgraph": null,
+    "radius": 0.9,
+    "graph_seed": null,
+    "backend": "csr_slab"
+  },
+  "n_types": 11751,
+  "n_edges": 3830931,
+  "leak": {
+    "ascending_neuron": {
+      "mean": 0.498842724527813,
+      "std": 0.0025274753536449397,
+      "n": 563
+    },
+    "cb_efferent": {
+      "mean": 0.5024550557136536,
+      "std": 0.0,
+      "n": 1
+    },
+    "cb_endocrine": {
+      "mean": 0.5022213965654373,
+      "std": 0.004747627568132306,
+      "n": 10
+    },
+    "cb_intrinsic": {
+      "mean": 0.5001603932970857,
+      "std": 0.00208361349648232,
+      "n": 6605
+    },
+    "cb_motor": {
+      "mean": 0.5020909981672154,
+      "std": 0.004089750337423144,
+      "n": 43
+    },
+    "cb_sensory": {
+      "mean": 0.4994209516274778,
+      "std": 0.002216689922674371,
+      "n": 158
+    },
+    "descending_neuron": {
+      "mean": 0.500302077208956,
+      "std": 0.0048363989446880236,
+      "n": 480
+    },
+    "efferent_ascending": {
+      "mean": 0.5004722535610199,
+      "std": 0.0034976335629309566,
+      "n": 5
+    },
+    "efferent_descending": {
+      "mean": 0.5042116045951843,
+      "std": 0.0,
+      "n": 1
+    },
+    "ol_intrinsic": {
+      "mean": 0.4997697262526438,
+      "std": 0.0012510139204328923,
+      "n": 271
+    },
+    "ol_sensory": {
+      "mean": 0.5004778477278623,
+      "std": 0.002264452532124701,
+      "n": 11
+    },
+    "sensory_ascending": {
+      "mean": 0.4992263993391624,
+      "std": 0.002418924327260093,
+      "n": 26
+    },
+    "sensory_descending": {
+      "mean": 0.49941764026880264,
+      "std": 0.0033375099576273505,
+      "n": 4
+    },
+    "visual_centrifugal": {
+      "mean": 0.4996932510424543,
+      "std": 0.002610570083592305,
+      "n": 108
+    },
+    "visual_projection": {
+      "mean": 0.49903258155880637,
+      "std": 0.002554160960996823,
+      "n": 346
+    },
+    "vnc_efferent": {
+      "mean": 0.5053049601890423,
+      "std": 0.0035180217397149257,
+      "n": 27
+    },
+    "vnc_endocrine": {
+      "mean": 0.5021571815013885,
+      "std": 0.004782252975541415,
+      "n": 4
+    },
+    "vnc_intrinsic": {
+      "mean": 0.49986514895564155,
+      "std": 0.002326439440921597,
+      "n": 2777
+    },
+    "vnc_motor": {
+      "mean": 0.5038663927518147,
+      "std": 0.003916452876905494,
+      "n": 142
+    },
+    "vnc_sensory": {
+      "mean": 0.4992870649642493,
+      "std": 0.0025713895757077314,
+      "n": 169
+    }
+  },
+  "gate_by_source": {
+    "replay": 0.026887530460953712,
+    "code": 0.026887530460953712,
+    "bio": 0.026887530460953712,
+    "connectome": 0.026887530460953712,
+    "fresh": 0.026887530460953712
+  },
+  "state_autocorr": 0.8609008431434632,
+  "R_quantiles": {
+    "min": 0.991442084312439,
+    "p01": 0.9996950030326843,
+    "p10": 0.9999943375587463,
+    "p25": 0.9999996423721313,
+    "p50": 1.0,
+    "p75": 1.0,
+    "p90": 1.0000032186508179,
+    "p99": 1.0003083944320679,
+    "max": 1.009840965270996
+  },
+  "R_mean": 1.0000000793091812,
+  "frac_R_changed_10pct": 0.0,
+  "sign_flips": 0,
+  "log2R_histogram": [
+    " -0.0124 ..  -0.0107 |                                          12",
+    " -0.0107 ..  -0.0091 |                                          65",
+    " -0.0091 ..  -0.0074 |                                          203",
+    " -0.0074 ..  -0.0058 |                                          544",
+    " -0.0058 ..  -0.0041 |                                          1,487",
+    " -0.0041 ..  -0.0025 |                                          3,897",
+    " -0.0025 ..  -0.0008 |                                          17,166",
+    " -0.0008 ..  +0.0009 | ######################################## 3,784,623",
+    " +0.0009 ..  +0.0025 |                                          16,133",
+    " +0.0025 ..  +0.0042 |                                          4,127",
+    " +0.0042 ..  +0.0058 |                                          1,652",
+    " +0.0058 ..  +0.0075 |                                          664",
+    " +0.0075 ..  +0.0092 |                                          274",
+    " +0.0092 ..  +0.0108 |                                          63",
+    " +0.0108 ..  +0.0125 |                                          17",
+    " +0.0125 ..  +0.0141 |                                          4"
+  ],
+  "R_by_pathway": [
+    {
+      "group": "central->central",
+      "n": 2646900,
+      "mean_log2_R": -5.917624131421843e-07,
+      "R_geo": 0.9999995898216358,
+      "std_log2_R": 2.7732306058122966e-05
+    },
+    {
+      "group": "central->input",
+      "n": 216811,
+      "mean_log2_R": -5.031441248982506e-07,
+      "R_geo": 0.9999996512471292,
+      "std_log2_R": 2.282681665104325e-05
+    },
+    {
+      "group": "central->output",
+      "n": 204315,
+      "mean_log2_R": -2.8332950574466805e-07,
+      "R_geo": 0.9999998036109712,
+      "std_log2_R": 0.0007123151390560013
+    },
+    {
+      "group": "input->central",
+      "n": 355580,
+      "mean_log2_R": 6.040621048816589e-07,
+      "R_geo": 1.0000004187040326,
+      "std_log2_R": 0.00046213194416912
+    },
+    {
+      "group": "input->input",
+      "n": 85086,
+      "mean_log2_R": -1.2238640317387063e-05,
+      "R_geo": 0.9999915168569522,
+      "std_log2_R": 0.00024262030485207723
+    },
+    {
+      "group": "input->output",
+      "n": 46940,
+      "mean_log2_R": 3.843364794309561e-05,
+      "R_geo": 1.000026640529563,
+      "std_log2_R": 0.001728582674907351
+    },
+    {
+      "group": "output->central",
+      "n": 193523,
+      "mean_log2_R": -3.911482860849792e-07,
+      "R_geo": 0.9999997288767051,
+      "std_log2_R": 2.121142094715486e-05
+    },
+    {
+      "group": "output->input",
+      "n": 32977,
+      "mean_log2_R": -8.675874073406493e-08,
+      "R_geo": 0.9999999398634253,
+      "std_log2_R": 2.165002103509282e-05
+    },
+    {
+      "group": "output->output",
+      "n": 48799,
+      "mean_log2_R": 2.3596167589781878e-05,
+      "R_geo": 1.0000163557507906,
+      "std_log2_R": 0.0006780812752705189
+    }
+  ],
+  "R_by_superclass_pair_most_changed": [
+    {
+      "group": "ascending_neuron->vnc_motor",
+      "n": 3230,
+      "mean_log2_R": 0.0005479552394170268,
+      "R_geo": 1.0003798857676043,
+      "std_log2_R": 0.0017916833131599343
+    },
+    {
+      "group": "visual_projection->vnc_motor",
+      "n": 1559,
+      "mean_log2_R": 0.0005143550498566068,
+      "R_geo": 1.0003565873147615,
+      "std_log2_R": 0.0018515958543212868
+    },
+    {
+      "group": "descending_neuron->vnc_efferent",
+      "n": 828,
+      "mean_log2_R": 0.00045658862266518294,
+      "R_geo": 1.0003165332025412,
+      "std_log2_R": 0.0015482556208089358
+    },
+    {
+      "group": "cb_sensory->descending_neuron",
+      "n": 1735,
+      "mean_log2_R": -0.00025112108400643005,
+      "R_geo": 0.9998259512768785,
+      "std_log2_R": 0.0016404957591251886
+    },
+    {
+      "group": "vnc_sensory->descending_neuron",
+      "n": 3363,
+      "mean_log2_R": -0.00018349617883676843,
+      "R_geo": 0.999872818229283,
+      "std_log2_R": 0.0017437028073885707
+    },
+    {
+      "group": "cb_intrinsic->vnc_efferent",
+      "n": 1840,
+      "mean_log2_R": 0.00013824535157084622,
+      "R_geo": 1.000095828966969,
+      "std_log2_R": 0.0013383463815120288
+    },
+    {
+      "group": "ascending_neuron->cb_motor",
+      "n": 1070,
+      "mean_log2_R": 0.0001284342603660525,
+      "R_geo": 1.0000890278082002,
+      "std_log2_R": 0.0018464254746961928
+    },
+    {
+      "group": "visual_projection->descending_neuron",
+      "n": 10453,
+      "mean_log2_R": -9.10222315146585e-05,
+      "R_geo": 0.9999369101871033,
+      "std_log2_R": 0.0016890917760266806
+    },
+    {
+      "group": "vnc_intrinsic->cb_motor",
+      "n": 1462,
+      "mean_log2_R": -7.435635241236823e-05,
+      "R_geo": 0.9999484614321262,
+      "std_log2_R": 0.0010424247628119405
+    },
+    {
+      "group": "ol_intrinsic->vnc_motor",
+      "n": 843,
+      "mean_log2_R": -6.790880240871918e-05,
+      "R_geo": 0.9999529303128877,
+      "std_log2_R": 0.0006485395266581247
+    },
+    {
+      "group": "descending_neuron->vnc_motor",
+      "n": 6490,
+      "mean_log2_R": 6.652306853808287e-05,
+      "R_geo": 1.0000461113404946,
+      "std_log2_R": 0.0007282791451808714
+    },
+    {
+      "group": "descending_neuron->cb_motor",
+      "n": 2784,
+      "mean_log2_R": 6.045878497934643e-05,
+      "R_geo": 1.0000419077144522,
+      "std_log2_R": 0.0009802967824647125
+    },
+    {
+      "group": "cb_intrinsic->vnc_motor",
+      "n": 26159,
+      "mean_log2_R": 4.417087128142256e-05,
+      "R_geo": 1.0000306173835942,
+      "std_log2_R": 0.0008940411240445269
+    },
+    {
+      "group": "cb_intrinsic->cb_motor",
+      "n": 3775,
+      "mean_log2_R": 2.70331728807556e-05,
+      "R_geo": 1.0000187381431207,
+      "std_log2_R": 0.0009913563829725255
+    },
+    {
+      "group": "visual_projection->visual_projection",
+      "n": 7020,
+      "mean_log2_R": -2.30864805948524e-05,
+      "R_geo": 0.9999839977991032,
+      "std_log2_R": 0.00025354296981414126
+    }
+  ],
+  "most_strengthened": [
+    {
+      "pre": "DNp47",
+      "post": "EN00B019",
+      "pre_superclass": "descending_neuron",
+      "post_superclass": "vnc_efferent",
+      "synapses": 952,
+      "bio": 0.5208510756492615,
+      "learned": 0.5259767770767212,
+      "R": 1.009840965270996
+    },
+    {
+      "pre": "AN23B001",
+      "post": "DNa15",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "descending_neuron",
+      "synapses": 223,
+      "bio": 0.00865496601909399,
+      "learned": 0.008732771500945091,
+      "R": 1.008989691734314
+    },
+    {
+      "pre": "AN19B019",
+      "post": "CB1109",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "cb_intrinsic",
+      "synapses": 6274,
+      "bio": 0.4873640537261963,
+      "learned": 0.49170616269111633,
+      "R": 1.0089093446731567
+    },
+    {
+      "pre": "IN23B093",
+      "post": "DNge051",
+      "pre_superclass": "vnc_intrinsic",
+      "post_superclass": "descending_neuron",
+      "synapses": 450,
+      "bio": 0.05175718665122986,
+      "learned": 0.05221144109964371,
+      "R": 1.0087766647338867
+    },
+    {
+      "pre": "AN07B021",
+      "post": "PVLP079",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "cb_intrinsic",
+      "synapses": 6467,
+      "bio": 0.572638750076294,
+      "learned": 0.5774536728858948,
+      "R": 1.0084083080291748
+    },
+    {
+      "pre": "AN09B009",
+      "post": "MN4a",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "cb_motor",
+      "synapses": 111,
+      "bio": 0.020661840215325356,
+      "learned": 0.020833007991313934,
+      "R": 1.0082842111587524
+    },
+    {
+      "pre": "AN05B102b",
+      "post": "DNg02_a",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "descending_neuron",
+      "synapses": 97,
+      "bio": 0.00864784512668848,
+      "learned": 0.008719315752387047,
+      "R": 1.0082645416259766
+    },
+    {
+      "pre": "GNG141",
+      "post": "DNg02_g",
+      "pre_superclass": "cb_intrinsic",
+      "post_superclass": "descending_neuron",
+      "synapses": 89,
+      "bio": 0.013303438201546669,
+      "learned": 0.01341076660901308,
+      "R": 1.0080677270889282
+    },
+    {
+      "pre": "IN07B092_a",
+      "post": "MNad49",
+      "pre_superclass": "vnc_intrinsic",
+      "post_superclass": "vnc_motor",
+      "synapses": 644,
+      "bio": 0.1986292004585266,
+      "learned": 0.20022238790988922,
+      "R": 1.0080208778381348
+    },
+    {
+      "pre": "LLPC4",
+      "post": "GNG141",
+      "pre_superclass": "visual_projection",
+      "post_superclass": "cb_intrinsic",
+      "synapses": 2184,
+      "bio": 0.3549295663833618,
+      "learned": 0.3577495515346527,
+      "R": 1.00794517993927
+    },
+    {
+      "pre": "AN23B001",
+      "post": "IN07B092_a",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "vnc_intrinsic",
+      "synapses": 170,
+      "bio": 0.060642093420028687,
+      "learned": 0.06112324073910713,
+      "R": 1.0079342126846313
+    },
+    {
+      "pre": "DNg68",
+      "post": "EN00B011",
+      "pre_superclass": "descending_neuron",
+      "post_superclass": "vnc_efferent",
+      "synapses": 332,
+      "bio": 0.06725185364484787,
+      "learned": 0.0677846148610115,
+      "R": 1.0079219341278076
+    }
+  ],
+  "most_weakened": [
+    {
+      "pre": "ANXXX037",
+      "post": "DNge091",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "descending_neuron",
+      "synapses": 546,
+      "bio": 0.04558441415429115,
+      "learned": 0.04519430547952652,
+      "R": 0.991442084312439
+    },
+    {
+      "pre": "AN19B022",
+      "post": "PLP157",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "cb_intrinsic",
+      "synapses": 2418,
+      "bio": 0.3703539967536926,
+      "learned": 0.36723843216896057,
+      "R": 0.9915875792503357
+    },
+    {
+      "pre": "AVLP004_a",
+      "post": "MNad09",
+      "pre_superclass": "cb_intrinsic",
+      "post_superclass": "vnc_motor",
+      "synapses": 4551,
+      "bio": -0.239582359790802,
+      "learned": -0.23761947453022003,
+      "R": 0.9918070435523987
+    },
+    {
+      "pre": "SNxx19",
+      "post": "AVLP004_a",
+      "pre_superclass": "vnc_sensory",
+      "post_superclass": "cb_intrinsic",
+      "synapses": 269,
+      "bio": 0.04582623392343521,
+      "learned": 0.04545488581061363,
+      "R": 0.9918966293334961
+    },
+    {
+      "pre": "LC29",
+      "post": "DNge047",
+      "pre_superclass": "visual_projection",
+      "post_superclass": "descending_neuron",
+      "synapses": 67,
+      "bio": 0.0072905332781374454,
+      "learned": 0.007232449017465115,
+      "R": 0.9920329451560974
+    },
+    {
+      "pre": "AN09A005",
+      "post": "DNxl114",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "descending_neuron",
+      "synapses": 677,
+      "bio": 0.10732781141996384,
+      "learned": 0.10648325830698013,
+      "R": 0.9921311140060425
+    },
+    {
+      "pre": "AN17A073",
+      "post": "DNge047",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "descending_neuron",
+      "synapses": 60,
+      "bio": 0.006528835743665695,
+      "learned": 0.006477951072156429,
+      "R": 0.9922061562538147
+    },
+    {
+      "pre": "PVLP096",
+      "post": "DNa15",
+      "pre_superclass": "cb_intrinsic",
+      "post_superclass": "descending_neuron",
+      "synapses": 744,
+      "bio": -0.02887576073408127,
+      "learned": -0.02865510992705822,
+      "R": 0.9923586249351501
+    },
+    {
+      "pre": "SNpp51",
+      "post": "DNg68",
+      "pre_superclass": "vnc_sensory",
+      "post_superclass": "descending_neuron",
+      "synapses": 448,
+      "bio": 0.0562657006084919,
+      "learned": 0.05583643913269043,
+      "R": 0.9923708438873291
+    },
+    {
+      "pre": "AN07B018",
+      "post": "DNge121",
+      "pre_superclass": "ascending_neuron",
+      "post_superclass": "descending_neuron",
+      "synapses": 340,
+      "bio": 0.07948052138090134,
+      "learned": 0.07887762784957886,
+      "R": 0.9924145936965942
+    },
+    {
+      "pre": "VS",
+      "post": "DNge047",
+      "pre_superclass": "visual_projection",
+      "post_superclass": "descending_neuron",
+      "synapses": 80,
+      "bio": 0.008705114014446735,
+      "learned": 0.008640028536319733,
+      "R": 0.9925233125686646
+    },
+    {
+      "pre": "CB2396",
+      "post": "ENXXX128",
+      "pre_superclass": "cb_intrinsic",
+      "post_superclass": "vnc_efferent",
+      "synapses": 325,
+      "bio": -0.04606299102306366,
+      "learned": -0.045719992369413376,
+      "R": 0.9925537109375
+    }
+  ],
+  "hubs_in_strength": {
+    "gained": [
+      {
+        "type": "PVLP079",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": 0.004995391733245924
+      },
+      {
+        "type": "EN00B019",
+        "superclass": "vnc_efferent",
+        "delta_abs_strength": 0.004975484742317349
+      },
+      {
+        "type": "ITP",
+        "superclass": "cb_endocrine",
+        "delta_abs_strength": 0.004632582888007164
+      },
+      {
+        "type": "PVLP013",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": 0.0045446193016687175
+      },
+      {
+        "type": "CB1109",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": 0.004361673796665855
+      },
+      {
+        "type": "CB0785",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": 0.0038803531497251242
+      },
+      {
+        "type": "DA1_lPN",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": 0.003449828463999438
+      },
+      {
+        "type": "GNG141",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": 0.0033578534348635003
+      }
+    ],
+    "lost": [
+      {
+        "type": "PVLP037",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": -0.005607096947642276
+      },
+      {
+        "type": "PVLP097",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": -0.003834453000308713
+      },
+      {
+        "type": "CB0346",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": -0.0038252316444413736
+      },
+      {
+        "type": "PLP249",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": -0.003722459321579663
+      },
+      {
+        "type": "PVLP008_a3",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": -0.0036796024796785787
+      },
+      {
+        "type": "DNge153",
+        "superclass": "descending_neuron",
+        "delta_abs_strength": -0.0034111577551811934
+      },
+      {
+        "type": "PLP157",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": -0.003395680309040472
+      },
+      {
+        "type": "PVLP025",
+        "superclass": "cb_intrinsic",
+        "delta_abs_strength": -0.0033688881994748954
+      }
+    ]
+  },
+  "hubs_out_strength": {
+    "gained": [
+      {
+        "type": "ANXXX037",
+        "superclass": "ascending_neuron",
+        "delta_abs_strength": 0.007877096034462738
+      },
+      {
+        "type": "DNp47",
+        "superclass": "descending_neuron",
+        "delta_abs_strength": 0.005352564586246444
+      },
+      {
+        "type": "AN19B024",
+        "superclass": "ascending_neuron",
+        "delta_abs_strength": 0.004384470286822761
+      },
+      {
+        "type": "AN05B102a",
+        "superclass": "ascending_neuron",
+        "delta_abs_strength": 0.004302447320696956
+      },
+      {
+        "type": "LoVP42",
+        "superclass": "visual_projection",
+        "delta_abs_strength": 0.0037794167533320433
+      },
+      {
+        "type": "LT87",
+        "superclass": "visual_projection",
+        "delta_abs_strength": 0.0036152335774204403
+      },
+      {
+        "type": "AN07B070",
+        "superclass": "ascending_neuron",
+        "delta_abs_strength": 0.0034409361933285254
+      },
+      {
+        "type": "AN05B098",
+        "superclass": "ascending_neuron",
+        "delta_abs_strength": 0.003282174295236473
+      }
+    ],
+    "lost": [
+      {
+        "type": "AN09B009",
+        "superclass": "ascending_neuron",
+        "delta_abs_strength": -0.007380233255389612
+      },
+      {
+        "type": "SNpp52",
+        "superclass": "vnc_sensory",
+        "delta_abs_strength": -0.0047083848221518565
+      },
+      {
+        "type": "AN17A015",
+        "superclass": "ascending_neuron",
+        "delta_abs_strength": -0.004168275008169076
+      },
+      {
+        "type": "AN09B007",
+        "superclass": "ascending_neuron",
+        "delta_abs_strength": -0.0038948259252720163
+      },
+      {
+        "type": "AN03A008",
+        "superclass": "ascending_neuron",
+        "delta_abs_strength": -0.003890216010859149
+      },
+      {
+        "type": "LPLC4",
+        "superclass": "visual_projection",
+        "delta_abs_strength": -0.003561866829841165
+      },
+      {
+        "type": "SNta29",
+        "superclass": "vnc_sensory",
+        "delta_abs_strength": -0.003313679988423246
+      },
+      {
+        "type": "LoVP39",
+        "superclass": "visual_projection",
+        "delta_abs_strength": -0.0032707063528505387
+      }
+    ]
+  },
+  "modularity_by_superclass": {
+    "bio": 0.04331643387502265,
+    "learned": 0.04330676870272426
+  },
+  "modularity_by_role": {
+    "bio": 0.041949943793586665,
+    "learned": 0.04194204210855003
+  },
+  "png": "fb28d89fd1344ccc_drift.png"
+}
