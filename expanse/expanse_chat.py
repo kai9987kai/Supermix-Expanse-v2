@@ -32,18 +32,22 @@ CTX = 128
 
 @contextmanager
 def gate_closed(module):
-    """Temporarily close a graft's residual gate (exact 'off')."""
+    """Temporarily close a graft's residual gate (exact 'off'). A lab core with gate="dynamic" (v4) writes through
+    ``gate + tanh(gate_proj(norm(h)))``, so its gate_proj is zeroed too."""
     if module is None:
         yield
         return
-    old = module.gate.detach().clone()
+    params = [module.gate] + ([module.gate_proj.weight] if hasattr(module, "gate_proj") else [])
+    old = [p.detach().clone() for p in params]
     with torch.no_grad():
-        module.gate.zero_()
+        for p in params:
+            p.zero_()
     try:
         yield
     finally:
         with torch.no_grad():
-            module.gate.copy_(old)
+            for p, o in zip(params, old):
+                p.copy_(o)
 
 
 @contextmanager
@@ -124,12 +128,19 @@ def build_app(E, tokE, A, tokA, receipt):
 
     tr = (receipt or {}).get("training", {})
     fin = tr.get("final", {})
+    n_params = sum(p.numel() for p in E.parameters()) / 1e6
+    v4 = (receipt or {}).get("v4")
     desc = (
         "Supermix Expanse: Archimedes + Omni v7 + Qwen2.5-Coder-7B + BioMedLM + the full male-CNS connectome "
-        f"(132.6M params, {tr.get('steps', '?')} training steps). Single-turn: each message is answered on its own, "
+        f"({n_params:.1f}M params, {tr.get('steps', '?')} training steps"
+        + (f" + {v4.get('steps', '?')} core-only steps with the v4 input-dependent CNS gate" if v4 else "")
+        + "). Single-turn: each message is answered on its own, "
         "short answers in the Supermix house style (128-token context). "
-        f"Final dev loss: replay {fin.get('dev_replay', float('nan')):.3f}, code {fin.get('dev_code', float('nan')):.3f}, "
+        + (f"Base training's final dev loss (nats/token): " if v4 else "Final dev loss: ")
+        + f"replay {fin.get('dev_replay', float('nan')):.3f}, code {fin.get('dev_code', float('nan')):.3f}, "
         f"bio {fin.get('dev_bio', float('nan')):.3f}, connectome {fin.get('dev_connectome', float('nan')):.3f}."
+        + (f" v4 held-out loss {v4['evals_pooled'][0]:.4f} -> {v4['evals_pooled'][-1]:.4f} nats/char."
+           if v4 and v4.get("evals_pooled") else "")
     )
     examples = [
         ["Write a Python function that returns the sum of a list."],

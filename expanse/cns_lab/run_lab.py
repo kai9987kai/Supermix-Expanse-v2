@@ -309,9 +309,12 @@ def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_mat
         rec["temporal_answer_nats_per_char_by_task"] = {k: t[2] / max(1, t[3]) for k, t in sorted(by_task.items())}
     core = model.cns_full
     if core is not None:
-        rec["gate_abs_mean"] = float(core.gate.detach().abs().mean())
+        rec["gate_abs_mean"] = float(core.gate.detach().abs().mean())  # the static gate vector only
         # only informative for gate="dynamic": a static gate gives every source the same mean |g|
         rec["gate_by_source"] = {s: float(np.mean(v)) for s, v in gate_by_src.items()}
+        # the gate actually applied, averaged over every eval row (dynamic: gate + tanh(W_g h); static: = gate_abs_mean)
+        allg = [x for v in gate_by_src.values() for x in v]
+        rec["gate_effective_abs_mean"] = float(np.mean(allg)) if allg else None
         rec["state_autocorr"] = float(np.mean(autocorr)) if autocorr else None
         rec["mean_rate"] = float(np.mean(rates)) if rates else None
         rec["fraction_active"] = float(np.mean(active)) if active else None
@@ -518,6 +521,8 @@ def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: 
     metrics: Dict[str, Any] = {"schema": METRICS_SCHEMA, "hypothesis": h["id"], "arm": arm, "seed": int(seed),
                                "run_key": rdir.name, "config": cfg.to_dict(), "protocol": P, "status": "running",
                                "unlocked": prov["unlocked"], "lock": prov["lock"], "evals": [], "train_log": []}
+    metrics["code_version"] = {"git": prereg.git_commit(), "torch": torch.__version__, "threads": int(threads),
+                               "python": sys.version.split()[0]}
     write_json(mpath, metrics)
 
     base = ROOT / P.get("base_checkpoint", "checkpoints/supermix_expanse_v3.pt")

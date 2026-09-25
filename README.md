@@ -122,9 +122,12 @@ needs *a* graph, and the fly's own wiring adds nothing over a shuffle of it.
 
 **Expanse v4** (`expanse/build_v4.py`) is v3 with that gate on its full-graph CNS core: converted bitwise-exactly from
 v3, then only the core trained for 600 steps. Held-out loss drops **2.5%** (0.4102 → 0.3997 nats/char; code −0.029,
-bio −0.014), and a matched static-gate control shows 93% of that comes from the gate. On the v1/v3 comparison rows v4
+bio −0.014; better on 345 of 500 rows), and a matched static-gate control gains only 0.0008 — the gain is the
+input-dependent gate, not the extra training. On the v1/v3 comparison rows v4
 is better than v3 on replay, code and bio loss and bio F1, equal on generation accuracy, and slightly worse on fly
-([`CNS_LAB_RESULTS.md`](expanse/CNS_LAB_RESULTS.md#expanse-v4-v3--the-dynamic-cns-gate)).
+(and, at noise level, connectome) loss — the gains are in loss, not yet in generated answers
+([`CNS_LAB_RESULTS.md`](expanse/CNS_LAB_RESULTS.md#expanse-v4-v3--the-dynamic-cns-gate)). Chat with it locally:
+`python expanse/expanse_chat.py --checkpoint expanse/checkpoints/supermix_expanse_v4.pt` (v4 is not on Hugging Face yet).
 
 ```bash
 python expanse/cns_lab/prereg.py lock H-CNS-001        # freeze a hypothesis before running it

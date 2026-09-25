@@ -169,8 +169,13 @@ def main() -> int:
     log(f"report -> {rpath}")
     if not args.no_save:
         receipt = dict(payload.get("expanse") or {})
-        receipt.update({"stage": "v4-dynamic-cns-gate", "v4": {k: v for k, v in report.items() if k != "evals"},
-                        "v4_evals": evals, "base_checkpoint": str(Path(args.inp).name)})
+        v4_info = {k: v for k, v in report.items() if k != "evals"}
+        v4_info["evals_pooled"] = [e["val_nats_per_char_pooled"] for e in evals]
+        v4_info["note"] = ("receipt['training'] is the BASE model's (v3) training; v4 adds core-only steps on top. "
+                           "The static-gate control trained its gate at lr_core while v4's new gate parameters used "
+                           "lr_new, so 'v4 - control' is an upper bound on the input-dependent share of the gain.")
+        receipt.update({"stage": "v4-dynamic-cns-gate", "v4": v4_info, "v4_evals": evals,
+                        "base_checkpoint": str(Path(args.inp).name), "base_sha256": ec.sha256_file(args.inp)})
         extra = dict(payload.get("extra") or {})
         extra.update({"note": "v4: v3 + input-dependent gate on the male-CNS core (core-only training)",
                       "steps": args.steps})

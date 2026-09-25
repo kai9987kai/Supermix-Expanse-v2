@@ -259,6 +259,8 @@ def check_run(h: Dict[str, Any], arm: str, seed: int, rdir: Path, m: Dict[str, A
             probs.append(f"recorded for {owner}, whose hypothesis file is missing or unreadable")
         elif other_cfg != want_cfg:
             probs.append(f"recorded as {owner}/{m.get('arm')}, which is not this arm's config")
+        elif other.get("exploratory") and not h.get("exploratory"):
+            probs.append(f"recorded for exploratory {owner}: an exploratory run cannot feed a confirmatory verdict")
         want_sha = _lock_sha(owner, hyp_dir)
         if want_sha is None:  # a shared run must trace back to a readable lock
             probs.append(f"recorded for {owner}, which has no readable lock")

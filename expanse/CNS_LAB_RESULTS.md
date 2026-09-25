@@ -12,7 +12,7 @@ wiring is useless. In the exploratory arms one change stood out — an **input-d
 follow-up confirmed it (H-CNS-004 SUPPORTED, 3/3 new seeds). It works mostly as an adapter: 83% of its gain needs
 no graph, the rest needs *a* graph, and the fly's own wiring adds nothing over a degree-preserving shuffle
 (H-CNS-005 barely SUPPORTED, H-CNS-006 NOT SUPPORTED). Built into the full model it gives **Expanse v4**: 2.5% lower
-held-out loss than v3, 93% of it attributable to the gate.
+held-out loss than v3, most of it (~70–93%) attributable to the input-dependent gate.
 
 ## Pre-registered verdicts
 
@@ -196,8 +196,10 @@ starts at 0 and every other initial value matches the real arm).
   frozen trunk's state (6–20 directions hold 52–83% of its energy): a 320→320 tanh adapter writing at ~15% of the
   hidden size with ~45% token-dependent power.
 * Minor: `gate_abs_mean` records only the static gate vector, so it understates the dynamic arms' effective gate
-  (~10× larger; see `gate_by_source`); H-CNS-004's static seeds 2–3 are reused H-CNS-003 runs recorded before the
-  per-row / write diagnostics existed (verdict unaffected).
+  (~10× larger; see `gate_by_source`; runs now also record `gate_effective_abs_mean`). H-CNS-004's static seeds 2–3
+  are reused H-CNS-003 runs — recorded before the per-row / write diagnostics existed, and **their values were known
+  before H-CNS-004 was written** (its dynamic arms and seed 4 were not); the verdict is unaffected, but this is
+  disclosed. The verdict tool now also refuses runs recorded for an exploratory file as confirmatory inputs.
 
 ## Expanse v4: v3 + the dynamic CNS gate
 
@@ -214,7 +216,15 @@ core the same way with the static gate.
 | bio | | −0.0010 | **−0.0141** |
 | fresh / replay / connectome | | ≈ 0 | −0.0023 / −0.0018 / −0.0002 |
 
-So **~93% of v4's gain is the gate**, not the extra training. On the standard comparison (v1's dev rows,
+So the gain is **not the extra training: at most 0.0008 of the 0.0105 comes from it**. How much needs the gate
+to be *input-dependent* is between ~70% and 93%: the control's static gate trained at v3's core learning rate (1e-4)
+while v4's new gate parameters trained at 1e-3, and freezing v4's gate at its average value keeps ~30% of the gain
+(one seed per arm). The gain is robust across rows: v4 is better on 345 of 500 rows (bootstrap 95% CI of the
+pooled change −0.0123 to −0.0087). Two caveats on the absolute numbers: the eval rows are v3's dev *split* (never
+trained on, but for replay and bio not literally the rows v3 recorded as its dev set), and **95 of the 500 have
+their exact reply in the training data under a reworded prompt** (the split key is the exact prompt + reply) — the
+gain holds without them (−0.0100, CI −0.0119 to −0.0081) but the absolute levels are optimistic. On the standard
+comparison (v1's dev rows,
 `checkpoints/compare_v1_v3_v4.md`):
 
 | | v1 | v3 | **v4** |
@@ -230,9 +240,15 @@ So **~93% of v4's gain is the gate**, not the extra training. On the standard co
 | code pass rate, PubMedQA | 0% | 0% | 0% |
 
 v4 is better than v3 on code, replay and bio loss and bio F1, level on generation accuracy, and slightly worse on
-fly rows (not in v4's core training). v1 still has the best bio numbers (its `<unk>`-heavy word vocabulary makes
+fly rows (not in v4's core training) and, at noise level, on connectome loss (+0.0005). The improvements are in
+**loss**; on 25 generation items per metric nothing changes except bio F1 (+0.01), code has only 33 comparison rows,
+and free-form code and biomedical answers remain wrong for both models. v1 still has the best bio numbers (its `<unk>`-heavy word vocabulary makes
 rare terms cheap; see the v3 notes). Checkpoint: `checkpoints/supermix_expanse_v4.pt` (loads with
-`expanse_core.load_expanse`; the lab core's config and anatomy are stored in it).
+`expanse_core.load_expanse`; the lab core's config and anatomy are stored in it; its receipt records the v3 base's
+sha256, and `receipt['training']` describes the v3 base training). The audit loaded it: the trunk is bitwise v3's,
+KV-cached decoding matches the full forward (1.1e-5), and `expanse_chat.py --checkpoint
+expanse/checkpoints/supermix_expanse_v4.pt` serves it — its "CNS core" off switch now closes the dynamic gate too
+(it zeroed only the static gate before), and `eval_expanse.py`'s CNS ablations handle lab cores.
 
 ## Files
 

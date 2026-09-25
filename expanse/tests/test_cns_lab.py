@@ -345,6 +345,50 @@ def test_verdict_accepts_runs_shared_with_another_hypothesis(tmp_path):
     assert prereg.evaluate_rule(bl, runs, hd)["verdict"] == "SUPPORTED"
 
 
+def test_exploratory_runs_cannot_feed_a_confirmatory_verdict(tmp_path):
+    """A run recorded for an exploratory file (same protocol/config/seed, so the same run key) is refused."""
+    hd, runs = tmp_path / "hyp", tmp_path / "runs"
+    x = {"id": "X-T-001", "exploratory": True, "claim": "explore", "protocol": PROTOCOL,
+         "arms": {"real": {"topology": "real"}}, "seeds": [1]}
+    b = hyp("H-B")
+    b["arms"] = {"wired": {"topology": "real"}, "none": {"topology": "none"}}
+    b.update(control_arm="none", treatment_arm="wired")
+    for h in (x, b):
+        write_hyp(hd, h)
+        prereg.lock(h["id"], hd)
+    xl, bl = prereg.load_locked("X-T-001", hd), prereg.load_locked("H-B", hd)
+    for s in (1, 2, 3):
+        fake_run(runs, bl, "wired", s, 0.95)
+        fake_run(runs, bl, "none", s, 1.0, steps=0, untrainable=True)
+    assert prereg.evaluate_rule(bl, runs, hd)["verdict"] == "SUPPORTED"
+    assert prereg.run_dir(xl, "real", 1, runs) == prereg.run_dir(bl, "wired", 1, runs)
+    # the seed-1 treatment was trained for the exploratory file (recorded under its name, arm and lock)
+    fake_run(runs, bl, "wired", 1, 0.95, hypothesis="X-T-001", arm="real", lock=xl["_lock"])
+    res = prereg.evaluate_rule(bl, runs, hd)
+    assert res["verdict"] == "INCONCLUSIVE" and any("exploratory" in p for p in res["problems"])
+
+
+def test_closing_a_dynamic_gate_is_exact(tmp_path):
+    """expanse_chat.gate_closed / eval_expanse.zero_gate must switch a v4-style dynamic-gate core fully off."""
+    sys.path.insert(0, str(ROOT))
+    import eval_expanse as ee
+    from test_connectome_full import write_tiny_npz
+
+    base = cf.build_full_graph(write_tiny_npz(tmp_path / "tiny.npz"))
+    cfg = cl.LabConfig(gate="dynamic")
+    core = cl.fresh_lab_core(16, cl.lab_graph(base, cfg, 0), cfg, seed=0)
+    with torch.no_grad():
+        for p in core.parameters():
+            p.add_(torch.randn(p.shape) * 0.3)
+    x = torch.randn(2, 5, 16)
+    before = [t.clone() for t in core.state_dict().values()]
+    with torch.no_grad(), ee.zero_gate(core):
+        assert torch.equal(core(x)[0], x)
+    assert all(torch.equal(a, b) for a, b in zip(before, core.state_dict().values()))
+    with torch.no_grad():
+        assert not torch.equal(core(x)[0], x)
+
+
 def test_shared_arms_share_runs():
     a, b = hyp("H-A"), hyp("H-B")
     b["arms"] = {"real": {"topology": "real"}, "none": {"topology": "none"}}

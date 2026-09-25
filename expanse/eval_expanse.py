@@ -264,19 +264,46 @@ def generation_block(runners: List[Runner], items: Dict[str, List[Dict[str, Any]
 # ---------------------------------------------------------------------------
 @contextlib.contextmanager
 def zero_gate(module) -> Iterator[None]:
-    saved = module.gate.detach().clone()
+    """Close a graft exactly: its gate, and for a dynamic-gate lab core (v4) also its gate_proj."""
+    params = [module.gate] + ([module.gate_proj.weight] if hasattr(module, "gate_proj") else [])
+    saved = [p.detach().clone() for p in params]
     with torch.no_grad():
-        module.gate.zero_()
+        for p in params:
+            p.zero_()
     try:
         yield
     finally:
         with torch.no_grad():
-            module.gate.copy_(saved)
+            for p, s in zip(params, saved):
+                p.copy_(s)
 
 
 @contextlib.contextmanager
 def rewired_core(core, graph_args: Dict[str, Any], seed: int) -> Iterator[Dict[str, Any]]:
     import connectome_full as cf
+
+    if hasattr(core, "CONST_BUFFERS"):  # a Connectome Lab core (v4): its own shuffled-graph null
+        import connectome_lab as cl
+
+        saved = {n: getattr(core, n) for n in core.CONST_BUFFERS}
+        saved_meta = (core.anatomy, core.graph_receipt)
+        base = cf.build_full_graph(graph_args["npz"])
+        null = cl.lab_graph(base, core.cfg.replace(topology="shuffled", graph_seed=seed), seed)
+        del base
+        core.set_graph(null)
+        info = {k: null["receipt"].get(k) for k in ("graph_seed", "edge_overlap_with_real", "abs_spectral_radius",
+                                                    "arrays_sha256")}
+        info["null"] = "connectome_lab shuffled (degree-, sign- and role-preserving); learned edge values stay by index"
+        del null
+        try:
+            yield info
+        finally:
+            for n, t in saved.items():
+                setattr(core, n, t)
+            core.anatomy, core.graph_receipt = saved_meta
+            core._op_cache = None
+            core._decode = None
+        return
 
     names = ("crow", "col", "val", "crow_t", "col_t", "val_t", "in_idx", "out_idx", "sign")
     saved = {n: getattr(core, n) for n in names}

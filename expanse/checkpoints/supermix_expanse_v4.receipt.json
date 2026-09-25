@@ -5069,7 +5069,14 @@
    "val_bio_nats_per_char": -0.014081228860657768,
    "val_connectome_nats_per_char": -0.00016117792255387897,
    "val_fresh_nats_per_char": -0.0023430011413974224
-  }
+  },
+  "evals_pooled": [
+   0.41015547876178465,
+   0.40469482035723575,
+   0.4016487315379216,
+   0.39970161471884036
+  ],
+  "note": "receipt['training'] is the BASE model's (v3) training; v4 adds core-only steps on top. The static-gate control trained its gate at lr_core while v4's new gate parameters used lr_new, so 'v4 - control' is an upper bound on the input-dependent share of the gain (a frozen-mean-gate ablation puts it at ~70%)."
  },
  "v4_evals": [
   {
@@ -5189,5 +5196,6 @@
    "eval_seconds": 68.0
   }
  ],
- "base_checkpoint": "supermix_expanse_v3.pt"
+ "base_checkpoint": "supermix_expanse_v3.pt",
+ "base_sha256": "e3acba03bf0ba3c03e1f244a10898eadd27b7dfef3bd9ec8d4faecb671abf13f"
 }
