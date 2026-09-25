@@ -938,13 +938,25 @@ def lab_from_full(full, cfg: Optional[LabConfig] = None, graph: Optional[dict] =
     return core
 
 
+#: Initial bias of the output types when ``topology="empty"``. With no edges the output types are driven by
+#: their bias alone; at bias 0 a relu output type is silent AND gets no gradient (relu'(0) = 0), so the
+#: no-connectome control would be dead. A small positive bias gives a learnable constant write instead;
+#: the gate still starts at 0, so the graft is the identity at birth. Consumes no RNG, so every other
+#: initial value equals the matched arms' at the same seed.
+EMPTY_OUT_BIAS = 0.1
+
+
 def fresh_lab_core(hidden_size: int, graph: Optional[dict], cfg: LabConfig, seed: int) -> Optional[ConnectomeLabCore]:
     """A new core, deterministically initialised by ``seed`` (gate 0: the graft is the identity at birth)."""
     if cfg.topology == "none" or graph is None:
         return None
     with torch.random.fork_rng(devices=[]):
         torch.manual_seed(int(seed))
-        return ConnectomeLabCore(hidden_size, graph, cfg)
+        core = ConnectomeLabCore(hidden_size, graph, cfg)
+    if cfg.topology == "empty":
+        with torch.no_grad():
+            core.bias[core.out_idx] = EMPTY_OUT_BIAS
+    return core
 
 
 # ---------------------------------------------------------------------------

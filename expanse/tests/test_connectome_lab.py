@@ -326,6 +326,29 @@ def test_empty_topology_is_the_no_connectome_control(base, gate):
     assert cl.export_anatomy(core)["edge_src"].shape == (0,)
 
 
+@pytest.mark.parametrize("gate", ("static", "dynamic"))
+def test_fresh_empty_core_is_not_dead(base, gate):
+    """A FRESH empty core (bias init, gate 0) must still learn: output-type biases start positive, so the write
+    is non-zero and the gate gets gradient; every other initial value equals the real arm's at the same seed."""
+    cfg = cl.LabConfig(topology="empty", gate=gate)
+    real = cl.fresh_lab_core(H, cl.lab_graph(base, cl.LabConfig(gate=gate), 0), cl.LabConfig(gate=gate), seed=3)
+    core = cl.fresh_lab_core(H, cl.lab_graph(base, cfg, 0), cfg, seed=3)
+    for (name, a), (_, b) in zip(real.named_parameters(), core.named_parameters()):
+        if name == "bias":
+            assert torch.equal(b[core.out_idx], torch.full_like(b[core.out_idx], cl.EMPTY_OUT_BIAS))
+            keep = torch.ones_like(b, dtype=torch.bool)
+            keep[core.out_idx] = False
+            assert torch.equal(a[keep], b[keep])
+        elif a.shape == b.shape:
+            assert torch.equal(a, b), name
+    x = torch.randn(2, 5, H)
+    with torch.no_grad():
+        assert torch.equal(core(x)[0], x)  # gate 0: identity at birth
+    out, _ = core(x)
+    out.pow(2).sum().backward()
+    assert float(core.gate.grad.abs().sum()) > 0
+
+
 def test_anatomy_export_and_core_file(base, tmp_path):
     g = cl.lab_graph(base, cl.LabConfig(), 0)
     core = cl.fresh_lab_core(H, g, cl.LabConfig(edge_param="dale_softplus"), seed=4)

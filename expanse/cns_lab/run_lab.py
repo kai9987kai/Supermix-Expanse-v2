@@ -356,7 +356,7 @@ def core_report(core) -> Dict[str, Any]:
         out["leak_by_superclass"] = {s: {"mean": float(np.mean(v)), "std": float(np.std(v)), "n": len(v)}
                                      for s, v in sorted(groups.items())}
     out["leak_mean"] = float(leak.mean())
-    if core.cfg.learned_edges:
+    if core.cfg.learned_edges and core.nnz > 0:  # topology "empty" has no edges to report
         m = core.edge_multiplier().detach().numpy().astype(np.float64)
         w = core.edge_weights().detach().numpy()
         out["edge_multiplier"] = {"mean": float(m.mean()), "std": float(m.std()), "min": float(m.min()),

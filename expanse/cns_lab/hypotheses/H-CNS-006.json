@@ -1,0 +1,75 @@
+{
+ "id": "H-CNS-006",
+ "claim": "With a dynamic gate, the core on the real wiring lowers held-out loss compared with the same core on a degree-preserving, sign- and role-stratified shuffle of that wiring.",
+ "protocol": {
+  "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+  "train_scope": "core",
+  "steps": 250,
+  "batch": 8,
+  "seq": 128,
+  "lr_core": 0.001,
+  "lr_edge": 0.0003,
+  "warmup_frac": 0.05,
+  "min_lr_frac": 0.05,
+  "grad_clip": 1.0,
+  "sources": [
+   "replay",
+   "code",
+   "bio",
+   "connectome",
+   "fresh"
+  ],
+  "corpus": {
+   "seed": 2026,
+   "dev_frac": 0.05,
+   "dev_cap": 200,
+   "max_rows_per_source": 6000,
+   "fly_rows": 0
+  },
+  "eval_steps": [
+   125,
+   250
+  ],
+  "eval_per_source": 60,
+  "temporal": {
+   "train_rows": 4000,
+   "eval_rows": 160,
+   "per_batch": 2,
+   "seed": 7,
+   "exact_match_items": 160
+  },
+  "base_config": {
+   "edge_param": "dale_softplus",
+   "subgraph": 3000
+  },
+  "notes": "3,000-type subgraph (synapse-mass core + proportional inputs/outputs; 629,875 edges): the per-token persistent scan costs ~4x a reset step, which the full graph cannot afford here. 2 of every 8 rows are synthetic temporal-memory rows (recall at a distance, pattern, count, first item) in every arm."
+ },
+ "arms": {
+  "dynamic_real": {
+   "gate": "dynamic"
+  },
+  "dynamic_shuffled": {
+   "gate": "dynamic",
+   "topology": "shuffled"
+  }
+ },
+ "control_arm": "dynamic_shuffled",
+ "treatment_arm": "dynamic_real",
+ "seeds": [
+  2,
+  3,
+  4
+ ],
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.0025
+ },
+ "secondary_metrics": [
+  "temporal_nats_per_char",
+  "temporal_answer_nats_per_char",
+  "temporal_exact_match"
+ ],
+ "notes": "The dynamic-gate effect was first seen in the exploratory X-CNS-001 run (seed 1: pooled -0.0077 nats/char, temporal 6.78 -> 2.60) before this file was written; seed 1 is therefore excluded and the confirmation uses seeds 2-4. Same protocol as H-CNS-003 / X-CNS-001 (3,000-type subgraph, learned Dale edges, 250 core-only steps). H-CNS-001 under the dynamic gate; the shuffle is redrawn per seed. Same 0.25% threshold as H-CNS-005."
+}

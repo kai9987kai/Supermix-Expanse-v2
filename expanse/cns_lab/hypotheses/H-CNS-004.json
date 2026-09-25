@@ -1,0 +1,77 @@
+{
+ "id": "H-CNS-004",
+ "claim": "An input-dependent (dynamic) CNS gate lowers held-out loss compared with the static per-channel gate, for a real-wiring core with learned Dale-preserving edges on the frozen v3 trunk.",
+ "protocol": {
+  "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+  "train_scope": "core",
+  "steps": 250,
+  "batch": 8,
+  "seq": 128,
+  "lr_core": 0.001,
+  "lr_edge": 0.0003,
+  "warmup_frac": 0.05,
+  "min_lr_frac": 0.05,
+  "grad_clip": 1.0,
+  "sources": [
+   "replay",
+   "code",
+   "bio",
+   "connectome",
+   "fresh"
+  ],
+  "corpus": {
+   "seed": 2026,
+   "dev_frac": 0.05,
+   "dev_cap": 200,
+   "max_rows_per_source": 6000,
+   "fly_rows": 0
+  },
+  "eval_steps": [
+   125,
+   250
+  ],
+  "eval_per_source": 60,
+  "temporal": {
+   "train_rows": 4000,
+   "eval_rows": 160,
+   "per_batch": 2,
+   "seed": 7,
+   "exact_match_items": 160
+  },
+  "base_config": {
+   "edge_param": "dale_softplus",
+   "subgraph": 3000
+  },
+  "notes": "3,000-type subgraph (synapse-mass core + proportional inputs/outputs; 629,875 edges): the per-token persistent scan costs ~4x a reset step, which the full graph cannot afford here. 2 of every 8 rows are synthetic temporal-memory rows (recall at a distance, pattern, count, first item) in every arm."
+ },
+ "arms": {
+  "dynamic": {
+   "gate": "dynamic"
+  },
+  "static": {
+   "gate": "static"
+  }
+ },
+ "control_arm": "static",
+ "treatment_arm": "dynamic",
+ "seeds": [
+  2,
+  3,
+  4
+ ],
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.01
+ },
+ "secondary_metrics": [
+  "temporal_nats_per_char",
+  "temporal_answer_nats_per_char",
+  "temporal_exact_match",
+  "val_bio_nats_per_char",
+  "val_code_nats_per_char",
+  "gate_by_source"
+ ],
+ "notes": "The dynamic-gate effect was first seen in the exploratory X-CNS-001 run (seed 1: pooled -0.0077 nats/char, temporal 6.78 -> 2.60) before this file was written; seed 1 is therefore excluded and the confirmation uses seeds 2-4. Same protocol as H-CNS-003 / X-CNS-001 (3,000-type subgraph, learned Dale edges, 250 core-only steps). Confirmatory test of the exploratory finding; threshold 1% of the static arm's pooled nats/char (the exploratory effect was 1.8%)."
+}

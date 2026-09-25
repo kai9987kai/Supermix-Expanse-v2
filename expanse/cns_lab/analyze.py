@@ -114,6 +114,9 @@ def analyse_core(key: str, metrics: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     if hasattr(core, "retain_logit"):
         ret = a["retain"]
         rep["retain"] = {"mean": float(ret.mean()), "by_superclass": {s: float(ret[sc == s].mean()) for s in np.unique(sc)}}
+    if core.nnz == 0:
+        rep["edges"] = "none (topology 'empty': no-connectome control)"
+        return rep
     if not core.cfg.learned_edges:
         rep["edges"] = "fixed (no drift)"
         return rep

@@ -1,0 +1,75 @@
+{
+ "id": "H-CNS-005",
+ "claim": "With a dynamic gate, the core on the real wiring lowers held-out loss compared with the same core on an empty graph (same cell types, no edges), i.e. the dynamic-gate gain depends on the connectome and is not just an input-dependent adapter.",
+ "protocol": {
+  "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+  "train_scope": "core",
+  "steps": 250,
+  "batch": 8,
+  "seq": 128,
+  "lr_core": 0.001,
+  "lr_edge": 0.0003,
+  "warmup_frac": 0.05,
+  "min_lr_frac": 0.05,
+  "grad_clip": 1.0,
+  "sources": [
+   "replay",
+   "code",
+   "bio",
+   "connectome",
+   "fresh"
+  ],
+  "corpus": {
+   "seed": 2026,
+   "dev_frac": 0.05,
+   "dev_cap": 200,
+   "max_rows_per_source": 6000,
+   "fly_rows": 0
+  },
+  "eval_steps": [
+   125,
+   250
+  ],
+  "eval_per_source": 60,
+  "temporal": {
+   "train_rows": 4000,
+   "eval_rows": 160,
+   "per_batch": 2,
+   "seed": 7,
+   "exact_match_items": 160
+  },
+  "base_config": {
+   "edge_param": "dale_softplus",
+   "subgraph": 3000
+  },
+  "notes": "3,000-type subgraph (synapse-mass core + proportional inputs/outputs; 629,875 edges): the per-token persistent scan costs ~4x a reset step, which the full graph cannot afford here. 2 of every 8 rows are synthetic temporal-memory rows (recall at a distance, pattern, count, first item) in every arm."
+ },
+ "arms": {
+  "dynamic_real": {
+   "gate": "dynamic"
+  },
+  "dynamic_empty": {
+   "gate": "dynamic",
+   "topology": "empty"
+  }
+ },
+ "control_arm": "dynamic_empty",
+ "treatment_arm": "dynamic_real",
+ "seeds": [
+  2,
+  3,
+  4
+ ],
+ "primary_metric": "val_nats_per_char_pooled",
+ "direction": "lower_is_better",
+ "success_rule": {
+  "all_same_sign": true,
+  "min_mean_delta_rel": 0.0025
+ },
+ "secondary_metrics": [
+  "temporal_nats_per_char",
+  "temporal_answer_nats_per_char",
+  "temporal_exact_match"
+ ],
+ "notes": "The dynamic-gate effect was first seen in the exploratory X-CNS-001 run (seed 1: pooled -0.0077 nats/char, temporal 6.78 -> 2.60) before this file was written; seed 1 is therefore excluded and the confirmation uses seeds 2-4. Same protocol as H-CNS-003 / X-CNS-001 (3,000-type subgraph, learned Dale edges, 250 core-only steps). With no edges the output types see only their bias, so the core's write is a learned constant and the dynamic gate turns it into a pure 320->320 tanh adapter: the matched no-connectome control. In the empty arm the output-type biases start at +0.1 (connectome_lab.EMPTY_OUT_BIAS; all other initial values equal the real arm's at the same seed, and the gate still starts at 0): at bias 0 the relu output types are silent and receive no gradient, which a pre-lock smoke run showed makes the control untrainable. Threshold 0.25% of the control (~0.001 nats/char, about 5-10 paired SDs; the graph-dependent part of the static core's gain was ~0.0015)."
+}
