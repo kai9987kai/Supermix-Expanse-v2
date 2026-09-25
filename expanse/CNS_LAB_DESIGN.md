@@ -96,3 +96,63 @@ arm says otherwise.
 * Expert routing is not tracked: the trunk (and so its MoE router) is frozen in every arm.
 * Caveat for H-CNS-002: the v3 trunk was trained with its own core, so "no core" is a damaged v3, and part of any gain
   is the fresh core re-learning that role.
+
+### Tooling changes after the first sweep
+
+Asked for by the audit of the first pre-registered sweep (`CNS_LAB_RESULTS.md`, "Why the nulls are weak evidence").
+All of it is backward compatible: for every locked hypothesis `prereg.run_key` returns the same keys (checked against
+the original `prereg.py` for all 31 (arm, seed) pairs), an existing protocol trains and evaluates bit for bit as before
+(checked against the original `run_lab.evaluate` and `ConnectomeLabCore`, forward and gradients), new behaviour needs a
+**new** protocol key (which also gives the run a new key), and metrics are only added, never redefined.
+
+* **Verdicts** (`prereg.py`, `verdict_schema_version: 2`; `schema` keeps its v1 string). The locked rule key
+  `all_same_sign` stays and is documented as what it always meant: *every seed favours the treatment*; the verdict also
+  reports it as `all_favour_treatment`. Before a run's metric counts, the run must be provably the run asked for:
+  `run_key` equals its directory, arm / seed (an exact int) / full `LabConfig` match, not an `--unlocked` run, a lock
+  is recorded and its sha is the hypothesis' lock (a run shared with another hypothesis: that hypothesis' lock, which
+  must exist, and the same arm config), the run's `untrainable` flag is what the arm and protocol imply (true only for
+  `topology: "none"` with `train_scope: "core"`), and every run's last eval (untrainable runs included) is at the
+  protocol's final step; anything else, including a malformed metrics.json field, is a problem (-> INCONCLUSIVE).
+  `inputs` records the sha256 of every metrics.json read, with line endings normalised to LF as for the locks
+  (`inputs_hash: "sha256-lf-normalised"`), so hashes taken from a CRLF working copy match the committed LF files.
+  `run_lab.run` records `unlocked: true` for a hypothesis dict that did not come from `load_locked`. Issued verdict
+  files are never touched; re-evaluating H-CNS-001..003 with the hardened rule from the recorded runs reproduces the
+  issued verdicts exactly.
+* **New optional protocol keys** (`run_lab.py`):
+  `eps_edge` (AdamW eps of the edge group only; the other groups keep 1e-8 -- per-edge gradients ~1e-9 sit below the
+  default eps, which is why the edges did not learn), `eval_sampling: "hash"` (+ `eval_salt`: each source's dev pool
+  sorted by a salted hash of `row_key(user, assistant)` instead of file order), `final_ablations: true` (at the final
+  eval, pooled nats/char with every edge weight zeroed -- no signal crosses the graph -- and with the gate closed:
+  `val_nats_per_char_pooled_zero_edges`, `val_nats_per_char_pooled_gate0`, `graph_dependent_gain` = zeroed - trained,
+  `core_gain` = gate closed - trained; the core is restored bit for bit. With edges zeroed the write is a constant
+  vector only with a static gate and `state: "reset"`; with a dynamic gate it is a fixed vector scaled per token
+  (channel-wise) by the gate, so for dynamic-gate arms `graph_dependent_gain` excludes what the gate alone can do. `core_gain` is the
+  gain of the core's write given the trained trunk -- the whole trained core's gain only with `train_scope: "core"`)
+  and `temporal.split_version: 2`
+  (`temporal_tasks.split_rows`: also drops train rows whose prompt starts with a held-out prompt and `pattern` rows
+  sharing a held-out repeating unit, up to rotation; the held-out rows are unchanged).
+* **Always recorded now** (additive): `final_rows` -- per final-eval row `[nats, chars, tokens]` per source in eval-row
+  order (+ `final_rows_sha256` of the row keys to check pairing, and `final_rows_temporal_answer`), so paired tests can
+  be row-level; per eval `temporal_answer_nats_per_char` (reply tokens without the end-of-reply token, per reply
+  character), `temporal_nats_per_char_by_task`, `temporal_answer_nats_per_char_by_task`, and with a core
+  `write_rms_ratio` (RMS of the gated write / RMS of the hidden state at the graft) and `write_token_var_frac` (share
+  of the write's power that varies across tokens, about the mean write; ~0 = a constant bias), both pooled over every
+  eval token (all sources) from per-forward sufficient statistics, so neither depends on the eval batch size or on
+  which rows share a batch; `optimizer_eps` per param group.
+  `temporal_nats_per_char` and every other existing key are unchanged.
+* **Core** (`connectome_lab.py`): `_stats` adds the two write diagnostics (per forward) and their sufficient
+  statistics `write_moments` on no-grad forwards only, pooled by `pool_write_moments`; forward numerics unchanged.
+  `gate_by_source` is kept but is only informative for `gate="dynamic"` (a static gate gives every source the same
+  mean |g|).
+* **Analysis** (`analyze.py`): `summary.md` lists the ablation / write diagnostics of runs that recorded them, and an
+  "Exploratory arms" section per exploratory hypothesis: every arm's final pooled / per-source / temporal numbers,
+  the delta against the reference arm (`reset` if present, else the first arm), flagged when |delta| > `--noise_k`
+  (2) x a noise floor -- `--noise_floor` if given, else per metric the SD over seeds of the paired treatment - control
+  delta of the pre-registered hypotheses with the same protocol (for `P_sub`: H-CNS-003). Single seed, no claims.
+* For the next pre-registration these make the audit's suggestions expressible: `eps_edge` (with a larger `lr_edge`
+  and a pre-registered check that multipliers move), `final_ablations` (state a wiring effect relative to
+  `graph_dependent_gain`), `eval_sampling: "hash"`, and `temporal.split_version: 2` with
+  `temporal_answer_nats_per_char` as the memory metric.
+* Tests: `tests/test_connectome_lab.py` 33 (31 passed + the 2 v3-checkpoint tests, which skip without the
+  checkpoint), `tests/test_cns_lab.py` 44 passed; the run_lab tests use a tiny synthetic LM around a real lab core on
+  a synthetic graph (no checkpoint, no corpus).

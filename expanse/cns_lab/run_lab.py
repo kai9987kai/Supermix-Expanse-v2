@@ -23,11 +23,51 @@ state autocorrelation, mean rate, leak by superclass, edge-multiplier drift,
 seconds per step and peak RSS. Written to
 ``checkpoints/cns_lab/runs/<run key>/metrics.json`` with the trained core
 (``core.pt``). A finished run is skipped; an unfinished one restarts.
+
+Always recorded as well (additive keys; existing keys keep their meaning):
+
+* ``final_rows`` -- per eval row of the final eval, ``[nats, chars, tokens]``
+  per source in eval-row order (``chars`` = len(reply) + 1, as in the
+  per-char metrics), with ``final_rows_sha256`` (hash of the rows' keys, to
+  check that two runs are paired) and, for temporal rows,
+  ``final_rows_temporal_answer`` (``[answer nats, len(reply), answer tokens]``);
+* per eval: ``temporal_answer_nats_per_char`` (reply tokens *without* the final
+  end-of-reply token, per reply character), ``temporal_nats_per_char_by_task``
+  and ``temporal_answer_nats_per_char_by_task``; with a core,
+  ``write_rms_ratio`` (RMS of the gated write / RMS of the hidden state at the
+  graft) and ``write_token_var_frac`` (share of the write's power that varies
+  across tokens, about the mean write; ~0 = the core acts as a constant bias),
+  both pooled over every eval token of every source (temporal included), so
+  they do not depend on the eval batch size or on how rows are batched.
+
+Optional protocol keys (absent = the original behaviour, bit for bit; a new
+key changes the run key, so it never collides with an existing run):
+
+    eps_edge          AdamW eps of the edge-parameter group only (default: AdamW's 1e-8).
+                      Per-edge gradients (~1e-9) sit below 1e-8, so edges barely learn.
+    eval_sampling     "head" (dev[:n], default) | "hash" (each source's dev pool sorted by
+                      sha256(eval_salt + row_key(user, assistant)), then the first n)
+    eval_salt         salt of the "hash" sampling (default "cns-lab-eval-v1")
+    final_ablations   true: at the final eval also the pooled nats/char with every edge weight
+                      zeroed (``..._zero_edges``: no signal crosses the graph) and with the gate
+                      closed (``..._gate0``), ``graph_dependent_gain`` = zero_edges - trained and
+                      ``core_gain`` = gate0 - trained; the core is restored bit for bit.
+                      With edges zeroed the core's ungated output is one fixed vector (state=reset;
+                      a persistent state relaxes towards it over the first tokens), so the write is
+                      constant only with a static gate. With a dynamic gate it is that vector times
+                      the token-dependent gate, and graph_dependent_gain then excludes what the gate
+                      alone can do. ``core_gain`` is the gain of the core's write *given the trained
+                      trunk*: the whole trained core's gain only with train_scope="core" (with
+                      "core+top" / "all" the gate0 eval keeps the fine-tuned trunk).
+    temporal.split_version   1 (default) | 2 (temporal_tasks.split_rows: near-duplicates of
+                      held-out rows removed from the temporal train rows)
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
+import hashlib
 import json
 import math
 import random
@@ -56,6 +96,8 @@ from expanse_core import PATHS, text_utils  # noqa: E402
 
 METRICS_SCHEMA = "supermix-expanse-cns-lab-run-v1"
 DEFAULT_SOURCES = ("replay", "code", "bio", "connectome", "fresh")
+EVAL_SAMPLINGS = ("head", "hash")
+DEFAULT_EVAL_SALT = "cns-lab-eval-v1"
 
 
 def log(*a) -> None:
@@ -79,6 +121,29 @@ def write_json(path: Path, obj: Dict[str, Any]) -> None:
 # ---------------------------------------------------------------------------
 # data
 # ---------------------------------------------------------------------------
+def eval_row_hash(row: Dict[str, Any], salt: str = DEFAULT_EVAL_SALT) -> str:
+    """Stable, salted hash of one row (the ``eval_sampling="hash"`` order)."""
+    return hashlib.sha256(f"{salt}\x1f{ec.row_key(row['user'], row['assistant'])}".encode("utf-8")).hexdigest()
+
+
+def select_eval_rows(dev: List[Dict[str, Any]], n: int, sampling: str = "head",
+                     salt: str = DEFAULT_EVAL_SALT) -> List[Dict[str, Any]]:
+    """The ``n`` eval rows of one source's dev pool: ``head`` = ``dev[:n]`` (original behaviour);
+    ``hash`` = the pool sorted by :func:`eval_row_hash` (stable; independent of file order), first ``n``."""
+    if sampling == "head":
+        return dev[:n]
+    if sampling == "hash":
+        return sorted(dev, key=lambda r: eval_row_hash(r, salt))[:n]
+    raise ValueError(f"eval_sampling {sampling!r}; allowed {EVAL_SAMPLINGS}")
+
+
+def temporal_split(P: Dict[str, Any]) -> Dict[str, List[Dict[str, Any]]]:
+    """The protocol's temporal train / held-out rows (``temporal.split_version`` 1 unless set)."""
+    tp = P.get("temporal") or {}
+    return tt.split_rows(int(tp.get("train_rows", 0)), int(tp.get("eval_rows", 0)), int(tp.get("seed", 7)),
+                         version=int(tp.get("split_version", 1)))
+
+
 def build_data(model, tok, P: Dict[str, Any], seed: int) -> Dict[str, Any]:
     """Train pools (corpus + temporal), fixed eval rows. Rows depend only on the protocol; order on the seed."""
     c = P.get("corpus") or {}
@@ -89,9 +154,10 @@ def build_data(model, tok, P: Dict[str, Any], seed: int) -> Dict[str, Any]:
     seq = int(P.get("seq", 128))
     train = [r for s in sources for r in corpus[s]["train"]]
     n_eval = int(P.get("eval_per_source", 60))
-    evals = {s: corpus[s]["dev"][:n_eval] for s in sources}
-    tp = P.get("temporal") or {}
-    temporal = tt.split_rows(int(tp.get("train_rows", 0)), int(tp.get("eval_rows", 0)), int(tp.get("seed", 7)))
+    sampling = str(P.get("eval_sampling", "head"))
+    salt = str(P.get("eval_salt", DEFAULT_EVAL_SALT))
+    evals = {s: select_eval_rows(corpus[s]["dev"], n_eval, sampling, salt) for s in sources}
+    temporal = temporal_split(P)
     x_tr, y_tr, _, m_tr, dropped = te.encode_rows(train, tok, seq)
     x_tt, y_tt, _, m_tt, dropped_t = te.encode_rows(temporal["train"], tok, seq) if temporal["train"] else (None, None, None, [], 0)
     ev = {}
@@ -153,8 +219,34 @@ class Features:
 # ---------------------------------------------------------------------------
 # eval
 # ---------------------------------------------------------------------------
+def _eval_batch(model, feats, x: torch.Tensor, y: torch.Tensor, rows: List[Dict[str, Any]], i: int, batch: int):
+    """One eval batch's forward: ``(yb, ce, m)`` with ``ce`` (B, L-1) per-position nats and ``m`` the reply mask."""
+    xb, yb = x[i:i + batch], y[i:i + batch]
+    L = int((xb != text_utils.PAD).sum(1).max())  # right-padded: trimming PAD columns is exact
+    xb, yb = xb[:, :L], yb[:, :L]
+    users = [r["user"] for r in rows[i:i + batch]]
+    lg = model(xb, return_mtp=False, **feats(users)).logits
+    ce = F.cross_entropy(lg[:, :-1].reshape(-1, lg.shape[-1]).float(), yb[:, 1:].reshape(-1),
+                         reduction="none").view(xb.shape[0], -1)
+    m = yb[:, 1:] != -100
+    return yb, ce, m
+
+
+def answer_mask(yb: torch.Tensor, m: torch.Tensor) -> torch.Tensor:
+    """``m`` without each row's final end-of-reply target (the answer tokens only)."""
+    idx = torch.arange(m.shape[1], device=m.device).unsqueeze(0)
+    last = torch.where(m, idx, torch.full_like(idx, -1)).max(dim=1).values
+    tgt = yb[:, 1:]
+    last_is_eos = tgt.gather(1, last.clamp_min(0).unsqueeze(1)).squeeze(1) == text_utils.EOS
+    return m & ~((idx == last.unsqueeze(1)) & (last_is_eos & (last >= 0)).unsqueeze(1))
+
+
 @torch.no_grad()
-def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_match_items: int = 0) -> Dict[str, Any]:
+def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_match_items: int = 0,
+             row_losses: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Losses and core statistics on the fixed eval rows. ``row_losses`` (a dict) receives the per-row
+    losses: ``rows`` {source: [[nats, chars, tokens], ...]}, ``keys_sha256`` {source: hash of the
+    rows' keys} and ``temporal_answer`` [[answer nats, len(reply), answer tokens], ...]."""
     model.eval()
     rec: Dict[str, Any] = {"step": int(step)}
     pooled = [0.0, 0, 0]  # nats, chars, tokens over the corpus sources
@@ -162,19 +254,16 @@ def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_mat
     autocorr: List[float] = []
     rates: List[float] = []
     active: List[float] = []
+    write_moments: List[Dict[str, Any]] = []  # per forward, pooled over every eval token below
+    per_row: Dict[str, List[List[float]]] = {}
+    answer_rows: List[List[float]] = []
+    by_task: Dict[str, List[float]] = {}  # task -> [nats, chars, answer nats, answer chars]
     t0 = time.time()
     for src, block in data["eval"].items():
         nats = chars = toks = 0
         x, y, rows = block["x"], block["y"], block["rows"]
         for i in range(0, x.shape[0], batch):
-            xb, yb = x[i:i + batch], y[i:i + batch]
-            L = int((xb != text_utils.PAD).sum(1).max())  # right-padded: trimming PAD columns is exact
-            xb, yb = xb[:, :L], yb[:, :L]
-            users = [r["user"] for r in rows[i:i + batch]]
-            lg = model(xb, return_mtp=False, **feats(users)).logits
-            ce = F.cross_entropy(lg[:, :-1].reshape(-1, lg.shape[-1]).float(), yb[:, 1:].reshape(-1),
-                                 reduction="none").view(xb.shape[0], -1)
-            m = yb[:, 1:] != -100
+            yb, ce, m = _eval_batch(model, feats, x, y, rows, i, batch)
             nats += float(ce[m].sum())
             toks += int(m.sum())
             chars += sum(len(r["assistant"]) + 1 for r in rows[i:i + batch])  # +1: end of reply
@@ -186,6 +275,25 @@ def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_mat
             if "mean_rate" in info:
                 rates.append(info["mean_rate"])
                 active.append(info["fraction_active"])
+            if info.get("write_moments") is not None:
+                write_moments.append(info["write_moments"])
+            # additive per-row / per-task accounting (the metrics above are computed exactly as before)
+            ce0 = ce.masked_fill(~m, 0.0).double()
+            row_nats, row_toks = ce0.sum(1).tolist(), m.sum(1).tolist()
+            brows = rows[i:i + batch]
+            per_row.setdefault(src, []).extend(
+                [round(n, 6), len(r["assistant"]) + 1, int(k)] for n, k, r in zip(row_nats, row_toks, brows))
+            if src == "temporal":
+                am = answer_mask(yb, m)
+                a_nats = ce.masked_fill(~am, 0.0).double().sum(1).tolist()
+                a_toks = am.sum(1).tolist()
+                for n_all, n_ans, k_ans, r in zip(row_nats, a_nats, a_toks, brows):
+                    answer_rows.append([round(n_ans, 6), len(r["assistant"]), int(k_ans)])
+                    t = by_task.setdefault(str(r.get("task", "?")), [0.0, 0, 0.0, 0])
+                    t[0] += n_all
+                    t[1] += len(r["assistant"]) + 1
+                    t[2] += n_ans
+                    t[3] += len(r["assistant"])
         key = "temporal" if src == "temporal" else f"val_{src}"
         rec[f"{key}_nats_per_char"] = nats / max(1, chars)
         rec[f"{key}_nats_per_token"] = nats / max(1, toks)
@@ -195,13 +303,28 @@ def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_mat
             pooled[2] += toks
     rec["val_nats_per_char_pooled"] = pooled[0] / max(1, pooled[1])
     rec["val_nats_per_token_pooled"] = pooled[0] / max(1, pooled[2])
+    if by_task:
+        rec["temporal_answer_nats_per_char"] = sum(t[2] for t in by_task.values()) / max(1, sum(t[3] for t in by_task.values()))
+        rec["temporal_nats_per_char_by_task"] = {k: t[0] / max(1, t[1]) for k, t in sorted(by_task.items())}
+        rec["temporal_answer_nats_per_char_by_task"] = {k: t[2] / max(1, t[3]) for k, t in sorted(by_task.items())}
     core = model.cns_full
     if core is not None:
         rec["gate_abs_mean"] = float(core.gate.detach().abs().mean())
+        # only informative for gate="dynamic": a static gate gives every source the same mean |g|
         rec["gate_by_source"] = {s: float(np.mean(v)) for s, v in gate_by_src.items()}
         rec["state_autocorr"] = float(np.mean(autocorr)) if autocorr else None
         rec["mean_rate"] = float(np.mean(rates)) if rates else None
         rec["fraction_active"] = float(np.mean(active)) if active else None
+        # pooled over every eval token (all sources, temporal included), not averaged per forward: the
+        # values do not depend on the eval batch size or on which rows share a batch
+        rec["write_rms_ratio"], rec["write_token_var_frac"] = cl.pool_write_moments(write_moments)
+    if row_losses is not None:
+        row_losses["rows"] = per_row
+        row_losses["keys_sha256"] = {
+            s: hashlib.sha256("\n".join(ec.row_key(r["user"], r["assistant"]) for r in b["rows"]).encode()).hexdigest()
+            for s, b in data["eval"].items()}
+        if answer_rows:
+            row_losses["temporal_answer"] = answer_rows
     if exact_match_items and data["temporal_heldout"]:
         hits: Dict[str, List[int]] = {}
         for r in data["temporal_heldout"][:exact_match_items]:
@@ -245,8 +368,94 @@ def core_report(core) -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# final-eval ablations (protocol ``final_ablations: true``)
+# ---------------------------------------------------------------------------
+ABLATIONS = {"zero_edges": "val_nats_per_char_pooled_zero_edges", "gate0": "val_nats_per_char_pooled_gate0"}
+
+
+@contextlib.contextmanager
+def ablated_core(core, mode: str):
+    """Temporarily ablate a lab core in place and restore it bit for bit afterwards.
+
+    ``zero_edges``: ``bio_weight`` = 0, so every edge weight (bio x learned multiplier) is 0 and no
+    signal crosses the graph (input and output types are disjoint): with ``state=reset`` the core's
+    ungated output is one fixed vector (a persistent state relaxes towards it over the first tokens).
+    The written update is that constant only with ``gate="static"``; a dynamic gate still scales it
+    per token (``tanh(gate_proj(norm(h)))`` depends on the token without any graph).
+    ``gate0``: the gate (and a dynamic gate's projection) = 0: the graft is exactly absent.
+    """
+    if mode == "zero_edges":
+        tensors = [core.bio_weight]
+    elif mode == "gate0":
+        tensors = [core.gate] + ([core.gate_proj.weight] if getattr(core, "gate_proj", None) is not None else [])
+    else:
+        raise ValueError(f"ablation {mode!r}; allowed {sorted(ABLATIONS)}")
+    saved = [t.detach().clone() for t in tensors]
+    try:
+        with torch.no_grad():
+            for t in tensors:
+                t.zero_()
+        core._op_cache = None  # the CSR operator caches bio_weight
+        core._decode = None
+        yield core
+    finally:
+        with torch.no_grad():
+            for t, s in zip(tensors, saved):
+                t.copy_(s)
+        core._op_cache = None
+        core._decode = None
+
+
+@torch.no_grad()
+def pooled_nats_per_char(model, data, feats, batch: int) -> float:
+    """``val_nats_per_char_pooled`` exactly as :func:`evaluate` computes it (corpus sources only)."""
+    model.eval()
+    pooled = [0.0, 0]
+    for src, block in data["eval"].items():
+        if src == "temporal":
+            continue
+        nats = chars = 0
+        x, y, rows = block["x"], block["y"], block["rows"]
+        for i in range(0, x.shape[0], batch):
+            _, ce, m = _eval_batch(model, feats, x, y, rows, i, batch)
+            nats += float(ce[m].sum())
+            chars += sum(len(r["assistant"]) + 1 for r in rows[i:i + batch])
+        pooled[0] += nats
+        pooled[1] += chars
+    return pooled[0] / max(1, pooled[1])
+
+
+def final_ablations(model, data, feats, batch: int, trained_pooled: float) -> Dict[str, Any]:
+    """Pooled nats/char with the edges zeroed and with the gate closed, and the gains they imply."""
+    core = model.cns_full
+    if core is None:
+        return {}
+    out: Dict[str, Any] = {}
+    for mode, key in ABLATIONS.items():
+        with ablated_core(core, mode):
+            out[key] = pooled_nats_per_char(model, data, feats, batch)
+    # > 0: the part of the trained core's gain that needs signal to pass through the graph (with a
+    # dynamic gate: beyond what the fixed zero-edge output scaled by the token-dependent gate achieves)
+    out["graph_dependent_gain"] = out[ABLATIONS["zero_edges"]] - float(trained_pooled)
+    # the gain of the core's write given the trained trunk (the whole trained core's gain only with
+    # train_scope="core"; with "core+top" / "all" the gate0 eval keeps the fine-tuned trunk)
+    out["core_gain"] = out[ABLATIONS["gate0"]] - float(trained_pooled)
+    return out
+
+
+# ---------------------------------------------------------------------------
 # the run
 # ---------------------------------------------------------------------------
+def store_final_rows(metrics: Dict[str, Any], rows_out: Optional[Dict[str, Any]]) -> None:
+    """Per-row final-eval losses into ``metrics`` (``final_rows`` & co., see the module doc)."""
+    if not rows_out:
+        return
+    metrics["final_rows"] = rows_out.get("rows", {})
+    metrics["final_rows_sha256"] = rows_out.get("keys_sha256", {})
+    if rows_out.get("temporal_answer"):
+        metrics["final_rows_temporal_answer"] = rows_out["temporal_answer"]
+
+
 def trainable_groups(model, core, P: Dict[str, Any]):
     scope = P.get("train_scope", "core")
     model.requires_grad_(False)
@@ -258,7 +467,10 @@ def trainable_groups(model, core, P: Dict[str, Any]):
         rest = [p for p in core.parameters() if id(p) not in eid]
         groups.append({"params": rest, "lr": float(P.get("lr_core", 1e-3)), "weight_decay": 0.0, "name": "core"})
         if edge:
-            groups.append({"params": edge, "lr": float(P.get("lr_edge", 3e-4)), "weight_decay": 0.0, "name": "edges"})
+            grp = {"params": edge, "lr": float(P.get("lr_edge", 3e-4)), "weight_decay": 0.0, "name": "edges"}
+            if P.get("eps_edge") is not None:  # AdamW eps is per param group: only the edges get it
+                grp["eps"] = float(P["eps_edge"])
+            groups.append(grp)
     if scope in ("core+top", "all"):
         first = int(model.graft_layer) + 1 if scope == "core+top" else 0
         top = [p for layer in model.layers[first:] for p in layer.parameters()] + list(model.norm.parameters())
@@ -271,6 +483,15 @@ def trainable_groups(model, core, P: Dict[str, Any]):
     elif scope != "core":
         raise ValueError(f"train_scope {scope!r}")
     return [g for g in groups if g["params"]]
+
+
+def run_provenance(h: Dict[str, Any], unlocked: bool) -> Dict[str, Any]:
+    """``unlocked`` and ``lock`` as a run records them. A hypothesis dict that did not come from
+    ``prereg.load_locked`` (no ``_lock``) is recorded as unlocked whatever the caller passed: the flag
+    says whether the run provably came from a locked hypothesis. (The CLI's locked path always has a
+    ``_lock``, so its runs record ``unlocked: false`` exactly as before.)"""
+    lock_rec = h.get("_lock")
+    return {"unlocked": bool(unlocked) or not lock_rec, "lock": lock_rec}
 
 
 def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: Path = prereg.RUNS,
@@ -293,9 +514,10 @@ def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: 
     t_start = time.time()
     steps, batch = int(P["steps"]), int(P.get("batch", 8))
     eval_steps = sorted({int(s) for s in P.get("eval_steps", [steps])} | {steps})
+    prov = run_provenance(h, unlocked)
     metrics: Dict[str, Any] = {"schema": METRICS_SCHEMA, "hypothesis": h["id"], "arm": arm, "seed": int(seed),
                                "run_key": rdir.name, "config": cfg.to_dict(), "protocol": P, "status": "running",
-                               "unlocked": bool(unlocked), "lock": h.get("_lock"), "evals": [], "train_log": []}
+                               "unlocked": prov["unlocked"], "lock": prov["lock"], "evals": [], "train_log": []}
     write_json(mpath, metrics)
 
     base = ROOT / P.get("base_checkpoint", "checkpoints/supermix_expanse_v3.pt")
@@ -323,12 +545,15 @@ def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: 
     untrainable = not groups
     metrics["untrainable"] = untrainable
     if untrainable:
-        rec = evaluate(model, tok, data, feats, batch, 0, em_items)
+        rows_out: Dict[str, Any] = {}
+        rec = evaluate(model, tok, data, feats, batch, 0, em_items, row_losses=rows_out)
         for s in eval_steps:
             metrics["evals"].append({**rec, "step": s})
         metrics["steps_done"] = 0
+        store_final_rows(metrics, rows_out)
     else:
         opt = torch.optim.AdamW([{k: v for k, v in g.items() if k != "name"} for g in groups], betas=(0.9, 0.95))
+        metrics["optimizer_eps"] = {g["name"]: float(pg["eps"]) for g, pg in zip(groups, opt.param_groups)}
         base_lrs = [g["lr"] for g in groups]
         warm = max(1, int(float(P.get("warmup_frac", 0.05)) * steps))
         floor = float(P.get("min_lr_frac", 0.05))
@@ -381,12 +606,21 @@ def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: 
                 log(f"[step {step + 1}/{steps}] loss {float(loss):.4f} gnorm {gnorm:.3f} |gate| {g_abs:.4f} "
                     f"{sum(recent) / len(recent):.2f}s/step eta {(steps - step - 1) * sum(recent) / len(recent) / 60:.1f}m")
             if step + 1 in eval_steps:
-                rec = evaluate(model, tok, data, feats, batch, step + 1, em_items if step + 1 == steps else 0)
+                final = step + 1 == steps
+                rows_out = {} if final else None
+                rec = evaluate(model, tok, data, feats, batch, step + 1, em_items if final else 0, row_losses=rows_out)
+                if final and P.get("final_ablations"):
+                    t_ab = time.time()
+                    rec.update(final_ablations(model, data, feats, batch, rec["val_nats_per_char_pooled"]))
+                    rec["ablation_seconds"] = round(time.time() - t_ab, 1)
                 metrics["evals"].append(rec)
                 metrics["steps_done"] = step + 1
+                if final:
+                    store_final_rows(metrics, rows_out)
                 log(f"[eval {step + 1}] pooled {rec['val_nats_per_char_pooled']:.4f} nats/char"
                     + (f", temporal {rec['temporal_nats_per_char']:.4f}" if "temporal_nats_per_char" in rec else "")
-                    + (f", temporal EM {rec['temporal_exact_match']:.3f}" if "temporal_exact_match" in rec else ""))
+                    + (f", temporal EM {rec['temporal_exact_match']:.3f}" if "temporal_exact_match" in rec else "")
+                    + (f", graph-dependent gain {rec['graph_dependent_gain']:+.5f}" if "graph_dependent_gain" in rec else ""))
                 write_json(mpath, metrics)
         metrics["steps_done"] = steps
         metrics["throughput"] = {"s_per_step_mean": sum(step_times) / len(step_times),
