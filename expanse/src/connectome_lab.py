@@ -768,7 +768,8 @@ class ConnectomeLabCore(nn.Module):
         if not torch.is_grad_enabled():
             rows = sel // t
             same = (rows[1:] == rows[:-1]) & (sel[1:] == sel[:-1] + 1)
-            info.update(self._stats(r, e, g, rows, b, pairs=(r[:, :-1][:, same], r[:, 1:][:, same])))
+            info.update(self._stats(r, e, g, rows, b, pairs=(r[:, :-1][:, same], r[:, 1:][:, same]),
+                                    write=write, hidden=h_sel))
         return out, info
 
     def _forward_scan(self, hidden, mask, past_length, info):
@@ -826,14 +827,22 @@ class ConnectomeLabCore(nn.Module):
             sel = mask.reshape(-1).nonzero(as_tuple=False).squeeze(1)
             g_sel = g.reshape(-1, h).index_select(0, sel) if g.dim() == 3 else g
             e_sel = e.reshape(b * t, -1).index_select(0, sel)
-            info.update(self._stats(r, e_sel, g_sel, sel // t, b, pairs=None))
+            info.update(self._stats(r, e_sel, g_sel, sel // t, b, pairs=None,
+                                    write=write.reshape(b * t, h).index_select(0, sel),
+                                    hidden=hidden.reshape(b * t, h).index_select(0, sel)))
             info["state_autocorr"] = float(cos_sum / cos_n) if cos_n else None
         return out, info
 
     @torch.no_grad()
-    def _stats(self, r, e, g, rows, b, pairs) -> Dict[str, Any]:
+    def _stats(self, r, e, g, rows, b, pairs, write: Optional[torch.Tensor] = None,
+               hidden: Optional[torch.Tensor] = None) -> Dict[str, Any]:
+        """Diagnostics of one no-grad forward (never part of the output). ``write`` (M, h): the
+        ungated write ``out_proj(e / rms)`` of the M real tokens; ``hidden`` (M, h): their hidden
+        state at the graft; ``g``: the gate, (h,) or (M, h)."""
         out: Dict[str, Any] = {"mean_rate": float(r.mean()), "efferent_rms": float(e.pow(2).mean().sqrt()),
                                "fraction_active": float((r > 0).float().mean())}
+        # gate_row_mean (run_lab's ``gate_by_source``) is only informative for gate="dynamic": a static
+        # gate is the same vector for every token, so every row (and source) gets the same mean |g|.
         ga = g.abs().mean(dim=-1)
         if ga.dim() == 0:
             out["gate_row_mean"] = [float(ga)] * b
@@ -843,6 +852,17 @@ class ConnectomeLabCore(nn.Module):
             out["gate_row_mean"] = (tot / cnt.clamp_min(1)).tolist()
         if pairs is not None and pairs[0].shape[1] > 0:
             out["state_autocorr"] = float(F.cosine_similarity(pairs[0], pairs[1], dim=0).mean())
+        if write is not None and hidden is not None and write.shape[0] > 0:
+            # what the core adds to the residual stream, in float64 (these are small numbers)
+            gw = (g * write).double()
+            power = gw.pow(2).mean()  # mean over tokens and channels
+            h_power = hidden.double().pow(2).mean()
+            # write_rms_ratio: RMS of the gated write / RMS of the hidden state it is added to
+            out["write_rms_ratio"] = float(torch.sqrt(power / h_power)) if float(h_power) > 0 else None
+            # write_token_var_frac: share of the write's power that varies across tokens (about its
+            # token mean, over this forward's tokens); 0 = a constant write (a learned bias vector)
+            var = (gw - gw.mean(dim=0, keepdim=True)).pow(2).mean()
+            out["write_token_var_frac"] = float(var / power) if float(power) > 0 else None
         return out
 
 

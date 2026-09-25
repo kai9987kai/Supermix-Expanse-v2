@@ -5,7 +5,15 @@
 
 Summary (``checkpoints/cns_lab/analysis/summary.md`` + ``.json``): every run's
 final metrics grouped by hypothesis and arm, the paired deltas and any issued
-verdict.
+verdict; the final-eval ablations / core-write diagnostics of the runs that
+recorded them; and, per exploratory hypothesis (``exploratory: true``), an
+"Exploratory arms" section: every arm's final pooled / per-source / temporal
+numbers and its delta against the file's reference arm (``reset`` if present,
+else the first arm), flagged against a noise floor -- ``--noise_floor`` if
+given, else per metric the SD over seeds of the paired treatment - control
+delta of the pre-registered hypotheses run under the same protocol (for the
+3,000-type subgraph protocol: H-CNS-003's persist - reset). Single seed, no
+claims.
 
 Per run with a saved core (``analysis/<key>.md`` + ``.json``, and a ``.png``
 histogram when matplotlib is installed):
@@ -28,7 +36,7 @@ import json
 import math
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -209,7 +217,174 @@ def run_markdown(rep: Dict[str, Any]) -> str:
     return "\n".join(L) + "\n"
 
 
-def summary(rows: List[Dict[str, Any]]) -> str:
+#: Final-eval numbers of the exploratory table (key, column); lower is better for all of them.
+EXPLORATORY_METRICS = (("val_nats_per_char_pooled", "pooled"), ("val_replay_nats_per_char", "replay"),
+                       ("val_code_nats_per_char", "code"), ("val_bio_nats_per_char", "bio"),
+                       ("val_connectome_nats_per_char", "connectome"), ("val_fresh_nats_per_char", "fresh"),
+                       ("temporal_nats_per_char", "temporal"), ("temporal_answer_nats_per_char", "temporal answer"))
+#: Ablation / diagnostic keys run_lab adds when a protocol opts in (or, for the write stats, when a core exists).
+DIAGNOSTIC_METRICS = (("val_nats_per_char_pooled_zero_edges", "pooled, edges zeroed"),
+                      ("val_nats_per_char_pooled_gate0", "pooled, gate closed"),
+                      ("graph_dependent_gain", "graph-dependent gain"), ("core_gain", "core gain"),
+                      ("write_rms_ratio", "write RMS / hidden RMS"), ("write_token_var_frac", "write token-var frac"))
+NOISE_K = 2.0
+
+
+def final_eval(m: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    return ((m or {}).get("evals") or [{}])[-1]
+
+
+def _num(v: Any) -> Optional[float]:
+    return float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(float(v)) else None
+
+
+def _read_metrics(h: Dict[str, Any], arm: str, seed: int, runs: Path) -> Optional[Dict[str, Any]]:
+    mp = prereg.run_dir(h, arm, seed, runs) / "metrics.json"
+    if not mp.exists():
+        return None
+    try:
+        return json.loads(mp.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+
+
+def _protocol_id(p: Dict[str, Any]) -> str:
+    return json.dumps({k: v for k, v in p.items() if k != "notes"}, sort_keys=True)
+
+
+def locked_hypotheses(hyp_dir: Path) -> List[Dict[str, Any]]:
+    out = []
+    for hid in prereg.all_hypotheses(hyp_dir):
+        try:
+            out.append(prereg.load_locked(hid, hyp_dir))
+        except (prereg.PreregError, ValueError, KeyError):
+            continue
+    return out
+
+
+def paired_noise_floor(hyps: List[Dict[str, Any]], protocol: Dict[str, Any], runs: Path,
+                       metrics: Tuple[str, ...]) -> Tuple[Dict[str, float], List[str]]:
+    """Per metric: the SD (ddof 1) over seeds of the paired treatment - control delta of every finished
+    pre-registered hypothesis run under ``protocol`` (the largest if several). Also returns their ids."""
+    floors: Dict[str, float] = {}
+    used: List[str] = []
+    pid = _protocol_id(protocol)
+    for h in hyps:
+        if h.get("exploratory") or _protocol_id(h["protocol"]) != pid:
+            continue
+        pairs = []
+        for s in h["seeds"]:
+            c, t = (_read_metrics(h, h[f"{r}_arm"], s, runs) for r in ("control", "treatment"))
+            if c and t and c.get("status") == "done" and t.get("status") == "done":
+                pairs.append((final_eval(c), final_eval(t)))
+        if len(pairs) < 2:
+            continue
+        used.append(h["id"])
+        for key in metrics:
+            d = [_num(t.get(key)) - _num(c.get(key)) for c, t in pairs
+                 if _num(t.get(key)) is not None and _num(c.get(key)) is not None]
+            if len(d) >= 2:
+                floors[key] = max(floors.get(key, 0.0), float(np.std(d, ddof=1)))
+    return floors, used
+
+
+def exploratory_section(hyp_dir: Optional[Path] = None, runs: Optional[Path] = None,
+                        noise_floor: Any = None, noise_k: float = NOISE_K) -> List[str]:
+    """Markdown lines: one block per exploratory hypothesis (see the module doc)."""
+    hyp_dir = Path(hyp_dir) if hyp_dir is not None else prereg.HYP_DIR
+    runs = Path(runs) if runs is not None else prereg.RUNS
+    hyps = locked_hypotheses(hyp_dir)
+    keys = tuple(k for k, _ in EXPLORATORY_METRICS)
+    L: List[str] = []
+
+    def f(v, p=5, signed=False):
+        v = _num(v)
+        return "" if v is None else (f"{v:+.{p}f}" if signed else f"{v:.{p}f}")
+
+    for h in hyps:
+        if not h.get("exploratory"):
+            continue
+        arms = list(h["arms"])
+        ref = "reset" if "reset" in h["arms"] else arms[0]
+        if isinstance(noise_floor, dict):
+            floors, source = {k: float(v) for k, v in noise_floor.items()}, "passed in (per metric)"
+        elif noise_floor is not None:
+            floors, source = {k: float(noise_floor) for k in keys}, f"passed in ({float(noise_floor):.5f} for every metric)"
+        else:
+            floors, used = paired_noise_floor(hyps, h["protocol"], runs, keys)
+            source = (f"SD over seeds of the paired treatment - control delta of {', '.join(used)} (same protocol)"
+                      if used else "none available (no finished pre-registered runs under this protocol)")
+        L += ["", f"## Exploratory arms: {h['id']} — single seed, no claims", "",
+              f"> **Single seed, no claims.** {h['claim']} Exploratory arms are reported, never given a verdict; "
+              f"a flag only says a difference is larger than the seed-to-seed spread of a paired comparison.", "",
+              f"Reference arm: `{ref}`. Delta = arm - `{ref}` in nats per reply character at the final eval "
+              f"(negative = lower loss than the reference). `*` = |delta| > {noise_k:g} x noise floor; "
+              f"`?` = no noise floor for that metric. Noise floor: {source}.", ""]
+        if floors:
+            L += ["| metric | noise floor |", "|---|---|"]
+            L += [f"| {name} | {floors[k]:.5f} |" for k, name in EXPLORATORY_METRICS if k in floors]
+            L.append("")
+        L += ["| arm | seed | status | " + " | ".join(n for _, n in EXPLORATORY_METRICS) + " |",
+              "|---|---|---|" + "---|" * len(EXPLORATORY_METRICS)]
+        deltas: List[str] = []
+        diag: List[str] = []
+        def done_eval(m):  # only a finished run has final numbers
+            return final_eval(m) if (m or {}).get("status") == "done" else {}
+
+        for s in h["seeds"]:
+            ref_ev = done_eval(_read_metrics(h, ref, s, runs))
+            for arm in arms:
+                m = _read_metrics(h, arm, s, runs)
+                ev = done_eval(m)
+                st = (m or {}).get("status", "todo")
+                if m is not None and st != "done" and (m.get("evals") or []):
+                    st += f" (at step {m['evals'][-1].get('step')})"
+                L.append(f"| {arm} | {s} | {st} | " + " | ".join(f(ev.get(k)) for k in keys) + " |")
+                if arm != ref:
+                    cells = []
+                    for k in keys:
+                        a, b = _num(ev.get(k)), _num(ref_ev.get(k))
+                        if a is None or b is None:
+                            cells.append("")
+                            continue
+                        d = a - b
+                        fl = floors.get(k)
+                        mark = "?" if fl is None else ("*" if abs(d) > noise_k * fl else "")
+                        cells.append(f"{d:+.5f}{mark}")
+                    deltas.append(f"| {arm} | {s} | " + " | ".join(cells) + " |")
+                if any(_num(ev.get(k)) is not None for k, _ in DIAGNOSTIC_METRICS):
+                    diag.append(f"| {arm} | {s} | " + " | ".join(f(ev.get(k)) for k, _ in DIAGNOSTIC_METRICS) + " |")
+        L += ["", f"Delta vs `{ref}`:", "",
+              "| arm | seed | " + " | ".join(n for _, n in EXPLORATORY_METRICS) + " |",
+              "|---|---|" + "---|" * len(EXPLORATORY_METRICS), *deltas]
+        if diag:
+            L += ["", "Final-eval ablations and core-write diagnostics:", "",
+                  "| arm | seed | " + " | ".join(n for _, n in DIAGNOSTIC_METRICS) + " |",
+                  "|---|---|" + "---|" * len(DIAGNOSTIC_METRICS), *diag]
+    return L
+
+
+def diagnostics_section(rows: List[Dict[str, Any]]) -> List[str]:
+    """Markdown lines: the ablation / diagnostic metrics of every run that recorded any."""
+    out = []
+    for m in sorted(rows, key=lambda m: (m.get("hypothesis", ""), m.get("arm", ""), m.get("seed", 0))):
+        ev = final_eval(m)
+        if any(_num(ev.get(k)) is not None for k, _ in DIAGNOSTIC_METRICS):
+            out.append(f"| {m.get('hypothesis')} | {m.get('arm')} | {m.get('seed')} | "
+                       + " | ".join("" if _num(ev.get(k)) is None else f"{_num(ev.get(k)):.5f}" for k, _ in DIAGNOSTIC_METRICS)
+                       + " |")
+    if not out:
+        return []
+    return ["", "## Final-eval ablations and core-write diagnostics", "",
+            "Pooled nats/char with every edge weight zeroed (a constant core write) and with the gate closed; "
+            "graph-dependent gain = zeroed - trained, core gain = gate closed - trained; write RMS relative to "
+            "the hidden state and the share of the write's power that varies across tokens.", "",
+            "| hypothesis | arm | seed | " + " | ".join(n for _, n in DIAGNOSTIC_METRICS) + " |",
+            "|---|---|---|" + "---|" * len(DIAGNOSTIC_METRICS), *out]
+
+
+def summary(rows: List[Dict[str, Any]], hyp_dir: Optional[Path] = None, runs: Optional[Path] = None,
+            noise_floor: Any = None, noise_k: float = NOISE_K) -> str:
     L = ["# Connectome Lab — run summary", "",
          "Final eval of every finished run (nats per reply character; lower is better).", "",
          "| hypothesis | arm | seed | pooled | replay | code | bio | connectome | fresh | temporal | temporal EM | |gate| | s/step |",
@@ -232,13 +407,22 @@ def summary(rows: List[Dict[str, Any]]) -> str:
               "| seed | control | treatment | delta (+ favours treatment) |", "|---|---|---|---|"]
         L += [f"| {r['seed']} | {f(r.get('control'), 5)} | {f(r.get('treatment'), 5)} | {f(r.get('delta'), 5)} |"
               for r in v["per_seed"]]
+    L += diagnostics_section(rows)
+    L += exploratory_section(hyp_dir, runs, noise_floor, noise_k)
     return "\n".join(L) + "\n"
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--run", default=None)
+    ap.add_argument("--noise_floor", default=None,
+                    help="exploratory flags: a float for every metric or a JSON {metric: floor} "
+                         "(default: derived from the pre-registered paired runs of the same protocol)")
+    ap.add_argument("--noise_k", type=float, default=NOISE_K, help="flag |delta| > k x noise floor")
     args = ap.parse_args(argv)
+    floor: Any = None
+    if args.noise_floor is not None:
+        floor = json.loads(args.noise_floor) if args.noise_floor.strip().startswith("{") else float(args.noise_floor)
     AN.mkdir(parents=True, exist_ok=True)
     rows = []
     for mp in sorted(prereg.RUNS.glob("*/metrics.json")):
@@ -258,7 +442,7 @@ def main(argv=None) -> int:
         cf.write_json(out_json, rep)
         (AN / f"{key}.md").write_text(run_markdown(rep), encoding="utf-8")
         print(f"[analyze] {key}: {m.get('arm')} seed {m.get('seed')}", flush=True)
-    (AN / "summary.md").write_text(summary(rows), encoding="utf-8")
+    (AN / "summary.md").write_text(summary(rows, noise_floor=floor, noise_k=args.noise_k), encoding="utf-8")
     cf.write_json(AN / "summary.json", {"runs": [{k: m.get(k) for k in ("hypothesis", "arm", "seed", "run_key", "config",
                                                                        "throughput", "peak_rss_mb", "wall_minutes")}
                                                   | {"final": (m.get("evals") or [{}])[-1]} for m in rows]})

@@ -12,6 +12,10 @@ and its ``direction``, and the ``success_rule``::
 
     {"all_same_sign": true, "min_mean_delta_rel": 0.01}   # or "min_mean_delta": 0.05 (absolute)
 
+``all_same_sign`` is a historical name (it is in locked files, so it stays):
+it means **every seed favours the treatment** (every ``delta > 0``), not
+"every delta has the same sign" -- three negative deltas do not meet it.
+
 ``lock`` writes ``hypotheses/<id>.lock.json`` (sha256 of the file bytes, UTC
 time, git commit). A lock is never replaced: editing a locked hypothesis makes
 ``run_lab`` and ``verdict`` refuse it. The verdict compares treatment and
@@ -20,9 +24,21 @@ that positive favours the treatment:
 
     SUPPORTED       every run finished, the rule holds
     NOT SUPPORTED   every run finished, the rule does not hold
-    INCONCLUSIVE    a run is missing, failed, or its metric is not finite
+    INCONCLUSIVE    a run is missing, failed, or its metric is not finite, or a
+                    recorded run is not provably the run the hypothesis asks for
 
 and is written once to ``verdicts/<id>.verdict.json`` (never overwritten).
+
+Before a run's metric is used, ``evaluate_rule`` checks that the recorded run
+is the one the hypothesis asks for: ``run_key`` equals its directory name, the
+recorded arm / seed / full ``LabConfig`` match, it was not an ``--unlocked``
+run, its recorded lock hash is the hypothesis' lock (for a run shared with
+another hypothesis: that hypothesis' lock, and its arm has the same config),
+and a trainable run's last eval is at the protocol's final step. Any failure is
+a problem (-> INCONCLUSIVE). Verdict schema version 2 (``verdict_schema_version``)
+adds ``all_favour_treatment`` (same value as ``all_same_sign``) and ``inputs``
+(sha256 of every metrics.json read). Verdict files issued before version 2
+are never rewritten.
 
 Runs are keyed by (protocol, full arm config, seed), so an arm shared by two
 hypotheses with the same protocol is trained once.
@@ -51,6 +67,9 @@ OUT = ROOT / "checkpoints" / "cns_lab"
 RUNS = OUT / "runs"
 VERDICTS = LAB / "verdicts"
 VERDICT_SCHEMA = "supermix-expanse-cns-lab-verdict-v1"
+#: Version of the verdict *content* (2: run provenance checks, ``inputs``, ``all_favour_treatment``).
+#: ``schema`` keeps its v1 string so readers of issued verdicts keep working.
+VERDICT_SCHEMA_VERSION = 2
 REQUIRED = ("id", "claim", "protocol", "arms", "control_arm", "treatment_arm", "seeds", "primary_metric", "direction",
             "success_rule")
 
@@ -171,12 +190,81 @@ def read_metric(metrics: Dict[str, Any], name: str, step: Optional[int] = None) 
     return float(v) if isinstance(v, (int, float)) else None
 
 
-def evaluate_rule(h: Dict[str, Any], runs: Path = RUNS) -> Dict[str, Any]:
-    """The verdict from the recorded metrics only."""
+def _lock_sha(hid: str, hyp_dir: Path) -> Optional[str]:
+    """sha256 recorded in ``<hid>.lock.json`` (None when there is no readable lock)."""
+    lp = lock_path(hid, hyp_dir)
+    try:
+        return json.loads(lp.read_text(encoding="utf-8")).get("sha256")
+    except (OSError, ValueError, AttributeError):
+        return None
+
+
+def check_run(h: Dict[str, Any], arm: str, seed: int, rdir: Path, m: Dict[str, Any],
+              hyp_dir: Path = HYP_DIR) -> List[str]:
+    """Why the recorded run ``m`` (read from ``rdir``) is not provably the run ``(h, arm, seed)``; [] if it is.
+
+    A run shared with another hypothesis (``m['hypothesis']`` names that one: same
+    protocol, config and seed, so the same run key) is accepted when that
+    hypothesis defines the recorded arm with the same config and the recorded
+    lock hash is that hypothesis' lock.
+    """
+    probs: List[str] = []
+    if m.get("run_key") != rdir.name:
+        probs.append(f"run_key {m.get('run_key')!r} != directory {rdir.name}")
+    try:
+        seed_ok = int(m.get("seed")) == int(seed)
+    except (TypeError, ValueError):
+        seed_ok = False
+    if not seed_ok:
+        probs.append(f"recorded seed {m.get('seed')!r} != {seed}")
+    want_cfg = arm_config(h, arm).to_dict()
+    if m.get("config") != want_cfg:
+        probs.append("recorded config differs from the arm's LabConfig")
+    if m.get("unlocked"):
+        probs.append("run made from an unlocked hypothesis (--unlocked)")
+    owner = m.get("hypothesis")
+    lock_rec = m.get("lock") if isinstance(m.get("lock"), dict) else None
+    if owner is None or owner == h["id"]:
+        if m.get("arm") != arm:
+            probs.append(f"recorded arm {m.get('arm')!r} != {arm!r}")
+        want_sha = (h.get("_lock") or {}).get("sha256")  # None: an unlocked dict, nothing to compare
+    else:  # trained once for another hypothesis with the same protocol
+        try:
+            other = json.loads(hyp_path(owner, hyp_dir).read_text(encoding="utf-8"))
+            other_cfg = arm_config(other, m.get("arm")).to_dict() if m.get("arm") in (other.get("arms") or {}) else None
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            other, other_cfg = None, None
+        if other is None:
+            probs.append(f"recorded for {owner}, whose hypothesis file is missing or unreadable")
+        elif other_cfg != want_cfg:
+            probs.append(f"recorded as {owner}/{m.get('arm')}, which is not this arm's config")
+        want_sha = _lock_sha(owner, hyp_dir)
+        if lock_rec and want_sha is None:  # a shared run must trace back to a readable lock
+            probs.append(f"recorded for {owner}, which has no readable lock")
+    if lock_rec and lock_rec.get("sha256") is not None and want_sha is not None:
+        if lock_rec["sha256"] != want_sha:
+            probs.append(f"recorded lock sha {str(lock_rec['sha256'])[:12]} != hypothesis lock {want_sha[:12]}")
+        if lock_rec.get("id") is not None and lock_rec["id"] != (owner or h["id"]):
+            probs.append(f"recorded lock is for {lock_rec['id']!r}, run recorded for {owner or h['id']!r}")
+    if not m.get("untrainable"):
+        evals = m.get("evals") or []
+        last = evals[-1].get("step") if evals and isinstance(evals[-1], dict) else None
+        try:
+            last_ok = last is not None and int(last) == int(h["protocol"]["steps"])
+        except (TypeError, ValueError):
+            last_ok = False
+        if not last_ok:
+            probs.append(f"last eval at step {last}, protocol {h['protocol']['steps']}")
+    return probs
+
+
+def evaluate_rule(h: Dict[str, Any], runs: Path = RUNS, hyp_dir: Path = HYP_DIR) -> Dict[str, Any]:
+    """The verdict from the recorded metrics only (every run's provenance checked, see :func:`check_run`)."""
     final_step = int(h["protocol"]["steps"])
     sign = 1.0 if h["direction"] == "lower_is_better" else -1.0
     rows: List[Dict[str, Any]] = []
     problems: List[str] = []
+    inputs: List[Dict[str, Any]] = []
     for seed in h["seeds"]:
         row: Dict[str, Any] = {"seed": int(seed)}
         for role in ("control", "treatment"):
@@ -187,25 +275,41 @@ def evaluate_rule(h: Dict[str, Any], runs: Path = RUNS) -> Dict[str, Any]:
             if not mp.exists():
                 problems.append(f"{arm} seed {seed}: no run")
             else:
-                m = json.loads(mp.read_text(encoding="utf-8"))
-                if m.get("status") != "done":
+                raw = mp.read_bytes()
+                inputs.append({"role": role, "arm": arm, "seed": int(seed), "run": d.name,
+                               "metrics_sha256": hashlib.sha256(raw).hexdigest()})
+                try:
+                    m = json.loads(raw.decode("utf-8"))
+                    if not isinstance(m, dict):
+                        raise ValueError("not a JSON object")
+                except ValueError as exc:
+                    m = None
+                    problems.append(f"{arm} seed {seed}: unreadable metrics.json ({exc})")
+                if m is None:
+                    pass
+                elif m.get("status") != "done":
                     problems.append(f"{arm} seed {seed}: status {m.get('status')}")
                 elif int(m.get("steps_done", -1)) != final_step and not m.get("untrainable"):
                     problems.append(f"{arm} seed {seed}: {m.get('steps_done')} steps, protocol {final_step}")
                 else:
-                    val = read_metric(m, h["primary_metric"])
-                    if val is None or not math.isfinite(val):
-                        problems.append(f"{arm} seed {seed}: metric {h['primary_metric']} = {val}")
-                        val = None
+                    bad = check_run(h, arm, seed, d, m, hyp_dir)
+                    if bad:
+                        problems += [f"{arm} seed {seed}: {p}" for p in bad]
+                    else:
+                        val = read_metric(m, h["primary_metric"])
+                        if val is None or not math.isfinite(val):
+                            problems.append(f"{arm} seed {seed}: metric {h['primary_metric']} = {val}")
+                            val = None
             row[role] = val
             row[f"{role}_run"] = d.name
         if row["control"] is not None and row["treatment"] is not None:
             row["delta"] = sign * (row["control"] - row["treatment"])  # > 0 favours the treatment
         rows.append(row)
-    out: Dict[str, Any] = {"schema": VERDICT_SCHEMA, "id": h["id"], "claim": h["claim"],
+    out: Dict[str, Any] = {"schema": VERDICT_SCHEMA, "verdict_schema_version": VERDICT_SCHEMA_VERSION,
+                           "id": h["id"], "claim": h["claim"],
                            "primary_metric": h["primary_metric"], "direction": h["direction"],
                            "success_rule": h["success_rule"], "per_seed": rows, "problems": problems,
-                           "hypothesis_sha256": (h.get("_lock") or {}).get("sha256")}
+                           "hypothesis_sha256": (h.get("_lock") or {}).get("sha256"), "inputs": inputs}
     if problems:
         out["verdict"] = "INCONCLUSIVE"
         return out
@@ -217,9 +321,11 @@ def evaluate_rule(h: Dict[str, Any], runs: Path = RUNS) -> Dict[str, Any]:
     else:
         control_mean = sum(r["control"] for r in rows) / len(rows)
         threshold = float(rule["min_mean_delta_rel"]) * abs(control_mean)
-    same_sign = all(d > 0 for d in deltas)
-    ok = (same_sign or not rule.get("all_same_sign", True)) and mean_delta >= threshold
-    out.update({"mean_delta": mean_delta, "threshold": threshold, "all_same_sign": same_sign,
+    # the rule key "all_same_sign" (locked files) means: every seed favours the treatment (delta > 0)
+    all_favour = all(d > 0 for d in deltas)
+    ok = (all_favour or not rule.get("all_same_sign", True)) and mean_delta >= threshold
+    out.update({"mean_delta": mean_delta, "threshold": threshold, "all_same_sign": all_favour,
+                "all_favour_treatment": all_favour,
                 "n_favour_treatment": sum(d > 0 for d in deltas), "n_seeds": len(deltas),
                 "verdict": "SUPPORTED" if ok else "NOT SUPPORTED"})
     return out
@@ -237,7 +343,7 @@ def verdict(hid: str, hyp_dir: Path = HYP_DIR, runs: Path = RUNS, verdict_dir: P
             raise PreregError(f"{vp} was issued for a different hypothesis file")
         old["_note"] = "existing verdict (verdicts are immutable)"
         return old
-    res = evaluate_rule(h, runs)
+    res = evaluate_rule(h, runs, hyp_dir)
     res["issued_utc"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     res["git"] = git_commit()
     if write and res["verdict"] != "INCONCLUSIVE":

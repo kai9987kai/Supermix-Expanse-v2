@@ -11,12 +11,22 @@ far back in the prompt (all well inside the 128-token context):
 ``make_rows(n, seed, split)`` is deterministic; ``train`` and ``heldout`` use
 disjoint seed streams and ``split_rows`` removes any heldout prompt from the
 train rows, so no evaluated prompt is ever trained on.
+
+``split_rows(..., version=2)`` (protocol ``temporal.split_version``; default 1
+is the original split, unchanged) also removes near-duplicates: every train row
+whose user text *starts with* a held-out user text (a held-out ``pattern``
+prompt that is a prefix of a train prompt shows the train row the held-out
+answer), and every train ``pattern`` row whose repeating unit is a held-out
+row's unit (compared up to rotation: the same cycle entered at another phase).
+Version 2 keeps the family round-robin of the train rows and draws further
+candidates from the same train stream when rows are dropped; the held-out
+rows are identical in both versions.
 """
 
 from __future__ import annotations
 
 import random
-from typing import Dict, List
+from typing import Dict, List, Optional, Tuple
 
 WORDS = ("amber cedar maple river stone cloud lamp tiger otter falcon copper silver garden harbor meadow canyon "
          "island lantern mirror pepper violet walnut willow zebra anchor basket candle desert ember forest glacier "
@@ -74,10 +84,66 @@ def make_rows(n: int, seed: int, split: str = "train") -> List[Dict[str, str]]:
     return rows
 
 
-def split_rows(n_train: int, n_heldout: int, seed: int) -> Dict[str, List[Dict[str, str]]]:
+SPLIT_VERSIONS = (1, 2)
+PATTERN_PREFIX = "Continue the sequence: "
+
+
+def pattern_unit(row: Dict[str, str]) -> Optional[Tuple[str, ...]]:
+    """The repeating unit of a ``pattern`` row (minimal period of prompt + answer), canonical up to
+    rotation (the lexicographically smallest rotation); None for other rows."""
+    if row.get("task") != "pattern" or not row["user"].startswith(PATTERN_PREFIX):
+        return None
+    seq = row["user"][len(PATTERN_PREFIX):].split() + row["assistant"].split()
+    if not seq:
+        return None
+    period = next(p for p in range(1, len(seq) + 1) if all(seq[i] == seq[i % p] for i in range(len(seq))))
+    unit = seq[:period]
+    return min(tuple(unit[i:] + unit[:i]) for i in range(period))
+
+
+def _leaks(row: Dict[str, str], held_users: List[str], held_units: set) -> bool:
+    """Split v2: a train row too close to a held-out row."""
+    user = row["user"]
+    if any(user.startswith(hu) for hu in held_users):
+        return True
+    unit = pattern_unit(row)
+    return unit is not None and unit in held_units
+
+
+def split_rows(n_train: int, n_heldout: int, seed: int, version: int = 1) -> Dict[str, List[Dict[str, str]]]:
+    """Train and held-out rows. ``version=1``: the original split (exact held-out prompts removed);
+    ``version=2``: also drops near-duplicates of held-out rows (see module doc)."""
+    version = int(version)
+    if version not in SPLIT_VERSIONS:
+        raise ValueError(f"temporal split_version {version}; allowed {SPLIT_VERSIONS}")
     held = make_rows(n_heldout, seed, "heldout")
     seen = {r["user"] for r in held}
-    train = [r for r in make_rows(n_train + n_heldout, seed, "train") if r["user"] not in seen][:n_train]
+    if version == 1:
+        train = [r for r in make_rows(n_train + n_heldout, seed, "train") if r["user"] not in seen][:n_train]
+        return {"train": train, "heldout": held}
+    held_users = sorted(seen)
+    held_units = {u for u in (pattern_unit(r) for r in held) if u is not None}
+    n_train = int(n_train)
+    pool = n_train + n_heldout
+    while True:
+        cands = make_rows(pool, seed, "train")  # a longer stream extends a shorter one (same rng sequence)
+        queues: Dict[str, List[Dict[str, str]]] = {f: [] for f in FAMILIES}
+        for r in cands:
+            if r["user"] not in seen and not _leaks(r, held_users, held_units):
+                queues[r["task"]].append(r)
+        need = {f: n_train // len(FAMILIES) + (1 if i < n_train % len(FAMILIES) else 0) for i, f in enumerate(FAMILIES)}
+        if all(len(queues[f]) >= need[f] for f in FAMILIES) or pool > 64 * (n_train + n_heldout + 1):
+            break
+        pool *= 2
+    ptr = {f: 0 for f in FAMILIES}
+    train: List[Dict[str, str]] = []
+    i = 0
+    while len(train) < n_train and any(ptr[f] < len(queues[f]) for f in FAMILIES):
+        f = FAMILIES[i % len(FAMILIES)]
+        if ptr[f] < len(queues[f]):
+            train.append(queues[f][ptr[f]])
+            ptr[f] += 1
+        i += 1
     return {"train": train, "heldout": held}
 
 
