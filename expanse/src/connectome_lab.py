@@ -863,7 +863,32 @@ class ConnectomeLabCore(nn.Module):
             # token mean, over this forward's tokens); 0 = a constant write (a learned bias vector)
             var = (gw - gw.mean(dim=0, keepdim=True)).pow(2).mean()
             out["write_token_var_frac"] = float(var / power) if float(power) > 0 else None
+            # the two values above are per forward (they depend on which tokens share a forward); these
+            # sufficient statistics let a caller pool them over any set of forwards: pool_write_moments
+            out["write_moments"] = {"n": int(gw.shape[0]), "sum": gw.sum(dim=0), "sq": float(gw.pow(2).sum()),
+                                    "h_sq": float(hidden.double().pow(2).sum())}
         return out
+
+
+def pool_write_moments(moments: Sequence[Dict[str, Any]]) -> Tuple[Optional[float], Optional[float]]:
+    """``(write_rms_ratio, write_token_var_frac)`` over every token of the given forwards.
+
+    ``moments`` are ``_stats``' ``write_moments`` (``n`` tokens, per-channel ``sum`` of the gated write
+    ``gw``, ``sq`` = sum of gw^2, ``h_sq`` = sum of hidden^2). Pooled exactly, so the result does not
+    depend on how tokens were split into forwards: ratio = sqrt(sum gw^2 / sum h^2); the variance
+    about the mean write over all tokens is sum gw^2 - |sum gw|^2 / n, and var_frac is its share of
+    sum gw^2. (None, None) without moments; a value is None when its denominator is 0.
+    """
+    ms = [m for m in moments if m and int(m["n"]) > 0]
+    if not ms:
+        return None, None
+    n = sum(int(m["n"]) for m in ms)
+    s = torch.stack([m["sum"].double() for m in ms]).sum(0)
+    sq = math.fsum(float(m["sq"]) for m in ms)
+    h_sq = math.fsum(float(m["h_sq"]) for m in ms)
+    ratio = math.sqrt(sq / h_sq) if h_sq > 0 else None
+    var_frac = min(1.0, max(0.0, (sq - float(s.pow(2).sum()) / n) / sq)) if sq > 0 else None
+    return ratio, var_frac
 
 
 # ---------------------------------------------------------------------------

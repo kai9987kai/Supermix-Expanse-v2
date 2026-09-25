@@ -36,7 +36,9 @@ Always recorded as well (additive keys; existing keys keep their meaning):
   and ``temporal_answer_nats_per_char_by_task``; with a core,
   ``write_rms_ratio`` (RMS of the gated write / RMS of the hidden state at the
   graft) and ``write_token_var_frac`` (share of the write's power that varies
-  across tokens; ~0 = the core acts as a constant bias).
+  across tokens, about the mean write; ~0 = the core acts as a constant bias),
+  both pooled over every eval token of every source (temporal included), so
+  they do not depend on the eval batch size or on how rows are batched.
 
 Optional protocol keys (absent = the original behaviour, bit for bit; a new
 key changes the run key, so it never collides with an existing run):
@@ -47,9 +49,16 @@ key changes the run key, so it never collides with an existing run):
                       sha256(eval_salt + row_key(user, assistant)), then the first n)
     eval_salt         salt of the "hash" sampling (default "cns-lab-eval-v1")
     final_ablations   true: at the final eval also the pooled nats/char with every edge weight
-                      zeroed (``..._zero_edges``: a constant write) and with the gate closed
-                      (``..._gate0``), ``graph_dependent_gain`` = zero_edges - trained and
-                      ``core_gain`` = gate0 - trained; the core is restored bit for bit
+                      zeroed (``..._zero_edges``: no signal crosses the graph) and with the gate
+                      closed (``..._gate0``), ``graph_dependent_gain`` = zero_edges - trained and
+                      ``core_gain`` = gate0 - trained; the core is restored bit for bit.
+                      With edges zeroed the core's ungated output is one fixed vector (state=reset;
+                      a persistent state relaxes towards it over the first tokens), so the write is
+                      constant only with a static gate. With a dynamic gate it is that vector times
+                      the token-dependent gate, and graph_dependent_gain then excludes what the gate
+                      alone can do. ``core_gain`` is the gain of the core's write *given the trained
+                      trunk*: the whole trained core's gain only with train_scope="core" (with
+                      "core+top" / "all" the gate0 eval keeps the fine-tuned trunk).
     temporal.split_version   1 (default) | 2 (temporal_tasks.split_rows: near-duplicates of
                       held-out rows removed from the temporal train rows)
 """
@@ -232,12 +241,6 @@ def answer_mask(yb: torch.Tensor, m: torch.Tensor) -> torch.Tensor:
     return m & ~((idx == last.unsqueeze(1)) & (last_is_eos & (last >= 0)).unsqueeze(1))
 
 
-def _weighted_mean(pairs: List[Any]) -> Optional[float]:
-    """Token-weighted mean of ``(weight, value)`` pairs (None when there are none)."""
-    tot = sum(w for w, _ in pairs)
-    return float(sum(w * v for w, v in pairs) / tot) if pairs and tot > 0 else None
-
-
 @torch.no_grad()
 def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_match_items: int = 0,
              row_losses: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -251,8 +254,7 @@ def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_mat
     autocorr: List[float] = []
     rates: List[float] = []
     active: List[float] = []
-    write_ratio: List[Any] = []  # (tokens, value) per forward
-    write_var: List[Any] = []
+    write_moments: List[Dict[str, Any]] = []  # per forward, pooled over every eval token below
     per_row: Dict[str, List[List[float]]] = {}
     answer_rows: List[List[float]] = []
     by_task: Dict[str, List[float]] = {}  # task -> [nats, chars, answer nats, answer chars]
@@ -273,10 +275,8 @@ def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_mat
             if "mean_rate" in info:
                 rates.append(info["mean_rate"])
                 active.append(info["fraction_active"])
-            if info.get("write_rms_ratio") is not None:
-                write_ratio.append((int(info.get("M", 1)), float(info["write_rms_ratio"])))
-            if info.get("write_token_var_frac") is not None:
-                write_var.append((int(info.get("M", 1)), float(info["write_token_var_frac"])))
+            if info.get("write_moments") is not None:
+                write_moments.append(info["write_moments"])
             # additive per-row / per-task accounting (the metrics above are computed exactly as before)
             ce0 = ce.masked_fill(~m, 0.0).double()
             row_nats, row_toks = ce0.sum(1).tolist(), m.sum(1).tolist()
@@ -315,8 +315,9 @@ def evaluate(model, tok, data, feats: Features, batch: int, step: int, exact_mat
         rec["state_autocorr"] = float(np.mean(autocorr)) if autocorr else None
         rec["mean_rate"] = float(np.mean(rates)) if rates else None
         rec["fraction_active"] = float(np.mean(active)) if active else None
-        rec["write_rms_ratio"] = _weighted_mean(write_ratio)
-        rec["write_token_var_frac"] = _weighted_mean(write_var)
+        # pooled over every eval token (all sources, temporal included), not averaged per forward: the
+        # values do not depend on the eval batch size or on which rows share a batch
+        rec["write_rms_ratio"], rec["write_token_var_frac"] = cl.pool_write_moments(write_moments)
     if row_losses is not None:
         row_losses["rows"] = per_row
         row_losses["keys_sha256"] = {
@@ -378,7 +379,9 @@ def ablated_core(core, mode: str):
 
     ``zero_edges``: ``bio_weight`` = 0, so every edge weight (bio x learned multiplier) is 0 and no
     signal crosses the graph (input and output types are disjoint): with ``state=reset`` the core's
-    write is one constant vector (a persistent state relaxes towards it over the first tokens).
+    ungated output is one fixed vector (a persistent state relaxes towards it over the first tokens).
+    The written update is that constant only with ``gate="static"``; a dynamic gate still scales it
+    per token (``tanh(gate_proj(norm(h)))`` depends on the token without any graph).
     ``gate0``: the gate (and a dynamic gate's projection) = 0: the graft is exactly absent.
     """
     if mode == "zero_edges":
@@ -431,9 +434,12 @@ def final_ablations(model, data, feats, batch: int, trained_pooled: float) -> Di
     for mode, key in ABLATIONS.items():
         with ablated_core(core, mode):
             out[key] = pooled_nats_per_char(model, data, feats, batch)
-    # > 0: the part of the trained core's gain that needs signal to pass through the graph
+    # > 0: the part of the trained core's gain that needs signal to pass through the graph (with a
+    # dynamic gate: beyond what the fixed zero-edge output scaled by the token-dependent gate achieves)
     out["graph_dependent_gain"] = out[ABLATIONS["zero_edges"]] - float(trained_pooled)
-    out["core_gain"] = out[ABLATIONS["gate0"]] - float(trained_pooled)  # the whole trained core's gain
+    # the gain of the core's write given the trained trunk (the whole trained core's gain only with
+    # train_scope="core"; with "core+top" / "all" the gate0 eval keeps the fine-tuned trunk)
+    out["core_gain"] = out[ABLATIONS["gate0"]] - float(trained_pooled)
     return out
 
 
@@ -479,6 +485,15 @@ def trainable_groups(model, core, P: Dict[str, Any]):
     return [g for g in groups if g["params"]]
 
 
+def run_provenance(h: Dict[str, Any], unlocked: bool) -> Dict[str, Any]:
+    """``unlocked`` and ``lock`` as a run records them. A hypothesis dict that did not come from
+    ``prereg.load_locked`` (no ``_lock``) is recorded as unlocked whatever the caller passed: the flag
+    says whether the run provably came from a locked hypothesis. (The CLI's locked path always has a
+    ``_lock``, so its runs record ``unlocked: false`` exactly as before.)"""
+    lock_rec = h.get("_lock")
+    return {"unlocked": bool(unlocked) or not lock_rec, "lock": lock_rec}
+
+
 def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: Path = prereg.RUNS,
         smoke: bool = False, unlocked: bool = False) -> Dict[str, Any]:
     P = dict(h["protocol"])
@@ -499,9 +514,10 @@ def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: 
     t_start = time.time()
     steps, batch = int(P["steps"]), int(P.get("batch", 8))
     eval_steps = sorted({int(s) for s in P.get("eval_steps", [steps])} | {steps})
+    prov = run_provenance(h, unlocked)
     metrics: Dict[str, Any] = {"schema": METRICS_SCHEMA, "hypothesis": h["id"], "arm": arm, "seed": int(seed),
                                "run_key": rdir.name, "config": cfg.to_dict(), "protocol": P, "status": "running",
-                               "unlocked": bool(unlocked), "lock": h.get("_lock"), "evals": [], "train_log": []}
+                               "unlocked": prov["unlocked"], "lock": prov["lock"], "evals": [], "train_log": []}
     write_json(mpath, metrics)
 
     base = ROOT / P.get("base_checkpoint", "checkpoints/supermix_expanse_v3.pt")

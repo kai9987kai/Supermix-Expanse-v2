@@ -376,9 +376,12 @@ def diagnostics_section(rows: List[Dict[str, Any]]) -> List[str]:
     if not out:
         return []
     return ["", "## Final-eval ablations and core-write diagnostics", "",
-            "Pooled nats/char with every edge weight zeroed (a constant core write) and with the gate closed; "
-            "graph-dependent gain = zeroed - trained, core gain = gate closed - trained; write RMS relative to "
-            "the hidden state and the share of the write's power that varies across tokens.", "",
+            "Pooled nats/char with every edge weight zeroed (no signal crosses the graph: a constant core write "
+            "only with a static gate and state=reset; a dynamic gate still scales it per token, so for "
+            "dynamic-gate arms the graph-dependent gain excludes what the gate alone can do) and with the gate "
+            "closed; graph-dependent gain = zeroed - trained, core gain = gate closed - trained (the gain of "
+            "the core's write given the trained trunk); write RMS relative to the hidden state and the share "
+            "of the write's power that varies across tokens, both over every eval token.", "",
             "| hypothesis | arm | seed | " + " | ".join(n for _, n in DIAGNOSTIC_METRICS) + " |",
             "|---|---|---|" + "---|" * len(DIAGNOSTIC_METRICS), *out]
 

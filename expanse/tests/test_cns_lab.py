@@ -5,17 +5,22 @@
 * verdict   -> SUPPORTED / NOT SUPPORTED / INCONCLUSIVE from synthetic run metrics,
                the delta sign follows ``direction``, relative thresholds use the
                control mean, and an issued verdict is never rewritten;
-* provenance-> a recorded run is used only if its run key, arm, seed, config, lock
-               and last eval step are the ones the hypothesis asks for and it was
-               not an ``--unlocked`` run (runs shared with another hypothesis are
-               checked against that hypothesis); verdict v2 fields and input hashes;
+* provenance-> a recorded run is used only if its run key, arm, seed (an exact int),
+               config, lock (which must be recorded) and last eval step are the ones
+               the hypothesis asks for, its ``untrainable`` flag is what the arm
+               implies, and it was not an ``--unlocked`` run (runs shared with another
+               hypothesis are checked against that hypothesis, which must be locked);
+               malformed fields give INCONCLUSIVE, never an exception; verdict v2
+               fields and input hashes (line endings normalised, as for the locks);
 * run keys  -> arms shared by two hypotheses with one protocol get one run;
 * tasks     -> deterministic, held-out prompts never in the train rows, answers
                derivable from the prompt; split v2 drops near-duplicates;
 * run_lab   -> (tiny synthetic LM + lab core, no checkpoint) per-row final losses
                add up to the reported metrics, answer-only temporal scoring, core
-               write diagnostics, final ablations restore the core bit for bit,
-               ``eps_edge`` reaches only the edge group, hash eval sampling;
+               write diagnostics over every eval token (independent of the eval
+               batch size), final ablations restore the core bit for bit,
+               ``eps_edge`` reaches only the edge group, hash eval sampling, a
+               never-locked hypothesis dict is recorded as unlocked;
 * analysis  -> modularity and drift report on a synthetic core file; exploratory
                arms section with a noise floor from paired pre-registered runs.
 
@@ -178,11 +183,23 @@ def test_verdict_v2_fields_and_inputs(tmp_path):
     assert res["verdict"] == "SUPPORTED" and res["verdict_schema_version"] == prereg.VERDICT_SCHEMA_VERSION == 2
     assert res["schema"] == prereg.VERDICT_SCHEMA  # issued v1 readers keep working
     assert res["all_favour_treatment"] is True and res["all_same_sign"] is True
-    assert len(res["inputs"]) == 6
+    assert len(res["inputs"]) == 6 and res["inputs_hash"] == prereg.INPUTS_HASH == "sha256-lf-normalised"
     for rec in res["inputs"]:
         mp = prereg.run_dir(hl, rec["arm"], rec["seed"], runs) / "metrics.json"
-        assert rec["run"] == mp.parent.name and rec["metrics_sha256"] == hashlib.sha256(mp.read_bytes()).hexdigest()
+        assert rec["run"] == mp.parent.name and rec["metrics_sha256"] == prereg.sha256_bytes(mp.read_bytes())
     assert {(r["role"], r["arm"]) for r in res["inputs"]} == {("control", "shuffled"), ("treatment", "real")}
+    # input hashes use the lock convention (CRLF -> LF): a CRLF working copy of a metrics.json (what
+    # Path.write_text gives on Windows) hashes like the LF blob git stores
+    mp = prereg.run_dir(hl, "real", 1, runs) / "metrics.json"
+    m = json.loads(mp.read_text(encoding="utf-8"))
+    lf = json.dumps(m, indent=1).encode("utf-8")
+    mp.write_bytes(lf)
+    want = hashlib.sha256(lf).hexdigest()
+    mp.write_bytes(lf.replace(b"\n", b"\r\n"))
+    assert b"\r\n" in mp.read_bytes() and hashlib.sha256(mp.read_bytes()).hexdigest() != want
+    res = prereg.evaluate_rule(hl, runs, hd)
+    assert res["verdict"] == "SUPPORTED"
+    assert [r["metrics_sha256"] for r in res["inputs"] if (r["arm"], r["seed"]) == ("real", 1)] == [want]
     # every delta negative: "all_same_sign" (= all favour the treatment) is False, as is its new name
     for s in (1, 2, 3):
         fake_run(runs, hl, "real", s, 1.2)
@@ -198,10 +215,26 @@ def test_verdict_v2_fields_and_inputs(tmp_path):
     ({"run_key": "0123456789abcdef"}, "run_key"),
     ({"arm": "shuffled"}, "recorded arm"),
     ({"seed": 7}, "recorded seed"),
+    ({"seed": 3.9}, "recorded seed"),  # int() would truncate it to 3
+    ({"seed": 3.0}, "recorded seed"),
+    ({"seed": "3"}, "recorded seed"),
     ({"config": cl.LabConfig(edge_param="dale_softplus", microsteps=3).to_dict()}, "config"),
     ({"unlocked": True}, "unlocked"),
     ({"lock": {"id": "H-T-001", "sha256": "0" * 64}}, "lock sha"),
+    ({"lock": None}, "no lock recorded"),  # e.g. run_lab.run called with a dict that was never locked
+    ({"lock": {}}, "no lock recorded"),
+    ({"lock": {"id": "H-T-001", "sha256": None}}, "no lock recorded"),
+    ({"lock": "H-T-001"}, "no lock recorded"),
     ({"evals": [{"step": 5, "val_nats_per_char_pooled": 0.96}]}, "last eval"),
+    ({"evals": [{"step": 10.5, "val_nats_per_char_pooled": 0.96}]}, "last eval"),
+    ({"untrainable": True}, "untrainable"),  # a trainable arm cannot opt out of the step checks
+    # malformed fields: a problem (-> INCONCLUSIVE), never an exception
+    ({"steps_done": None}, "steps, protocol"),
+    ({"steps_done": "x"}, "steps, protocol"),
+    ({"evals": {"step": 10, "val_nats_per_char_pooled": 0.96}}, "last eval"),
+    ({"evals": [5, 10]}, "last eval"),
+    ({"evals": [{"step": 10, "val_nats_per_char_pooled": True}]}, "metric"),
+    ({"evals": [{"step": 10, "val_nats_per_char_pooled": 10 ** 400}]}, "malformed metrics.json field"),
 ])
 def test_verdict_rejects_runs_it_cannot_trace(tmp_path, tamper, expect):
     hd, hl = locked(tmp_path, hyp())
@@ -212,7 +245,17 @@ def test_verdict_rejects_runs_it_cannot_trace(tmp_path, tamper, expect):
     res = prereg.evaluate_rule(hl, runs, hd)
     assert res["verdict"] == "INCONCLUSIVE", tamper
     assert any(p.startswith("real seed 3:") and expect in p for p in res["problems"]), res["problems"]
-    assert len(res["problems"]) == 1
+    assert len(res["problems"]) == 1, res["problems"]
+
+
+def test_verdict_seed_is_compared_exactly(tmp_path):
+    """True == 1 in Python: a recorded seed True is not seed 1."""
+    hd, hl = locked(tmp_path, hyp())
+    runs = tmp_path / "runs"
+    supported_runs(runs, hl)
+    fake_run(runs, hl, "real", 1, 0.97, seed=True)
+    res = prereg.evaluate_rule(hl, runs, hd)
+    assert res["verdict"] == "INCONCLUSIVE" and res["problems"] == ["real seed 1: recorded seed True != 1"]
 
 
 def test_verdict_untrainable_and_unreadable_runs(tmp_path):
@@ -221,16 +264,38 @@ def test_verdict_untrainable_and_unreadable_runs(tmp_path):
     h["control_arm"] = "none"
     hd, hl = locked(tmp_path, h)
     runs = tmp_path / "runs"
+    assert prereg.untrainable_arm(hl, "none") and not prereg.untrainable_arm(hl, "real")
+    assert not prereg.untrainable_arm(dict(hl, protocol=dict(PROTOCOL, train_scope="core+top")), "none")
     for s in (1, 2, 3):
-        fake_run(runs, hl, "none", s, 1.0, steps=0, untrainable=True)  # evaluated as-is: no step check
+        # evaluated as-is (steps_done 0), with the eval recorded at every eval step as run_lab does
+        fake_run(runs, hl, "none", s, 1.0, steps=0, untrainable=True)
         fake_run(runs, hl, "real", s, 0.95)
     assert prereg.evaluate_rule(hl, runs, hd)["verdict"] == "SUPPORTED"
-    # an untrainable run needs no final-step eval, but it still has to be the right run
-    fake_run(runs, hl, "none", 1, 1.0, steps=0, untrainable=True, evals=[{"step": 5, "val_nats_per_char_pooled": 1.0}])
-    assert prereg.evaluate_rule(hl, runs, hd)["verdict"] == "SUPPORTED"
-    fake_run(runs, hl, "none", 1, 1.0, steps=0, untrainable=True, config=cl.LabConfig().to_dict())
-    assert prereg.evaluate_rule(hl, runs, hd)["verdict"] == "INCONCLUSIVE"
+
+    def problems_after(arm, seed, **fields):
+        fake_run(runs, hl, arm, seed, 1.0 if arm == "none" else 0.95, **fields)
+        res = prereg.evaluate_rule(hl, runs, hd)
+        fake_run(runs, hl, arm, seed, 1.0 if arm == "none" else 0.95,
+                 **({"steps": 0, "untrainable": True} if arm == "none" else {}))  # restore
+        assert (res["verdict"] == "INCONCLUSIVE") == bool(res["problems"])
+        return res["problems"]
+
+    # an untrainable run also needs its eval at the final step (run_lab writes one at every eval step)
+    probs = problems_after("none", 1, steps=0, untrainable=True, evals=[{"step": 5, "val_nats_per_char_pooled": 1.0}])
+    assert probs == ["none seed 1: last eval at step 5, protocol 10"]
+    # the untrainable flag is checked against the arm: a trainable arm that claims it (a short run) ...
+    probs = problems_after("real", 3, steps=5, untrainable=True, evals=[{"step": 5, "val_nats_per_char_pooled": 0.5}])
+    assert len(probs) == 2 and all(p.startswith("real seed 3:") for p in probs)
+    assert "untrainable=True" in probs[0] and "last eval at step 5" in probs[1]
+    # ... and an untrainable arm recorded as trained
+    probs = problems_after("none", 2, steps=10)
+    assert probs == ["none seed 2: recorded untrainable=None, but arm 'none' is untrainable under this protocol"]
+    # still has to be the right run
+    assert problems_after("none", 1, steps=0, untrainable=True, config=cl.LabConfig().to_dict())
     (prereg.run_dir(hl, "none", 1, runs) / "metrics.json").write_text("{not json", encoding="utf-8")
+    res = prereg.evaluate_rule(hl, runs, hd)
+    assert res["verdict"] == "INCONCLUSIVE" and "unreadable" in res["problems"][0]
+    (prereg.run_dir(hl, "none", 1, runs) / "metrics.json").write_text("[1, 2]", encoding="utf-8")
     res = prereg.evaluate_rule(hl, runs, hd)
     assert res["verdict"] == "INCONCLUSIVE" and "unreadable" in res["problems"][0]
 
@@ -263,6 +328,19 @@ def test_verdict_accepts_runs_shared_with_another_hypothesis(tmp_path):
     # recorded for H-A under an arm name whose config is not this arm's
     fake_run(runs, al, "real", 2, 0.95, arm="shuffled")
     assert prereg.evaluate_rule(bl, runs, hd)["verdict"] == "INCONCLUSIVE"
+    # recorded for H-A without a lock record (not an --unlocked run): not provably from the locked H-A
+    fake_run(runs, al, "real", 2, 0.95, lock=None)
+    res = prereg.evaluate_rule(bl, runs, hd)
+    assert res["verdict"] == "INCONCLUSIVE" and res["problems"] == ["wired seed 2: no lock recorded: not provably "
+                                                                    "made from the locked hypothesis"]
+    # recorded for H-C: same protocol and arm config, but H-C was written and never locked
+    c = hyp("H-C")
+    write_hyp(hd, c)
+    assert prereg.run_dir(c, "real", 2, runs) == prereg.run_dir(bl, "wired", 2, runs)
+    fake_run(runs, c, "real", 2, 0.95)  # c has no _lock: the run records lock None, unlocked False
+    res = prereg.evaluate_rule(bl, runs, hd)
+    assert res["verdict"] == "INCONCLUSIVE" and res["problems"] == ["wired seed 2: recorded for H-C, which has no "
+                                                                    "readable lock"]
     fake_run(runs, al, "real", 2, 0.95)
     assert prereg.evaluate_rule(bl, runs, hd)["verdict"] == "SUPPORTED"
 
@@ -493,6 +571,62 @@ def test_run_lab_final_rows_temporal_answer_and_write_stats(rl, tmp_path):
     rl.store_final_rows(metrics, out)
     assert metrics["final_rows"] is out["rows"] and metrics["final_rows_temporal_answer"] is ans
     assert len(json.dumps(metrics)) < 60 * sum(len(v) for v in out["rows"].values()) + 2000  # compact
+
+
+@pytest.mark.parametrize("cfg", [cl.LabConfig(edge_param="dale_softplus"),
+                                 cl.LabConfig(edge_param="dale_softplus", gate="dynamic"),
+                                 cl.LabConfig(edge_param="dale_softplus", gate="dynamic", state="persist")],
+                         ids=["static-reset", "dynamic-reset", "dynamic-persist"])
+def test_run_lab_write_stats_pool_every_eval_token(rl, tmp_path, cfg):
+    """write_rms_ratio / write_token_var_frac are over all eval tokens at once (not a mean of per-batch values)."""
+    model, tok, data = tiny_setup(rl, tmp_path, cfg)
+    core = model.cns_full
+    seen = []
+
+    def capture(mod, args, out):  # the core is called as core(hidden, token_mask, past_length=...)
+        hidden, mask = args[0], args[1]
+        seen.append(((out[0] - hidden)[mask].double(), hidden[mask].double()))
+
+    def brute(records):
+        w, hs = torch.cat([a for a, _ in records]), torch.cat([b for _, b in records])
+        power = w.pow(2).mean()
+        return (float(torch.sqrt(power / hs.pow(2).mean())),
+                float((w - w.mean(0, keepdim=True)).pow(2).mean() / power))
+
+    hook = core.register_forward_hook(capture)
+    try:
+        rec = rl.evaluate(model, tok, data, no_feats, batch=3, step=1)
+    finally:
+        hook.remove()
+    assert len(seen) == sum(-(-b["x"].shape[0] // 3) for b in data["eval"].values())  # every eval forward
+    ratio, var = brute(seen)
+    assert rec["write_rms_ratio"] == pytest.approx(ratio, rel=1e-4)
+    assert rec["write_token_var_frac"] == pytest.approx(var, rel=1e-3)
+    # the per-forward values averaged (the old aggregation) are not the eval-level value
+    per_fwd = [brute([s]) for s in seen]
+    wts = [s[0].shape[0] for s in seen]
+    assert abs(sum(wt * v for wt, (_, v) in zip(wts, per_fwd)) / sum(wts) - var) > 1e-3
+    # independent of the eval batch size (right-padded rows: every token sees the same inputs)
+    for b in (1, 7):
+        rb = rl.evaluate(model, tok, data, no_feats, batch=b, step=1)
+        assert rb["write_rms_ratio"] == pytest.approx(rec["write_rms_ratio"], rel=1e-5)
+        assert rb["write_token_var_frac"] == pytest.approx(rec["write_token_var_frac"], rel=1e-5)
+    # edges zeroed: a constant write only with a static gate and state=reset; a dynamic gate still
+    # scales the fixed zero-edge output per token
+    with rl.ablated_core(core, "zero_edges"):
+        rec0 = rl.evaluate(model, tok, data, no_feats, batch=3, step=1)
+    if cfg.gate == "static" and cfg.state == "reset":
+        assert rec0["write_token_var_frac"] < 1e-9
+    else:
+        assert rec0["write_token_var_frac"] > 1e-3
+
+
+def test_run_lab_records_unlocked_for_a_dict_that_was_never_locked(rl):
+    h = hyp()
+    assert rl.run_provenance(h, False) == {"unlocked": True, "lock": None}
+    lock_rec = {"id": h["id"], "sha256": "ab" * 32}
+    assert rl.run_provenance(dict(h, _lock=lock_rec), False) == {"unlocked": False, "lock": lock_rec}
+    assert rl.run_provenance(dict(h, _lock=lock_rec), True) == {"unlocked": True, "lock": lock_rec}
 
 
 @pytest.mark.parametrize("cfg", [cl.LabConfig(), cl.LabConfig(edge_param="dale_softplus", gate="dynamic", state="persist")],

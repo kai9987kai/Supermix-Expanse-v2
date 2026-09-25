@@ -14,7 +14,8 @@ What must hold, and why:
   unsigned is all-positive, random strengths permute magnitudes, every arm has |W| radius 0.9;
 * anatomy        -> export shapes, multiplier exactly 1 at birth;
 * diagnostics    -> the no-grad ``write_rms_ratio`` / ``write_token_var_frac`` match the write the
-  output actually carries (out - hidden), are absent under autograd, and a zero-edge core writes a constant;
+  output actually carries (out - hidden), pool exactly over forwards (``pool_write_moments``), are
+  absent under autograd, and a zero-edge core writes a constant only with a static gate and reset state;
 * Expanse        -> a lab core round-trips through save_expanse / load_expanse and KV decode.
 
 Run: ``python -m pytest tests/test_connectome_lab.py -q``
@@ -227,14 +228,29 @@ def test_write_diagnostics(base, state, gate):
     assert info["write_rms_ratio"] == pytest.approx(ratio, rel=1e-4)
     assert info["write_token_var_frac"] == pytest.approx(var, rel=1e-3, abs=1e-6)
     assert 0 < info["write_token_var_frac"] <= 1
+    # the sufficient statistics give the same values for one forward, and pool exactly over several:
+    # the two rows as two forwards give the values of all their tokens together
+    assert info["write_moments"]["n"] == int(mask.sum())
+    one = cl.pool_write_moments([info["write_moments"]])
+    assert one == pytest.approx((info["write_rms_ratio"], info["write_token_var_frac"]), rel=1e-9, abs=1e-12)
+    with torch.no_grad():
+        parts = [core(x[i:i + 1], mask[i:i + 1])[1]["write_moments"] for i in range(2)]
+    pooled = cl.pool_write_moments(parts)
+    assert pooled[0] == pytest.approx(ratio, rel=1e-4) and pooled[1] == pytest.approx(var, rel=1e-3, abs=1e-6)
+    assert cl.pool_write_moments([]) == (None, None)
     out_g, info_g = core(x, mask)  # under autograd: no statistics, same function
-    assert "write_rms_ratio" not in info_g and "write_token_var_frac" not in info_g
+    assert "write_rms_ratio" not in info_g and "write_token_var_frac" not in info_g and "write_moments" not in info_g
     assert torch.allclose(out_g.detach(), out, atol=1e-6)
-    if gate == "static" and state == "reset":  # every edge zeroed: nothing crosses the graph -> one constant write
-        with torch.no_grad():
-            core.bio_weight.zero_()
-            _, info0 = core(x, mask)
+    # every edge zeroed: nothing crosses the graph, so the core's ungated output is one fixed vector (with
+    # state=reset); the write is constant only with a static gate -- a dynamic gate still varies per token
+    with torch.no_grad():
+        core.bio_weight.zero_()
+        core._op_cache = None
+        _, info0 = core(x, mask)
+    if gate == "static" and state == "reset":
         assert info0["write_token_var_frac"] < 1e-9
+    elif gate == "dynamic":
+        assert info0["write_token_var_frac"] > 1e-3
 
 
 def test_graph_arms(base):
