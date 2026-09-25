@@ -1,0 +1,10 @@
+{
+ "id": "H-CNS-004",
+ "sha256": "83310d7344283c36935a2297df75d79abc483090f1aa9e7d732a9b9d0493fd58",
+ "locked_utc": "2026-09-25T13:05:48+00:00",
+ "git": {
+  "commit": "1c43a8a2d090465305271818dfd3c06e1db1dc67",
+  "dirty": true
+ },
+ "file": "H-CNS-004.json"
+}
