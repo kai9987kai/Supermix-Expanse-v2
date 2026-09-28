@@ -98,6 +98,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 import expanse_core as ec  # noqa: E402
 from expanse_core import PATHS, text_utils  # noqa: E402
+from source_sampler import SourceSampler, parse_source_weights, validate_resume_contract  # noqa: E402
 
 FLY_AGENTS = ("agent1", "agent2", "agent3")
 FLY_REGIMES = ("FORAGE", "EVADE", "SCOUT", "PIONEER", "CONSOLIDATE", "MAP_BEACON")
@@ -105,7 +106,8 @@ SOURCES = ("replay", "fly", "code", "bio", "connectome", "fresh")
 V1_SOURCES = SOURCES[:5]  # the v1 corpus (train_consolidation_v2's domains)
 FRESH_FAMILIES = ("omni", "code", "math")
 V2_SCHEMA = "supermix-expanse-v2"
-PARTIAL_SCHEMA = "supermix-expanse-partial-v1"
+LEGACY_PARTIAL_SCHEMA = "supermix-expanse-partial-v1"
+PARTIAL_SCHEMA = "supermix-expanse-partial-v2"
 KD_CACHE_VERSION = 1
 O7_CACHE_VERSION = 1
 
@@ -391,6 +393,38 @@ def data_fingerprint(meta_tr, meta_dv, seq: int, vocab: int, tok_tag: str = "") 
     return h.hexdigest()
 
 
+def packed_data_fingerprint(meta_tr, meta_dv, legacy_fingerprint: str) -> str:
+    """Bind full packed metadata, including source assignments and auxiliary labels."""
+    body = {"legacy_fingerprint": legacy_fingerprint, "train": meta_tr, "dev": meta_dv}
+    return hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":"),
+                                     allow_nan=False).encode("utf-8")).hexdigest()
+
+
+RESUME_ARGUMENTS = ("steps", "batch", "seq", "lr_trunk", "lr_graft", "kd_arch", "kd_T", "kd_topk",
+                    "omni7_kd", "fly_aux", "wake", "freeze_trunk_steps", "boost_all_embeddings",
+                    "v2_balance", "seed", "threads", "eval_every", "smoke")
+
+
+def parse_wake_schedule(value: str):
+    if value == "preserve":
+        return None
+    try:
+        start, end = [float(v) for v in value.split(",")]
+    except ValueError as exc:
+        raise ValueError("wake must be 'preserve' or two comma-separated progress values") from exc
+    if not math.isfinite(start) or not math.isfinite(end) or end < start:
+        raise ValueError("wake progress values must be finite and nondecreasing")
+    return start, end
+
+
+def donor_wake_progress(schedule, step: int, steps: int) -> Optional[float]:
+    if schedule is None:
+        return None
+    start, end = schedule
+    prog = step / max(1, steps)
+    return None if prog < start else min(1.0, (prog - start) / max(1e-6, end - start))
+
+
 # ---------------------------------------------------------------------------
 # checkpoints + tokenizers (v1 / v2 schema, word / BPE)
 # ---------------------------------------------------------------------------
@@ -540,7 +574,8 @@ def main() -> int:
     ap.add_argument("--kd_topk", type=int, default=32)
     ap.add_argument("--omni7_kd", type=float, default=0.2)
     ap.add_argument("--fly_aux", type=float, default=1.0)
-    ap.add_argument("--wake", type=str, default="0.1,0.5")
+    ap.add_argument("--wake", type=str, default="0.1,0.5",
+                    help="start,end donor wake progress, or preserve for continuation without bias resets")
     ap.add_argument("--eval_every", type=int, default=50)
     ap.add_argument("--save_every", type=int, default=25)
     ap.add_argument("--kd_cache", default=str(PATHS["data"] / "kd_arch_top32.pt"))
@@ -551,8 +586,22 @@ def main() -> int:
     ap.add_argument("--finalize_on_budget", action="store_true", help="also write the final checkpoint when the budget ends a run")
     ap.add_argument("--smoke", action="store_true", help="2 steps on 16 rows; caches in memory only")
     ap.add_argument("--seed", type=int, default=2026)
+    ap.add_argument("--sampling", choices=("natural", "balanced"), default="natural",
+                    help="natural: historical shuffled row pool; balanced: explicit source row probabilities")
+    ap.add_argument("--source_weights", default=None,
+                    help="balanced only: source=weight,... for every nonempty packed source; default equal")
+    ap.add_argument("--sampling_seed", type=int, default=None,
+                    help="sampler RNG seed, default --seed; does not change corpus split")
     ap.add_argument("--threads", type=int, default=8)
     args = ap.parse_args()
+    source_weights = parse_source_weights(args.source_weights)
+    if args.sampling == "natural" and source_weights is not None:
+        ap.error("--source_weights requires --sampling balanced")
+    wake_schedule = parse_wake_schedule(args.wake)
+    if args.sampling_seed is None:
+        args.sampling_seed = args.seed
+    if args.batch <= 0 or args.steps <= 0 or args.eval_every <= 0:
+        ap.error("batch, steps, and eval_every must be positive")
     smoke_dir = PATHS["checkpoints"] / "smoke"
     if args.smoke:
         args.steps = 2 if args.steps == 600 else args.steps
@@ -574,6 +623,7 @@ def main() -> int:
     t0 = time.time()
 
     # model --------------------------------------------------------------------
+    parent_sha256 = ec.sha256_file(args.inp)
     model, tok, payload, schema = load_checkpoint(args.inp)
     receipt_in = dict(payload.get("expanse") or {})
     payload["state_dict"] = None
@@ -622,6 +672,14 @@ def main() -> int:
     src_tr = [r["source"] for r in m_tr]
     src_dv = [r["source"] for r in m_dv]
     fingerprint = data_fingerprint(m_tr, m_dv, args.seq, tok.vocab_size, tokenizer_tag(tok))
+    packed_fingerprint = packed_data_fingerprint(m_tr, m_dv, fingerprint)
+    sampler = SourceSampler(src_tr, (y_tr[:, 1:] != -100).sum(dim=1).tolist(), mode=args.sampling,
+                            seed=args.sampling_seed, weights=source_weights)
+    resume_contract = {"schema": "expanse-training-contract-v1", "parent_sha256": parent_sha256,
+                       "data_fingerprint": packed_fingerprint, "sampling": sampler.config(),
+                       "arguments": {k: getattr(args, k) for k in RESUME_ARGUMENTS}}
+    log(f"sampling {args.sampling}, seed {args.sampling_seed}, source row probabilities "
+        + json.dumps(sampler.probabilities, sort_keys=True))
 
     # prompt-constant features: omni v48/v38 and omni7 -----------------------------
     feats_tr = ec.arch.OmniCore.featurize([r["user"] for r in m_tr])
@@ -726,11 +784,8 @@ def main() -> int:
         prog = (step - warm) / max(1, args.steps - warm)
         return 0.05 + 0.95 * 0.5 * (1 + math.cos(math.pi * prog))
 
-    wake0, wake1 = [float(v) for v in args.wake.split(",")]
-
     def wake_progress(step: int) -> Optional[float]:
-        prog = step / max(1, args.steps)
-        return None if prog < wake0 else min(1.0, (prog - wake0) / max(1e-6, wake1 - wake0))
+        return donor_wake_progress(wake_schedule, step, args.steps)
 
     # evaluation ------------------------------------------------------------------------
     @torch.no_grad()
@@ -788,31 +843,43 @@ def main() -> int:
         return rep
 
     # resume --------------------------------------------------------------------------------
-    step, ptr = 0, 0
-    g = torch.Generator().manual_seed(args.seed)
-    idx = torch.randperm(x_tr.shape[0], generator=g)
+    step = 0
     history: List[Dict[str, Any]] = []
     train_seconds = 0.0
     resumed_from = None
     rp = None if args.resume == "none" else (partial_path if args.resume == "auto" else Path(args.resume))
+    if args.resume not in ("none", "auto") and not rp.exists():
+        raise FileNotFoundError(f"explicit resume checkpoint does not exist: {rp}")
     const_keys = set(constant_state_keys(model))
     if rp is not None and rp.exists():
         part = torch.load(rp, map_location="cpu", weights_only=False)
-        if part.get("schema") != PARTIAL_SCHEMA:
-            raise ValueError(f"{rp} is not a {PARTIAL_SCHEMA} file")
+        if part.get("schema") not in (PARTIAL_SCHEMA, LEGACY_PARTIAL_SCHEMA):
+            raise ValueError(f"{rp} is not a supported Expanse partial checkpoint")
         if part.get("fingerprint") != fingerprint:
             raise ValueError(f"{rp} was written for different data/tokenizer (fingerprint mismatch); "
                              "pass --resume none to start over")
-        for k in ("steps", "batch", "seq", "lr_trunk", "lr_graft"):
-            if part["args"].get(k) != getattr(args, k):
-                log(f"WARNING resuming with {k}={getattr(args, k)} (partial had {part['args'].get(k)})")
+        if part["schema"] == PARTIAL_SCHEMA:
+            validate_resume_contract(part.get("resume_contract"), resume_contract)
+            sampler.load_state_dict(part["sampler"])
+            if sampler.updates_seen + sampler.exposure_start_step != int(part["step"]):
+                raise ValueError("partial sampler exposure/update count differs from checkpoint step")
+        else:
+            if args.sampling != "natural" or args.sampling_seed != args.seed:
+                raise ValueError("legacy partials require natural sampling with the original seed")
+            changed = [k for k in RESUME_ARGUMENTS if part["args"].get(k) != getattr(args, k)]
+            if changed:
+                raise ValueError("legacy resume training arguments changed: " + ", ".join(changed))
+            if Path(part["inp"]).resolve() != Path(args.inp).resolve():
+                raise ValueError("legacy partial has a different parent path; parent content was not hashed")
+            sampler.load_legacy_order(part["order"], step=int(part["step"]))
+            log("WARNING legacy partial: parent bytes and previous exposure cannot be verified; "
+                "receipt exposure counts cover resumed updates only")
         missing_k, unexpected_k = model.load_state_dict(part["model"], strict=False)
         bad = [k for k in missing_k if k not in const_keys]
         if bad or unexpected_k:
             raise RuntimeError(f"partial state mismatch: missing {bad[:5]} unexpected {list(unexpected_k)[:5]}")
         opt.load_state_dict(part["optimizer"])
-        step, idx, ptr = int(part["step"]), part["order"]["idx"], int(part["order"]["ptr"])
-        g.set_state(part["order"]["gen"])
+        step = int(part["step"])
         history = list(part.get("history", []))
         train_seconds = float(part.get("train_seconds", 0.0))
         torch.set_rng_state(part["rng"]["torch"])
@@ -831,7 +898,8 @@ def main() -> int:
         t1 = time.time()
         state = {k: v.detach().cpu() for k, v in model.state_dict().items() if k not in const_keys}
         atomic_save({"schema": PARTIAL_SCHEMA, "step": step, "model": state, "optimizer": opt.state_dict(),
-                     "order": {"idx": idx, "ptr": ptr, "gen": g.get_state()}, "history": history, "fingerprint": fingerprint,
+                     "sampler": sampler.state_dict(), "resume_contract": resume_contract,
+                     "history": history, "fingerprint": fingerprint,
                      "args": vars(args), "inp": args.inp, "reason": reason,
                      "train_seconds": train_seconds + (time.time() - t_run),
                      "rng": {"torch": torch.get_rng_state(), "python": random.getstate(), "numpy": np.random.get_state()}},
@@ -853,11 +921,7 @@ def main() -> int:
         if args.stop_after and steps_this_run >= args.stop_after:
             ended_by = "stop_after"
             break
-        if ptr + args.batch > idx.numel():
-            idx = torch.randperm(x_tr.shape[0], generator=g)
-            ptr = 0
-        bi = idx[ptr:ptr + args.batch]
-        ptr += args.batch
+        bi = sampler.next_batch(args.batch)
         xb, yb, plb = x_tr[bi], y_tr[bi], pl_tr[bi]
         wp = wake_progress(step)
         if wp is not None:
@@ -923,6 +987,7 @@ def main() -> int:
         boost.snapshot()
         opt.step()
         boost.apply()
+        sampler.record_update(bi)
         step += 1
         steps_this_run += 1
         last_losses = losses
@@ -942,7 +1007,8 @@ def main() -> int:
             log(f"stopped at step {step}/{args.steps} ({ended_by}); rerun the same command to resume")
             return 0
 
-    model.wake_donor_experts(1.0)
+    if wake_schedule is not None:
+        model.wake_donor_experts(1.0)
     final = evaluate("final")
     history.append({"step": step, **final})
     model.eval()
@@ -955,6 +1021,8 @@ def main() -> int:
             "lr_trunk": args.lr_trunk, "lr_graft": args.lr_graft, "kd_arch": args.kd_arch, "kd_T": args.kd_T,
             "kd_topk": args.kd_topk, "omni7_kd": args.omni7_kd, "fly_aux": args.fly_aux, "wake": args.wake,
             "seed": args.seed, "smoke": bool(args.smoke),
+            "parent_sha256": parent_sha256, "data_fingerprint": packed_fingerprint,
+            "sampling": sampler.receipt(), "resume_contract": resume_contract,
             "init": {"path": str(args.inp), "schema": schema, "stage": receipt_in.get("stage"),
                      "prior_training": {k: prior.get(k) for k in ("steps", "seq", "seed", "corpus_args")} if prior else None},
             "tokenizer": {"kind": tok_kind, "vocab": tok.vocab_size, "retokenized": retokenized,

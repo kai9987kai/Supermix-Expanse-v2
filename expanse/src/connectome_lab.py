@@ -15,6 +15,7 @@ one field of :class:`LabConfig`:
     state          reset | persist | window:K | learned_decay
     microsteps     recurrent updates per token
     gate           static | dynamic
+    readout        absolute | evoked (reset state only)
     subgraph       None | N cell types
     backend        csr_slab | torch_sparse | dense
 
@@ -40,7 +41,9 @@ permuted across edges) -> sign (Dale: the presynaptic type's; unsigned: +1)
 every row of ``|W|`` sums to 1) are multiplied by ``radius`` exactly (bitwise the
 v3 values; Perron root <= ``radius``, and = 0.9 measured on the real graph);
 every other variant is rescaled so a measured power iteration gives
-``radius``. Arms therefore differ in *structure*, not in gain. Every per-type ``g_in`` is a learned input
+``radius`` at initialisation. This is not a contractivity guarantee after
+training: learned edge multipliers and per-type gains can increase the
+effective recurrent gain. Every per-type ``g_in`` is a learned input
 normalisation in all variants ("learned" normalisation of the design notes).
 
 Dynamics per token column (``a = sigmoid(leak)``, ``act`` relu or tanh)::
@@ -58,6 +61,18 @@ state the previous call stored, so KV-cached decoding equals the full forward.
 
 ``gate="dynamic"`` adds an input-dependent term to the per-channel gate:
 ``g(h) = gate + tanh(W_g RMSNorm(h))`` with ``W_g`` zero at birth.
+
+``readout="evoked"`` removes the ungated write produced by a zero input
+drive, using the same current parameters and microsteps. The token and null
+activities are normalised independently, then their projected writes are
+subtracted before gating: ``gate(h) * (F(u) - F(0))``. Both paths remain
+differentiable. The null drive is one extra column in the recurrent batch,
+so it is independent of other tokens and batch composition. This blocks the
+bias-only adapter path when input and output sets are disjoint and no edges
+carry input to the outputs. It does not prove that biological topology helps.
+Only reset state is supported; persistent counterfactual state needs its own
+explicit experimental definition. The default ``absolute`` mode is unchanged
+and omitted from serialised configs to preserve existing run identities.
 
 Per-edge learning (``residual`` / ``dale_softplus``) needs ``dL/dW_e =
 sum_c grad_y[post_e, c] x[pre_e, c]`` for every spmm. The ``csr_slab``
@@ -114,6 +129,7 @@ EDGE_PARAMS = ("fixed", "residual", "dale_softplus")
 NORMS = ("frac", "sqrt_indeg", "raw")
 ACTIVATIONS = ("relu", "tanh")
 GATES = ("static", "dynamic")
+READOUTS = ("absolute", "evoked")
 BACKENDS = ("csr_slab", "torch_sparse", "dense")
 #: Columns per sampled_addmm call when edge gradients are flushed.
 SDDMM_CHUNK = 1024
@@ -143,22 +159,25 @@ class LabConfig:
     radius: float = 0.9
     graph_seed: Optional[int] = None  # shuffled / random / strength draws; None = the run seed
     backend: str = "csr_slab"
+    readout: str = "absolute"
 
     def __post_init__(self):
         for name, allowed in (("topology", TOPOLOGIES), ("sign_mode", SIGN_MODES), ("strength_init", STRENGTH_INITS),
                               ("edge_param", EDGE_PARAMS), ("norm", NORMS), ("activation", ACTIVATIONS),
-                              ("gate", GATES), ("backend", BACKENDS)):
+                              ("gate", GATES), ("backend", BACKENDS), ("readout", READOUTS)):
             if getattr(self, name) not in allowed:
                 raise ValueError(f"LabConfig.{name}={getattr(self, name)!r}; allowed {allowed}")
         if self.state not in ("reset", "persist", "learned_decay"):
             if not (self.state.startswith("window:") and self.state[7:].isdigit() and int(self.state[7:]) >= 1):
                 raise ValueError(f"LabConfig.state={self.state!r}; allowed reset | persist | window:K | learned_decay")
+        if self.readout == "evoked" and self.state != "reset":
+            raise ValueError("readout='evoked' requires state='reset'; persistent null state is not defined")
         if int(self.microsteps) < 1:
             raise ValueError("microsteps must be >= 1")
         if self.subgraph is not None and int(self.subgraph) < 8:
             raise ValueError("subgraph must keep at least 8 types")
         if not (0.0 < float(self.radius) < 1.0):
-            raise ValueError("radius must be in (0, 1) for contractive dynamics")
+            raise ValueError("initial graph radius must be in (0, 1); learned dynamics are not guaranteed contractive")
 
     @property
     def window(self) -> int:
@@ -183,7 +202,10 @@ class LabConfig:
         return self.topology in ("shuffled", "random") or self.strength_init == "random"
 
     def to_dict(self) -> Dict[str, Any]:
-        return dataclasses.asdict(self)
+        out = dataclasses.asdict(self)
+        if self.readout == "absolute":
+            del out["readout"]  # Historical configs and locked run keys must remain byte-for-byte identical.
+        return out
 
     @classmethod
     def from_dict(cls, d: Optional[Dict[str, Any]]) -> "LabConfig":
@@ -628,6 +650,7 @@ class ConnectomeLabCore(nn.Module):
     # -- cache hygiene (same contract as FullConnectomeCore) ---------------------
     def _apply(self, fn, *args, **kwargs):
         self._op_cache = None
+        self._decode = None
         return super()._apply(fn, *args, **kwargs)
 
     def _load_from_state_dict(self, *args, **kwargs):
@@ -747,6 +770,15 @@ class ConnectomeLabCore(nn.Module):
                 else token_mask.to(dtype=torch.bool, device=hidden.device).reshape(b, t))
         info: Dict[str, Any] = {"M": int(mask.sum())}
         if info["M"] == 0:
+            # PAD carries rates unchanged but still occupies absolute decode
+            # positions. An all-PAD cached chunk must not leave the cursor stale.
+            if not torch.is_grad_enabled() and self._closed():
+                self._decode = None  # A closed gate never requires or keeps decode rates.
+            elif self.cfg.persistent and past_length is not None and not torch.is_grad_enabled():
+                r, start = self._decode_start(b, past_length)
+                if r is None:
+                    r = self.bio_weight.new_zeros(self.n, b)
+                self._decode = {"r": r.detach(), "pos": start + t}
             return hidden.clone(), info
         if not torch.is_grad_enabled() and self._closed():
             self._decode = None
@@ -766,10 +798,20 @@ class ConnectomeLabCore(nn.Module):
         dtype = self.bio_weight.dtype
         matmul, anchor = self._operator(dtype)
         u = u_in.new_zeros(self.n, m, dtype=dtype).index_copy(0, self.in_idx, u_in.t().to(dtype))
+        evoked = self.cfg.readout == "evoked"
+        if evoked:
+            # One shared autograd chain also ensures the CSR edge-gradient
+            # collector sees both the token and counterfactual contributions.
+            u = torch.cat((u, u.new_zeros(self.n, 1)), dim=1)
         r = self._run(u, None, matmul, anchor, self._coeffs(dtype))
         e = r.index_select(0, self.out_idx).t()
         e_rms = torch.sqrt(e.pow(2).mean(dim=-1, keepdim=True) + 1e-6)
         write = self.out_proj((e / e_rms).to(hidden.dtype))
+        if evoked:
+            # Subtract complete independently normalised writes. Normalising
+            # the activity difference instead would amplify near-zero noise.
+            write = write[:-1] - write[-1:]
+            r, e = r[:, :-1], e[:-1]
         g = self._gate(h_sel)
         new = h_sel + g * write
         out = flat.index_copy(0, sel, new).view(b, t, h)
@@ -780,6 +822,19 @@ class ConnectomeLabCore(nn.Module):
                                     write=write, hidden=h_sel))
         return out, info
 
+    def _decode_start(self, batch_size: int, past_length: Optional[int]):
+        """Validate and recover a cached state, or begin a new sequence."""
+        start = 0
+        r: Optional[torch.Tensor] = None
+        if past_length is not None and int(past_length) > 0:
+            st = self._decode
+            if st is None or st["pos"] != int(past_length) or st["r"].shape[1] != batch_size:
+                raise RuntimeError("persistent CNS state missing or out of step for this cached decode step "
+                                   f"(stored {None if st is None else st['pos']}, asked {past_length}); "
+                                   "run the prompt with past_length=0 first")
+            r, start = st["r"], int(past_length)
+        return r, start
+
     def _forward_scan(self, hidden, mask, past_length, info):
         b, t, h = hidden.shape
         dtype = self.bio_weight.dtype
@@ -788,15 +843,7 @@ class ConnectomeLabCore(nn.Module):
         c = self._coeffs(dtype)
         rho = torch.sigmoid(self.retain_logit).unsqueeze(1).to(dtype) if self.cfg.state == "learned_decay" else None
         window = self.cfg.window
-        start = 0
-        r: Optional[torch.Tensor] = None
-        if past_length is not None and int(past_length) > 0:
-            st = self._decode
-            if st is None or st["pos"] != int(past_length) or st["r"].shape[1] != b:
-                raise RuntimeError("persistent CNS state missing or out of step for this cached decode step "
-                                   f"(stored {None if st is None else st['pos']}, asked {past_length}); "
-                                   "run the prompt with past_length=0 first")
-            r, start = st["r"], int(past_length)
+        r, start = self._decode_start(b, past_length)
         es: List[torch.Tensor] = []
         cos_sum = torch.zeros((), dtype=dtype)
         cos_n = 0

@@ -1,0 +1,5 @@
+[train] loaded C:\Users\kai99\Desktop\supermix-expanse\Supermix-expanse\expanse\checkpoints\supermix_expanse_v4.pt (supermix-expanse-v1): 132,041,916 params, bpe vocab 8864 (base 8864), seq 128
+[train] corpus files: connectome connectome_rows_v3.jsonl, fresh ['fresh_omni.jsonl', 'fresh_code.jsonl', 'fresh_math.jsonl'] (v3 data on)
+[train] rows replay: train 3554 dev 24 fly: train 1438 dev 24 code: train 4760 dev 24 bio: train 2402 dev 24 connectome: train 12000 dev 24 fresh: train 17830 dev 24
+[train] packed train (41984, 128) dev (144, 128) dropped 0+0 over-length; unk rate 0.0000
+[train] sampling natural, seed 2026, source row probabilities {"bio": 0.057212271341463415, "code": 0.1133765243902439, "connectome": 0.2858231707317073, "fly": 0.034251143292682924, "fresh": 0.4246855945121951, "replay": 0.08465129573170732}

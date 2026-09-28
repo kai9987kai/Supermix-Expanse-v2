@@ -80,10 +80,10 @@ def main(argv=None) -> int:
     if args.dry:
         return 0
     failed = []
+    failed_keys = set()
     for i, (hid, arm, s, key) in enumerate(jobs, 1):
-        m = prereg.RUNS / key / "metrics.json"
-        if m.exists() and json.loads(m.read_text(encoding="utf-8")).get("status") == "done":
-            continue
+        # Even a completed run must pass run_lab's current input-manifest check.
+        # Skipping here would silently reuse stale or unverifiable legacy data.
         say(f"run {i}/{len(jobs)}: {hid} {arm} seed {s}")
         t0 = time.time()
         with open(LOG, "a", encoding="utf-8") as f:
@@ -93,10 +93,16 @@ def main(argv=None) -> int:
         say(f"run {i}/{len(jobs)} exit {rc} after {(time.time() - t0) / 60:.1f} min")
         if rc != 0:
             failed.append((hid, arm, s))
+            failed_keys.add(key)
     for hid in ids:
         try:
             h = prereg.load_locked(hid)
             if h.get("exploratory"):
+                continue
+            required_keys = {prereg.run_dir(h, arm, seed).name for seed in h["seeds"]
+                             for arm in (h["control_arm"], h["treatment_arm"])}
+            if required_keys & failed_keys:
+                say(f"verdict {hid}: skipped because a required run failed validation or execution")
                 continue
             v = prereg.verdict(hid)
             say(f"verdict {hid}: {v['verdict']}" + (f" (mean delta {v['mean_delta']:.5f}, threshold "

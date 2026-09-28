@@ -1,5 +1,12 @@
 # Expanse Connectome Laboratory — results
 
+> **Evidence re-audit, 2026-09-26:** the historical verdicts below are unchanged. New protocol/cohort checks
+> reproduce H-CNS-001/002/003/005/006, but classify H-CNS-004 as **INCONCLUSIVE** on fresh evaluation:
+> seeds 2 and 3 record final-row cohort hashes in only one arm. This is missing pairing evidence, not a
+> demonstrated reversal of its measured effect. Pairs without either receipt are explicitly labeled legacy
+> unverified. See the [audit receipt](checkpoints/cns_lab/evidence_reaudit_20260926.json) and the
+> [input-evoked follow-up design](EVOKED_CNS_DESIGN.md). The narrative below describes the original studies.
+
 Pre-registered, matched-arm experiments on the male-CNS core of Supermix Expanse v3, run on one laptop CPU
 (2026-09-24/25). Method and spec: [`CNS_LAB_DESIGN.md`](CNS_LAB_DESIGN.md). Code: `src/connectome_lab.py`, `cns_lab/`.
 

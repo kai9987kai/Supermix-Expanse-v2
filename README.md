@@ -137,6 +137,54 @@ python expanse/cns_lab/bench_connectome.py             # CSR vs torch.sparse vs 
 bash expanse/run_v4.sh 8                               # v4 + its static-gate control + v1/v3/v4 comparison
 ```
 
+## Input-evoked CNS experiment
+
+The lab now supports `LabConfig(readout="evoked", state="reset")`: each token's CNS write has the same
+core's zero-input response subtracted before gating. This removes the bias-only shortcut identified in the
+earlier audit. Both responses remain differentiable and token-local; the existing `absolute` readout is still
+the default. The new mode is experimental, with no claim yet of better answers or superior biological wiring.
+
+New experiments record hashes of the checkpoint, corpus, graph source, project code, encoded row order and
+batch plan. Completed runs are reused only after validation; stale runs are preserved and rejected. Paired
+verdicts check protocol and cohort compatibility. Historical verdict files stay immutable: under these stricter
+checks a fresh audit of **H-CNS-004 is INCONCLUSIVE**, because two pairs have cohort hashes in only one arm;
+its original SUPPORTED verdict is historical evidence with that limitation.
+
+The [six-run pilot](expanse/checkpoints/cns_lab/X-CNS-002.report.md) completed: mean development loss is
+0.425371 for absolute real, 0.425105 for evoked real, and 0.424951 for evoked shuffled. The evoked real
+arm improves this small pilot's loss by about 0.06%, but replay regresses slightly and shuffled wiring
+still leads. No model was promoted. See the [design, interpretation and research sources](expanse/EVOKED_CNS_DESIGN.md)
+and locked [X-CNS-002 protocol](expanse/cns_lab/hypotheses/X-CNS-002.json). Reproduce individual runs and summarize them:
+
+```bash
+python expanse/cns_lab/run_lab.py --hypothesis X-CNS-002 --arm evoked_real --seed 31 --threads 4
+# Run every arm (absolute_real, evoked_real, evoked_shuffled) for both seeds (31, 32), then:
+python expanse/cns_lab/report_pilot.py --hypothesis X-CNS-002
+```
+
+Use `--runs PATH` for a fresh output directory if old run inputs no longer match. A pilot report requires
+complete, matched receipts and cannot issue a confirmatory verdict or promote a model.
+
+## Controlled continuation and reasoning diagnostics
+
+Continued training now supports explicit source row probabilities, exact sampler
+resume, measured row/token exposure, and `--wake preserve` to retain already-active
+donor experts. Natural sampling remains the default. The chat uses the loaded
+model's context limit and rejects overlong prompts instead of silently truncating them.
+
+The new semantic diagnostic freezes arithmetic and Python trace groups with
+paraphrases, numeric changes, and operation changes. It retains raw replies and
+reports correctness separately from consistency. A matched study runner binds
+source, data, checkpoint and evaluation bytes and keeps candidate checkpoints
+separate from the live model. See [the design and reproducible commands](expanse/MIXTURE_STUDY.md).
+These are experimental training and evaluation tools; they do not by themselves
+establish a stronger model.
+
+The completed 80-step matched pilot reduced pooled dev loss by 0.319% with
+balanced sampling, but all three checkpoints scored **4/72** on the frozen
+strict final-answer diagnostic. Neither candidate was promoted. See the
+[full results and raw-answer evidence](expanse/checkpoints/mixture-20260927-v2/REPORT.md).
+
 ## Set it up yourself
 
 ### Requirements

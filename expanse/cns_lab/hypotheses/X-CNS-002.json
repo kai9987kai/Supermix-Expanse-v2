@@ -1,0 +1,33 @@
+{
+  "id": "X-CNS-002",
+  "claim": "Exploratory trainability and causal-control pilot of the input-evoked CNS readout; no confirmatory or model-promotion claim.",
+  "exploratory": true,
+  "protocol": {
+    "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+    "train_scope": "core",
+    "steps": 40,
+    "batch": 4,
+    "seq": 128,
+    "lr_core": 0.001,
+    "lr_edge": 0.0003,
+    "warmup_frac": 0.05,
+    "min_lr_frac": 0.05,
+    "grad_clip": 1.0,
+    "sources": ["replay", "code", "bio", "connectome", "fresh"],
+    "corpus": {"seed": 2026, "dev_frac": 0.05, "dev_cap": 200, "max_rows_per_source": 6000, "fly_rows": 0},
+    "eval_at_start": true,
+    "eval_steps": [40],
+    "eval_per_source": 12,
+    "eval_sampling": "hash",
+    "eval_salt": "cns-evoked-pilot-20260925",
+    "final_ablations": true,
+    "base_config": {"edge_param": "fixed", "subgraph": 3000, "gate": "dynamic", "state": "reset"}
+  },
+  "arms": {
+    "absolute_real": {},
+    "evoked_real": {"readout": "evoked"},
+    "evoked_shuffled": {"readout": "evoked", "topology": "shuffled"}
+  },
+  "seeds": [31, 32],
+  "notes": "All choices fixed before pilot results. Fixed edges isolate the readout change. Same checkpoint, encoded row order, batch plan and trainable parameter initialization within a seed. Zero-edge control checks cancellation only. A matched dense-adapter capacity control, more seeds, longer training and fresh generation evaluation are required before confirmation. Existing v3 dev rows are reused for development; they are not an untouched final evaluation set. Never promote from this pilot."
+}

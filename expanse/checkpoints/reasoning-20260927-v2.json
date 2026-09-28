@@ -1,0 +1,872 @@
+{
+  "schema": "supermix-semantic-reasoning-v1",
+  "scorer": "strict-final-number-v2",
+  "seed": 20260927,
+  "groups_per_family": 6,
+  "groups": [
+    {
+      "id": "c17078297e7cace0",
+      "spec": {
+        "family": "arithmetic",
+        "a": 43,
+        "b": 9,
+        "op": "+",
+        "n": 1
+      },
+      "items": [
+        {
+          "id": "c17078297e7cace0.base.0",
+          "group_id": "c17078297e7cace0",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "What is 43 + 9?",
+          "expected": 52
+        },
+        {
+          "id": "c17078297e7cace0.base.1",
+          "group_id": "c17078297e7cace0",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 43 + 9",
+          "expected": 52
+        },
+        {
+          "id": "c17078297e7cace0.numeric.0",
+          "group_id": "c17078297e7cace0",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "What is 44 + 9?",
+          "expected": 53
+        },
+        {
+          "id": "c17078297e7cace0.numeric.1",
+          "group_id": "c17078297e7cace0",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 44 + 9",
+          "expected": 53
+        },
+        {
+          "id": "c17078297e7cace0.operation.0",
+          "group_id": "c17078297e7cace0",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "What is 43 - 9?",
+          "expected": 34
+        },
+        {
+          "id": "c17078297e7cace0.operation.1",
+          "group_id": "c17078297e7cace0",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 43 - 9",
+          "expected": 34
+        }
+      ]
+    },
+    {
+      "id": "a6cbff4b7d518aa0",
+      "spec": {
+        "family": "arithmetic",
+        "a": 608,
+        "b": 8,
+        "op": "/",
+        "n": 1
+      },
+      "items": [
+        {
+          "id": "a6cbff4b7d518aa0.base.0",
+          "group_id": "a6cbff4b7d518aa0",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "What is 608 / 8?",
+          "expected": 76
+        },
+        {
+          "id": "a6cbff4b7d518aa0.base.1",
+          "group_id": "a6cbff4b7d518aa0",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 608 / 8",
+          "expected": 76
+        },
+        {
+          "id": "a6cbff4b7d518aa0.numeric.0",
+          "group_id": "a6cbff4b7d518aa0",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "What is 616 / 8?",
+          "expected": 77
+        },
+        {
+          "id": "a6cbff4b7d518aa0.numeric.1",
+          "group_id": "a6cbff4b7d518aa0",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 616 / 8",
+          "expected": 77
+        },
+        {
+          "id": "a6cbff4b7d518aa0.operation.0",
+          "group_id": "a6cbff4b7d518aa0",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "What is 608 * 8?",
+          "expected": 4864
+        },
+        {
+          "id": "a6cbff4b7d518aa0.operation.1",
+          "group_id": "a6cbff4b7d518aa0",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 608 * 8",
+          "expected": 4864
+        }
+      ]
+    },
+    {
+      "id": "dcfba45350f8dc72",
+      "spec": {
+        "family": "arithmetic",
+        "a": 26,
+        "b": 6,
+        "op": "+",
+        "n": 1
+      },
+      "items": [
+        {
+          "id": "dcfba45350f8dc72.base.0",
+          "group_id": "dcfba45350f8dc72",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "What is 26 + 6?",
+          "expected": 32
+        },
+        {
+          "id": "dcfba45350f8dc72.base.1",
+          "group_id": "dcfba45350f8dc72",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 26 + 6",
+          "expected": 32
+        },
+        {
+          "id": "dcfba45350f8dc72.numeric.0",
+          "group_id": "dcfba45350f8dc72",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "What is 27 + 6?",
+          "expected": 33
+        },
+        {
+          "id": "dcfba45350f8dc72.numeric.1",
+          "group_id": "dcfba45350f8dc72",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 27 + 6",
+          "expected": 33
+        },
+        {
+          "id": "dcfba45350f8dc72.operation.0",
+          "group_id": "dcfba45350f8dc72",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "What is 26 - 6?",
+          "expected": 20
+        },
+        {
+          "id": "dcfba45350f8dc72.operation.1",
+          "group_id": "dcfba45350f8dc72",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 26 - 6",
+          "expected": 20
+        }
+      ]
+    },
+    {
+      "id": "8858fb8ee90077ae",
+      "spec": {
+        "family": "arithmetic",
+        "a": 736,
+        "b": 8,
+        "op": "/",
+        "n": 1
+      },
+      "items": [
+        {
+          "id": "8858fb8ee90077ae.base.0",
+          "group_id": "8858fb8ee90077ae",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "What is 736 / 8?",
+          "expected": 92
+        },
+        {
+          "id": "8858fb8ee90077ae.base.1",
+          "group_id": "8858fb8ee90077ae",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 736 / 8",
+          "expected": 92
+        },
+        {
+          "id": "8858fb8ee90077ae.numeric.0",
+          "group_id": "8858fb8ee90077ae",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "What is 744 / 8?",
+          "expected": 93
+        },
+        {
+          "id": "8858fb8ee90077ae.numeric.1",
+          "group_id": "8858fb8ee90077ae",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 744 / 8",
+          "expected": 93
+        },
+        {
+          "id": "8858fb8ee90077ae.operation.0",
+          "group_id": "8858fb8ee90077ae",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "What is 736 * 8?",
+          "expected": 5888
+        },
+        {
+          "id": "8858fb8ee90077ae.operation.1",
+          "group_id": "8858fb8ee90077ae",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 736 * 8",
+          "expected": 5888
+        }
+      ]
+    },
+    {
+      "id": "516a5d8acb5ba4df",
+      "spec": {
+        "family": "arithmetic",
+        "a": 67,
+        "b": 3,
+        "op": "+",
+        "n": 1
+      },
+      "items": [
+        {
+          "id": "516a5d8acb5ba4df.base.0",
+          "group_id": "516a5d8acb5ba4df",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "What is 67 + 3?",
+          "expected": 70
+        },
+        {
+          "id": "516a5d8acb5ba4df.base.1",
+          "group_id": "516a5d8acb5ba4df",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 67 + 3",
+          "expected": 70
+        },
+        {
+          "id": "516a5d8acb5ba4df.numeric.0",
+          "group_id": "516a5d8acb5ba4df",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "What is 68 + 3?",
+          "expected": 71
+        },
+        {
+          "id": "516a5d8acb5ba4df.numeric.1",
+          "group_id": "516a5d8acb5ba4df",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 68 + 3",
+          "expected": 71
+        },
+        {
+          "id": "516a5d8acb5ba4df.operation.0",
+          "group_id": "516a5d8acb5ba4df",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "What is 67 - 3?",
+          "expected": 64
+        },
+        {
+          "id": "516a5d8acb5ba4df.operation.1",
+          "group_id": "516a5d8acb5ba4df",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 67 - 3",
+          "expected": 64
+        }
+      ]
+    },
+    {
+      "id": "4b79d18b9a6a1f55",
+      "spec": {
+        "family": "arithmetic",
+        "a": 182,
+        "b": 2,
+        "op": "/",
+        "n": 1
+      },
+      "items": [
+        {
+          "id": "4b79d18b9a6a1f55.base.0",
+          "group_id": "4b79d18b9a6a1f55",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "What is 182 / 2?",
+          "expected": 91
+        },
+        {
+          "id": "4b79d18b9a6a1f55.base.1",
+          "group_id": "4b79d18b9a6a1f55",
+          "family": "arithmetic",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 182 / 2",
+          "expected": 91
+        },
+        {
+          "id": "4b79d18b9a6a1f55.numeric.0",
+          "group_id": "4b79d18b9a6a1f55",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "What is 184 / 2?",
+          "expected": 92
+        },
+        {
+          "id": "4b79d18b9a6a1f55.numeric.1",
+          "group_id": "4b79d18b9a6a1f55",
+          "family": "arithmetic",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 184 / 2",
+          "expected": 92
+        },
+        {
+          "id": "4b79d18b9a6a1f55.operation.0",
+          "group_id": "4b79d18b9a6a1f55",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "What is 182 * 2?",
+          "expected": 364
+        },
+        {
+          "id": "4b79d18b9a6a1f55.operation.1",
+          "group_id": "4b79d18b9a6a1f55",
+          "family": "arithmetic",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "Solve this basic math problem: 182 * 2",
+          "expected": 364
+        }
+      ]
+    },
+    {
+      "id": "368ec01e10066df7",
+      "spec": {
+        "family": "python_trace",
+        "a": 46,
+        "b": 7,
+        "op": "+",
+        "n": 2
+      },
+      "items": [
+        {
+          "id": "368ec01e10066df7.base.0",
+          "group_id": "368ec01e10066df7",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "x = 46\nfor i in range(2): x = x + 7\nWhat is x after this runs?",
+          "expected": 60
+        },
+        {
+          "id": "368ec01e10066df7.base.1",
+          "group_id": "368ec01e10066df7",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 46\nfor i in range(2): x = x + 7",
+          "expected": 60
+        },
+        {
+          "id": "368ec01e10066df7.numeric.0",
+          "group_id": "368ec01e10066df7",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "x = 47\nfor i in range(2): x = x + 7\nWhat is x after this runs?",
+          "expected": 61
+        },
+        {
+          "id": "368ec01e10066df7.numeric.1",
+          "group_id": "368ec01e10066df7",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 47\nfor i in range(2): x = x + 7",
+          "expected": 61
+        },
+        {
+          "id": "368ec01e10066df7.operation.0",
+          "group_id": "368ec01e10066df7",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "x = 46\nfor i in range(2): x = x - 7\nWhat is x after this runs?",
+          "expected": 32
+        },
+        {
+          "id": "368ec01e10066df7.operation.1",
+          "group_id": "368ec01e10066df7",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 46\nfor i in range(2): x = x - 7",
+          "expected": 32
+        }
+      ]
+    },
+    {
+      "id": "55ab74348f040e60",
+      "spec": {
+        "family": "python_trace",
+        "a": 36,
+        "b": 9,
+        "op": "+",
+        "n": 3
+      },
+      "items": [
+        {
+          "id": "55ab74348f040e60.base.0",
+          "group_id": "55ab74348f040e60",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "x = 36\nfor i in range(3): x = x + 9\nWhat is x after this runs?",
+          "expected": 63
+        },
+        {
+          "id": "55ab74348f040e60.base.1",
+          "group_id": "55ab74348f040e60",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 36\nfor i in range(3): x = x + 9",
+          "expected": 63
+        },
+        {
+          "id": "55ab74348f040e60.numeric.0",
+          "group_id": "55ab74348f040e60",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "x = 37\nfor i in range(3): x = x + 9\nWhat is x after this runs?",
+          "expected": 64
+        },
+        {
+          "id": "55ab74348f040e60.numeric.1",
+          "group_id": "55ab74348f040e60",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 37\nfor i in range(3): x = x + 9",
+          "expected": 64
+        },
+        {
+          "id": "55ab74348f040e60.operation.0",
+          "group_id": "55ab74348f040e60",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "x = 36\nfor i in range(3): x = x - 9\nWhat is x after this runs?",
+          "expected": 9
+        },
+        {
+          "id": "55ab74348f040e60.operation.1",
+          "group_id": "55ab74348f040e60",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 36\nfor i in range(3): x = x - 9",
+          "expected": 9
+        }
+      ]
+    },
+    {
+      "id": "facbe160df78ee47",
+      "spec": {
+        "family": "python_trace",
+        "a": 88,
+        "b": 4,
+        "op": "+",
+        "n": 3
+      },
+      "items": [
+        {
+          "id": "facbe160df78ee47.base.0",
+          "group_id": "facbe160df78ee47",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "x = 88\nfor i in range(3): x = x + 4\nWhat is x after this runs?",
+          "expected": 100
+        },
+        {
+          "id": "facbe160df78ee47.base.1",
+          "group_id": "facbe160df78ee47",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 88\nfor i in range(3): x = x + 4",
+          "expected": 100
+        },
+        {
+          "id": "facbe160df78ee47.numeric.0",
+          "group_id": "facbe160df78ee47",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "x = 89\nfor i in range(3): x = x + 4\nWhat is x after this runs?",
+          "expected": 101
+        },
+        {
+          "id": "facbe160df78ee47.numeric.1",
+          "group_id": "facbe160df78ee47",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 89\nfor i in range(3): x = x + 4",
+          "expected": 101
+        },
+        {
+          "id": "facbe160df78ee47.operation.0",
+          "group_id": "facbe160df78ee47",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "x = 88\nfor i in range(3): x = x - 4\nWhat is x after this runs?",
+          "expected": 76
+        },
+        {
+          "id": "facbe160df78ee47.operation.1",
+          "group_id": "facbe160df78ee47",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 88\nfor i in range(3): x = x - 4",
+          "expected": 76
+        }
+      ]
+    },
+    {
+      "id": "9ecef6a83baa96f1",
+      "spec": {
+        "family": "python_trace",
+        "a": 26,
+        "b": 5,
+        "op": "+",
+        "n": 2
+      },
+      "items": [
+        {
+          "id": "9ecef6a83baa96f1.base.0",
+          "group_id": "9ecef6a83baa96f1",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "x = 26\nfor i in range(2): x = x + 5\nWhat is x after this runs?",
+          "expected": 36
+        },
+        {
+          "id": "9ecef6a83baa96f1.base.1",
+          "group_id": "9ecef6a83baa96f1",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 26\nfor i in range(2): x = x + 5",
+          "expected": 36
+        },
+        {
+          "id": "9ecef6a83baa96f1.numeric.0",
+          "group_id": "9ecef6a83baa96f1",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "x = 27\nfor i in range(2): x = x + 5\nWhat is x after this runs?",
+          "expected": 37
+        },
+        {
+          "id": "9ecef6a83baa96f1.numeric.1",
+          "group_id": "9ecef6a83baa96f1",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 27\nfor i in range(2): x = x + 5",
+          "expected": 37
+        },
+        {
+          "id": "9ecef6a83baa96f1.operation.0",
+          "group_id": "9ecef6a83baa96f1",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "x = 26\nfor i in range(2): x = x - 5\nWhat is x after this runs?",
+          "expected": 16
+        },
+        {
+          "id": "9ecef6a83baa96f1.operation.1",
+          "group_id": "9ecef6a83baa96f1",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 26\nfor i in range(2): x = x - 5",
+          "expected": 16
+        }
+      ]
+    },
+    {
+      "id": "8091c42ca794e1ff",
+      "spec": {
+        "family": "python_trace",
+        "a": 18,
+        "b": 4,
+        "op": "+",
+        "n": 6
+      },
+      "items": [
+        {
+          "id": "8091c42ca794e1ff.base.0",
+          "group_id": "8091c42ca794e1ff",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "x = 18\nfor i in range(6): x = x + 4\nWhat is x after this runs?",
+          "expected": 42
+        },
+        {
+          "id": "8091c42ca794e1ff.base.1",
+          "group_id": "8091c42ca794e1ff",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 18\nfor i in range(6): x = x + 4",
+          "expected": 42
+        },
+        {
+          "id": "8091c42ca794e1ff.numeric.0",
+          "group_id": "8091c42ca794e1ff",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "x = 19\nfor i in range(6): x = x + 4\nWhat is x after this runs?",
+          "expected": 43
+        },
+        {
+          "id": "8091c42ca794e1ff.numeric.1",
+          "group_id": "8091c42ca794e1ff",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 19\nfor i in range(6): x = x + 4",
+          "expected": 43
+        },
+        {
+          "id": "8091c42ca794e1ff.operation.0",
+          "group_id": "8091c42ca794e1ff",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "x = 18\nfor i in range(6): x = x - 4\nWhat is x after this runs?",
+          "expected": -6
+        },
+        {
+          "id": "8091c42ca794e1ff.operation.1",
+          "group_id": "8091c42ca794e1ff",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 18\nfor i in range(6): x = x - 4",
+          "expected": -6
+        }
+      ]
+    },
+    {
+      "id": "70cfd822aa4d49f8",
+      "spec": {
+        "family": "python_trace",
+        "a": 80,
+        "b": 3,
+        "op": "+",
+        "n": 2
+      },
+      "items": [
+        {
+          "id": "70cfd822aa4d49f8.base.0",
+          "group_id": "70cfd822aa4d49f8",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 0,
+          "user": "x = 80\nfor i in range(2): x = x + 3\nWhat is x after this runs?",
+          "expected": 86
+        },
+        {
+          "id": "70cfd822aa4d49f8.base.1",
+          "group_id": "70cfd822aa4d49f8",
+          "family": "python_trace",
+          "case": "base",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 80\nfor i in range(2): x = x + 3",
+          "expected": 86
+        },
+        {
+          "id": "70cfd822aa4d49f8.numeric.0",
+          "group_id": "70cfd822aa4d49f8",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 0,
+          "user": "x = 81\nfor i in range(2): x = x + 3\nWhat is x after this runs?",
+          "expected": 87
+        },
+        {
+          "id": "70cfd822aa4d49f8.numeric.1",
+          "group_id": "70cfd822aa4d49f8",
+          "family": "python_trace",
+          "case": "numeric",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 81\nfor i in range(2): x = x + 3",
+          "expected": 87
+        },
+        {
+          "id": "70cfd822aa4d49f8.operation.0",
+          "group_id": "70cfd822aa4d49f8",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 0,
+          "user": "x = 80\nfor i in range(2): x = x - 3\nWhat is x after this runs?",
+          "expected": 74
+        },
+        {
+          "id": "70cfd822aa4d49f8.operation.1",
+          "group_id": "70cfd822aa4d49f8",
+          "family": "python_trace",
+          "case": "operation",
+          "paraphrase": 1,
+          "user": "What is the final value of x?\nx = 80\nfor i in range(2): x = x - 3",
+          "expected": 74
+        }
+      ]
+    }
+  ],
+  "corpus_audit": {
+    "files": [
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\expanse\\data\\bio_rows.clean.jsonl",
+        "sha256": "8bedc13a36c1cfc9dd198588ce1168579c77fed02fa5bc11541c8e8835d5b35a",
+        "rows": 2722,
+        "recognized_semantic_rows": 0
+      },
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\expanse\\data\\code_rows.jsonl",
+        "sha256": "0b23eb1c09b845daa7c898bc78a32769cccd87db05f6f07201e00aa769ebf640",
+        "rows": 5150,
+        "recognized_semantic_rows": 0
+      },
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\expanse\\data\\connectome_rows.jsonl",
+        "sha256": "e7005c65ff87238fdf9840efc02bdd7a8b6e11f3207f4c8e43c292eab5d7a263",
+        "rows": 6667,
+        "recognized_semantic_rows": 0
+      },
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\expanse\\data\\v3\\connectome_rows_v3.jsonl",
+        "sha256": "d68a5cb00087375cf949bd6df5548ac80f220d6478e443579a364c6982a18304",
+        "rows": 13333,
+        "recognized_semantic_rows": 0
+      },
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\expanse\\data\\v3\\fresh_code.jsonl",
+        "sha256": "b890571875fec9c416d13aa7b263857973d8115a5f974878b0f848e4cb88cfe5",
+        "rows": 8001,
+        "recognized_semantic_rows": 1778
+      },
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\expanse\\data\\v3\\fresh_math.jsonl",
+        "sha256": "ebbdb6de25b11d4a17405a0f8853ab73fbd3286ac461ca2f425a13de061729a0",
+        "rows": 4816,
+        "recognized_semantic_rows": 1841
+      },
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\expanse\\data\\v3\\fresh_omni.jsonl",
+        "sha256": "a381966ed7d5a32abc3b9b70cdabc0ebf7d89063f7f6679a35bbcffadddfce8f",
+        "rows": 6528,
+        "recognized_semantic_rows": 0
+      },
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\supermix-archimedes\\corpus\\code.jsonl",
+        "sha256": "9dabe13961888a522dcea01b2b0a1940265359124e315a5cd026011941fab426",
+        "rows": 300,
+        "recognized_semantic_rows": 0
+      },
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\supermix-archimedes\\corpus\\math.jsonl",
+        "sha256": "2198300caad4ff7cf9de8db5ba6b2eed9159ce2f949f12d477d0625ea95a5158",
+        "rows": 1500,
+        "recognized_semantic_rows": 600
+      },
+      {
+        "path": "C:\\Users\\kai99\\Desktop\\supermix-expanse\\Supermix-expanse\\supermix-archimedes\\corpus\\omni.jsonl",
+        "sha256": "b64fe33f253062cfc52b62a0a0cfc4a5867ac336ad1f54ffc79a5b228b930105",
+        "rows": 1943,
+        "recognized_semantic_rows": 0
+      }
+    ],
+    "excluded_groups": {
+      "normalized_exact_group_overlap": 6,
+      "recognized_semantic_group_overlap": 1
+    },
+    "scope": "All rows of listed local JSONL files, including train/dev/heldout where present.",
+    "semantic_recognizer": "One binary integer expression or literal x/for-range add/subtract loop.",
+    "limitations": "Not a full training-history audit; unknown phrasings, upstream donor data and generated FlyCore rows are outside coverage. No claim of globally unseen semantics."
+  },
+  "sha256": "6df109c9788af112a658f002c9962d167369491ed488418829c1f8f5d18d8ec1"
+}

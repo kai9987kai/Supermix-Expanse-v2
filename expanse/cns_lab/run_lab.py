@@ -89,6 +89,7 @@ sys.path.insert(0, str(LAB))
 import connectome_full as cf  # noqa: E402
 import connectome_lab as cl  # noqa: E402
 import expanse_core as ec  # noqa: E402
+import lineage  # noqa: E402
 import prereg  # noqa: E402
 import temporal_tasks as tt  # noqa: E402
 import train_expanse as te  # noqa: E402
@@ -497,8 +498,59 @@ def run_provenance(h: Dict[str, Any], unlocked: bool) -> Dict[str, Any]:
     return {"unlocked": bool(unlocked) or not lock_rec, "lock": lock_rec}
 
 
+def run_input_manifest(P: Dict[str, Any]) -> Dict[str, Any]:
+    """Bind the checkpoint, anatomy, selected corpus and bounded project code."""
+    selected = te.corpus_files(v3=True)
+    files = [ROOT / P.get("base_checkpoint", "checkpoints/supermix_expanse_v3.pt"), cl.npz_path(),
+             PATHS["code_rows"], PATHS["bio_rows"], selected["connectome"], *selected["fresh"]]
+    files.extend(PATHS["corpus"] / f"{name}.jsonl" for name in ("omni", "code", "math"))
+    # Features consumes this cache when available. Its presence/content is an
+    # input even if a particular checkpoint eventually rejects its version.
+    optional_cache = PATHS["data"] / "omni7_states.pt"
+    if optional_cache.exists():
+        files.append(optional_cache)
+    files.extend(lineage.project_source_files(ROOT.parent))
+    return lineage.input_manifest(files, ROOT.parent)
+
+
+def require_finished_run(h, P, arm, seed, rdir, metrics, *, smoke, unlocked, hyp_dir):
+    """A matching input fingerprint alone does not establish a completed run."""
+    expected = {**h, "protocol": P}
+    problems = []
+    intent = run_provenance(h, unlocked)
+    if metrics.get("schema") != METRICS_SCHEMA:
+        problems.append("missing or unsupported run schema")
+    if metrics.get("status") != "done":
+        problems.append("run is not done")
+    if type(metrics.get("unlocked")) is not bool or metrics["unlocked"] != intent["unlocked"]:
+        problems.append("recorded unlocked intent differs from this invocation")
+    checked = metrics
+    if intent["unlocked"] and metrics.get("unlocked") is True:
+        # check_run intentionally forbids unlocked evidence for verdicts. A smoke
+        # development cache is allowed when this invocation also requests an
+        # unlocked run; its real receipt remains explicitly unlocked.
+        checked = {**metrics, "unlocked": False}
+    try:
+        problems.extend(prereg.check_run(expected, arm, seed, rdir, checked, hyp_dir))
+        target_steps = 0 if prereg.untrainable_arm(expected, arm) else int(P["steps"])
+        if type(metrics.get("steps_done")) is not int or metrics["steps_done"] != target_steps:
+            problems.append(f"steps_done is not the expected {target_steps}")
+        final = metrics.get("evals", [])[-1]
+        value = final.get("val_nats_per_char_pooled")
+        if type(value) not in (int, float) or not math.isfinite(value):
+            problems.append("final pooled loss is missing or non-finite")
+    except (TypeError, ValueError, KeyError, AttributeError, IndexError, OverflowError) as exc:
+        problems.append(f"malformed completion fields: {exc}")
+    problems.extend(lineage.validate_data_lineage(metrics.get("data_lineage")))
+    for field in ("final_rows", "final_rows_sha256"):
+        if not isinstance(metrics.get(field), dict) or not metrics[field]:
+            problems.append(f"missing {field} receipt")
+    if problems:
+        raise RuntimeError("unverifiable-cache: " + "; ".join(problems))
+
+
 def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: Path = prereg.RUNS,
-        smoke: bool = False, unlocked: bool = False) -> Dict[str, Any]:
+        smoke: bool = False, unlocked: bool = False, hyp_dir: Path = prereg.HYP_DIR) -> Dict[str, Any]:
     P = dict(h["protocol"])
     if smoke:
         P.update({"steps": 3, "eval_steps": [3], "eval_per_source": 4,
@@ -506,9 +558,18 @@ def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: 
     cfg = prereg.arm_config(h, arm)
     rdir = Path(runs_root) / (prereg.run_key(P, cfg, seed) + ("_smoke" if smoke else ""))
     mpath = rdir / "metrics.json"
-    if mpath.exists() and json.loads(mpath.read_text(encoding="utf-8")).get("status") == "done":
-        log(f"{h['id']} {arm} seed {seed}: already done ({rdir.name})")
-        return json.loads(mpath.read_text(encoding="utf-8"))
+    recorded = json.loads(mpath.read_text(encoding="utf-8")) if mpath.exists() else None
+    try:
+        current_inputs = run_input_manifest(P)
+    except (OSError, ValueError) as exc:
+        if recorded is not None and recorded.get("status") == "done":
+            raise RuntimeError(f"unverifiable-cache: cannot fingerprint current inputs: {exc}") from exc
+        raise
+    if recorded is not None and recorded.get("status") == "done":
+        lineage.require_reusable_run(recorded, current_inputs)
+        require_finished_run(h, P, arm, seed, rdir, recorded, smoke=smoke, unlocked=unlocked, hyp_dir=hyp_dir)
+        log(f"{h['id']} {arm} seed {seed}: already done; inputs verified ({rdir.name})")
+        return recorded
     rdir.mkdir(parents=True, exist_ok=True)
     torch.set_num_threads(int(threads))
     torch.manual_seed(seed)
@@ -520,6 +581,7 @@ def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: 
     prov = run_provenance(h, unlocked)
     metrics: Dict[str, Any] = {"schema": METRICS_SCHEMA, "hypothesis": h["id"], "arm": arm, "seed": int(seed),
                                "run_key": rdir.name, "config": cfg.to_dict(), "protocol": P, "status": "running",
+                               "input_manifest": current_inputs,
                                "unlocked": prov["unlocked"], "lock": prov["lock"], "evals": [], "train_log": []}
     metrics["code_version"] = {"git": prereg.git_commit(), "torch": torch.__version__, "threads": int(threads),
                                "python": sys.version.split()[0]}
@@ -544,6 +606,7 @@ def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: 
     feats = Features(model, payload)
     tpb = int((P.get("temporal") or {}).get("per_batch", 0))
     plan = batch_plan(len(data["m_tr"]), len(data["m_tt"]), steps, batch, tpb, seed)
+    metrics["data_lineage"] = lineage.data_lineage(data, plan)
     em_items = int((P.get("temporal") or {}).get("exact_match_items", 0))
     log(f"data: {data['counts']}")
 
@@ -637,6 +700,12 @@ def run(h: Dict[str, Any], arm: str, seed: int, *, threads: int = 8, runs_root: 
     if core is not None and not smoke:
         cl.save_core_file(rdir / "core.pt", core, {"hypothesis": h["id"], "arm": arm, "seed": seed},
                           keep_constant=core.nnz <= 1_500_000)
+    # Refuse a completion receipt if an input changed while training was live.
+    if run_input_manifest(P) != current_inputs:
+        metrics["status"] = "failed"
+        metrics["error"] = "input bytes or source files changed during this run"
+        write_json(mpath, metrics)
+        raise RuntimeError(metrics["error"])
     metrics["status"] = "done"
     write_json(mpath, metrics)
     log(f"done {h['id']} {arm} seed {seed} in {metrics['wall_minutes']} min -> {mpath}")
@@ -662,7 +731,7 @@ def main(argv=None) -> int:
     else:
         h = prereg.load_locked(args.hypothesis, Path(args.hyp_dir))
     run(h, args.arm, args.seed, threads=args.threads, runs_root=Path(args.runs), smoke=args.smoke,
-        unlocked=args.unlocked)
+        unlocked=args.unlocked, hyp_dir=Path(args.hyp_dir))
     return 0
 
 

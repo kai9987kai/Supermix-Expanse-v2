@@ -1,0 +1,1024 @@
+{
+  "schema": "supermix-expanse-cns-lab-run-v1",
+  "hypothesis": "X-CNS-002",
+  "arm": "evoked_shuffled",
+  "seed": 31,
+  "run_key": "6ef7a7f21fa9aed0",
+  "config": {
+    "topology": "shuffled",
+    "sign_mode": "dale",
+    "strength_init": "bio",
+    "edge_param": "fixed",
+    "norm": "frac",
+    "activation": "relu",
+    "state": "reset",
+    "microsteps": 4,
+    "gate": "dynamic",
+    "subgraph": 3000,
+    "radius": 0.9,
+    "graph_seed": null,
+    "backend": "csr_slab",
+    "readout": "evoked"
+  },
+  "protocol": {
+    "base_checkpoint": "checkpoints/supermix_expanse_v3.pt",
+    "train_scope": "core",
+    "steps": 40,
+    "batch": 4,
+    "seq": 128,
+    "lr_core": 0.001,
+    "lr_edge": 0.0003,
+    "warmup_frac": 0.05,
+    "min_lr_frac": 0.05,
+    "grad_clip": 1.0,
+    "sources": [
+      "replay",
+      "code",
+      "bio",
+      "connectome",
+      "fresh"
+    ],
+    "corpus": {
+      "seed": 2026,
+      "dev_frac": 0.05,
+      "dev_cap": 200,
+      "max_rows_per_source": 6000,
+      "fly_rows": 0
+    },
+    "eval_at_start": true,
+    "eval_steps": [
+      40
+    ],
+    "eval_per_source": 12,
+    "eval_sampling": "hash",
+    "eval_salt": "cns-evoked-pilot-20260925",
+    "final_ablations": true,
+    "base_config": {
+      "edge_param": "fixed",
+      "subgraph": 3000,
+      "gate": "dynamic",
+      "state": "reset"
+    }
+  },
+  "status": "done",
+  "input_manifest": {
+    "schema": "supermix-expanse-cns-lab-inputs-v1",
+    "files": [
+      {
+        "path": "expanse/build_expanse.py",
+        "sha256": "164a0aea7a2726b1c9a6327294ea67d0858454d74f8bb3bacf09573977dd3e2f"
+      },
+      {
+        "path": "expanse/build_v4.py",
+        "sha256": "f45bcde0da286d74f9171a96a40ddf865c73404cce5e41f8ae916a81c975d1a4"
+      },
+      {
+        "path": "expanse/checkpoints/supermix_expanse_v3.pt",
+        "sha256": "e3acba03bf0ba3c03e1f244a10898eadd27b7dfef3bd9ec8d4faecb671abf13f"
+      },
+      {
+        "path": "expanse/clean_bio_rows.py",
+        "sha256": "05841e6b0876824a77490b52b68906500f40156e30d0a1097e8e54579eec6438"
+      },
+      {
+        "path": "expanse/cns_lab/analyze.py",
+        "sha256": "11ffbe39b9e285f5e6e2bc9a06c1d3dcb8092503207d9cd0a5ce28bf86ceb572"
+      },
+      {
+        "path": "expanse/cns_lab/bench_connectome.py",
+        "sha256": "36de6bdff0c93f8421ac37466193fd0278dff3070b71a794be4a12e6c65e609a"
+      },
+      {
+        "path": "expanse/cns_lab/lineage.py",
+        "sha256": "29893e9deda96f3d4294a185d58aef62f78d800f0c79fd066ecd4fdb6610c43c"
+      },
+      {
+        "path": "expanse/cns_lab/prereg.py",
+        "sha256": "aa0f2e185fb28aca1175b4b16b1c06895009b1ac2b3f7f2c46187d97f028eee4"
+      },
+      {
+        "path": "expanse/cns_lab/report_pilot.py",
+        "sha256": "77079ddd438090cec8fc4eee86dcd40d3ac69b257d7d425ef206b265209fc086"
+      },
+      {
+        "path": "expanse/cns_lab/run_all.py",
+        "sha256": "185e102bca0e145b1f09b9a4b53c9b122faac326c07465685f7f176f7c9ea08b"
+      },
+      {
+        "path": "expanse/cns_lab/run_lab.py",
+        "sha256": "090ab75fc45db951ff77d6e6a13ee5eb8d82779287089306d5d3ea8441efabe4"
+      },
+      {
+        "path": "expanse/cns_lab/temporal_tasks.py",
+        "sha256": "fa5fb0025d75e9b44ed15a6bb5c219786c045e429801ba900032e37af65d2bcd"
+      },
+      {
+        "path": "expanse/compare_models.py",
+        "sha256": "a35fde86352bddbd483d135dd96ee3c5ebb2bb446a8b46a8689c1eeedfa2d8ed"
+      },
+      {
+        "path": "expanse/data/bio_rows.clean.jsonl",
+        "sha256": "8bedc13a36c1cfc9dd198588ce1168579c77fed02fa5bc11541c8e8835d5b35a"
+      },
+      {
+        "path": "expanse/data/code_rows.jsonl",
+        "sha256": "0b23eb1c09b845daa7c898bc78a32769cccd87db05f6f07201e00aa769ebf640"
+      },
+      {
+        "path": "expanse/data/malecns_types.npz",
+        "sha256": "a582ac7da0c86221c654c0793aef78f3049d5fc4fa4f8c264e9a1f3eda2b0271"
+      },
+      {
+        "path": "expanse/data/omni7_states.pt",
+        "sha256": "7d5fefa9d28f577b54830d64bc13f8c0bdf769701a2642614dbb22467b8f267d"
+      },
+      {
+        "path": "expanse/data/v3/connectome_rows_v3.jsonl",
+        "sha256": "d68a5cb00087375cf949bd6df5548ac80f220d6478e443579a364c6982a18304"
+      },
+      {
+        "path": "expanse/data/v3/fresh_code.jsonl",
+        "sha256": "b890571875fec9c416d13aa7b263857973d8115a5f974878b0f848e4cb88cfe5"
+      },
+      {
+        "path": "expanse/data/v3/fresh_math.jsonl",
+        "sha256": "ebbdb6de25b11d4a17405a0f8853ab73fbd3286ac461ca2f425a13de061729a0"
+      },
+      {
+        "path": "expanse/data/v3/fresh_omni.jsonl",
+        "sha256": "a381966ed7d5a32abc3b9b70cdabc0ebf7d89063f7f6679a35bbcffadddfce8f"
+      },
+      {
+        "path": "expanse/eval_expanse.py",
+        "sha256": "484c1b7b81c01bd61e8c9bad96f7590eba4c786ffd83508f15a3df32247251e2"
+      },
+      {
+        "path": "expanse/expanse_chat.py",
+        "sha256": "17f8a5728eddb5d6db52d161642a6b29741315af1f00820b289b494d3db990b6"
+      },
+      {
+        "path": "expanse/make_teacher_data.py",
+        "sha256": "5d7051b34a742c9596029fa0edc4539eabc35d351d8d46d4f57b1689cd4b88a7"
+      },
+      {
+        "path": "expanse/make_v3_data.py",
+        "sha256": "5d6133756d7b0e6263f5650bb6b44213b0f452a20b29fa4ec59bbf9164abf507"
+      },
+      {
+        "path": "expanse/retokenize_v3.py",
+        "sha256": "0788723f6f78582963f43bfbee5c746704c24d86d7218a95aad8017518662e1e"
+      },
+      {
+        "path": "expanse/src/bpe_tokenizer.py",
+        "sha256": "2cb081a85c86cb85bc0eb237ee16c3735759551cc2e84d672259961cd0115249"
+      },
+      {
+        "path": "expanse/src/connectome_full.py",
+        "sha256": "fe2a000f11f9bcf5b225967020396485aaef25ec5b6ba582e8fe8785fdb23a37"
+      },
+      {
+        "path": "expanse/src/connectome_lab.py",
+        "sha256": "731eaa336cd1ff33f5c51dd16c631b26635cbfcaff647915aae2db3958cf8f56"
+      },
+      {
+        "path": "expanse/src/connectome_text.py",
+        "sha256": "915c294e28dfd397d47e84e4013b2d44cc7104e0ce5cfca8a2e0e07b20eb5a6b"
+      },
+      {
+        "path": "expanse/src/consolidation_v2.py",
+        "sha256": "4a69d3de6d17cc0ed5a29b3c40b0265ecd80f173563743ca0b5bfe773880802c"
+      },
+      {
+        "path": "expanse/src/donor_graft.py",
+        "sha256": "9e6f5c2d83e991f712da4ecfeabe33fb963f2a9a04cedd536643a15fa656861e"
+      },
+      {
+        "path": "expanse/src/expanse_core.py",
+        "sha256": "4488f72ff3d575f1b290a48007cb8262aacf401c5f275de47519677fbd19aa40"
+      },
+      {
+        "path": "expanse/src/omni_v7_branch.py",
+        "sha256": "41a803ae7d7c7126c82f62d57f0569073d13534df62e5d9ddf3e61c21fecd307"
+      },
+      {
+        "path": "expanse/src/teacher_data.py",
+        "sha256": "cdb9ce4443464031bca656e3db1cf8bfb4ee274d03572ecc49b159472a2f16e7"
+      },
+      {
+        "path": "expanse/train_consolidation_v2.py",
+        "sha256": "1c2342f51b0fc01c5172541fe3a1d07983c3273ae7a5feb4196ed4cba680b21c"
+      },
+      {
+        "path": "expanse/train_expanse.py",
+        "sha256": "134da7e4eb5cda640f18b0b15c7203719e601f1b75180f8da47fc2227d660f0d"
+      },
+      {
+        "path": "external/omni_v7/image_feature_utils.py",
+        "sha256": "f1d6d50f23e32f8d910ea36e9406d9e238af6203fe49d716e8e7e20d3cc20449"
+      },
+      {
+        "path": "external/omni_v7/image_recognition_model.py",
+        "sha256": "da84035a69d9ff05ccc95c0a7ec13ffc10c2f92fffc3f86aef0b1bc83e9ca294"
+      },
+      {
+        "path": "external/omni_v7/math_equation_model.py",
+        "sha256": "ed0fbf7e5a4cd50c4f9dc680f5679a76e96a8d262b8e2acd31384a9df640090a"
+      },
+      {
+        "path": "external/omni_v7/omni_collective_model.py",
+        "sha256": "2d366c5a829b084af05fc9f46d9707d16582d72cceb5bea79e6dd4d7cef65808"
+      },
+      {
+        "path": "external/omni_v7/omni_collective_v4_model.py",
+        "sha256": "1f408355dd58459126b32cd7b7a1df67708c2c9d945c8701d93f9ca88bf079aa"
+      },
+      {
+        "path": "external/omni_v7/omni_collective_v5_model.py",
+        "sha256": "e2dd75502b932ba4e23d8b1318cbcedefdf355884b0002f20e1c7fa8bf27d52c"
+      },
+      {
+        "path": "external/omni_v7/omni_collective_v7_model.py",
+        "sha256": "f07fa9ed6dc524b5df528dd391f7c457586f0d9074f306b49bb9e6f8571a7673"
+      },
+      {
+        "path": "external/omni_v7/protein_folding_model.py",
+        "sha256": "7564366ba0002de9ea78e31f1817ac39c03f72d95e72e161e1115984e5d1d71f"
+      },
+      {
+        "path": "external/omni_v7/train_omni_collective_v7.py",
+        "sha256": "02f404eeb5bff3de821d911948c6446031ba5c438b2dcfc632afa6d89eacd4ea"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/answer_check.py",
+        "sha256": "966b71c37721a5c9a57147a537f63396dcc8139296c250dc3b86e93a7868d0df"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/archimedes_core.py",
+        "sha256": "15dbba8b20b53dc3aa1b239b2acef878a9b3113f49c667a4d80823d1665b8c25"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/champion/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/champion/chat_pipeline.py",
+        "sha256": "3b731b33893d88a8d4d40a3f9ec2fd0e7de64495f79bf0656dc29f0bf64c57d3"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/champion/model_native_image_xlite_v38.py",
+        "sha256": "913729b0cc99bfbccdd231c734bb5b5b1a8e757d9964ce80a8f2ec6a16a5d095"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/champion/model_variants.py",
+        "sha256": "98372e7b30afade0a39e799270331ca2810ce9db237c91ee85998be1ce9b9cf3"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/champion/run.py",
+        "sha256": "a70c53e19d3513c4a1137c84a388c27dad57e33752b647d496502027e859f7d4"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/device_utils.py",
+        "sha256": "2e44b7ae8890269af2193cb9895036fd6bb9cc77020fd7409fb45bf87dfb5399"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/malecns_connectome.py",
+        "sha256": "5782ca6ee1ba8818be661d8695f91cf000c435443ffd10743c507241d3178e66"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/mimomix_core.py",
+        "sha256": "86202e62afc730d3a5b69bbfb0189983433ece7c79ef5ab73ba43a17e7391768"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/mimomix_decoding.py",
+        "sha256": "92bf8bc294f55f4a3f7ba7f34661de58bd487d0dc0879939ad9929b6b919793a"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/mimomix_text.py",
+        "sha256": "2333da1daf0c22f05ef0fe022d40b9c2fc962ddfef335ac67b4277746299cab9"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/natural_phrasings.py",
+        "sha256": "db633eeb32d7f84e6f41dfb9b6210d427aac0b98674af8af9f037748e050e32c"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/neurogenesis.py",
+        "sha256": "417868ab3985e36e473913cc2f86b47280d70411b29539f970b256455ccdde38"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/prompt_normaliser.py",
+        "sha256": "63d687499683f1d8c8726285eb4c839c9285c29cf60242c50fb7d2f2c2223c5d"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/step_audit.py",
+        "sha256": "8312ee3608a4df20d1205d5c7bcce939d8d3b6c17dcdb72e3e8ab5cd4343dabf"
+      },
+      {
+        "path": "supermix-archimedes/archimedes/src/train_mimomix_talk.py",
+        "sha256": "218e18f660e4e989b79e5b9ff5349c021deb27e6ebdbfd77554407c5808b0e87"
+      },
+      {
+        "path": "supermix-archimedes/corpus/code.jsonl",
+        "sha256": "9dabe13961888a522dcea01b2b0a1940265359124e315a5cd026011941fab426"
+      },
+      {
+        "path": "supermix-archimedes/corpus/math.jsonl",
+        "sha256": "2198300caad4ff7cf9de8db5ba6b2eed9159ce2f949f12d477d0625ea95a5158"
+      },
+      {
+        "path": "supermix-archimedes/corpus/omni.jsonl",
+        "sha256": "b64fe33f253062cfc52b62a0a0cfc4a5867ac336ad1f54ffc79a5b228b930105"
+      },
+      {
+        "path": "supermix-archimedes/models/supermix-v93/src/build_code_corpus.py",
+        "sha256": "7f019386406048e78c930594b74a5fa6dd1316736b395e2714cbd7ed9fd21730"
+      },
+      {
+        "path": "supermix-archimedes/models/supermix-v93/src/build_omni_corpus.py",
+        "sha256": "09ab0de0eca1a52ae9c62cecc9679af681dc4ac55194abb39724e4960ee41692"
+      },
+      {
+        "path": "supermix-archimedes/models/supermix-v93/src/build_scratchpad_math.py",
+        "sha256": "379a2e2251a100717d0c869864303537c42d991cea4978fc2befe6244e129c90"
+      },
+      {
+        "path": "supermix-archimedes/models/supermix-v93/src/mimomix_text.py",
+        "sha256": "2333da1daf0c22f05ef0fe022d40b9c2fc962ddfef335ac67b4277746299cab9"
+      },
+      {
+        "path": "supermix-archimedes/models/supermix-v93/src/natural_phrasings.py",
+        "sha256": "db633eeb32d7f84e6f41dfb9b6210d427aac0b98674af8af9f037748e050e32c"
+      },
+      {
+        "path": "supermix-archimedes/models/supermix-v93/src/nexus_solver.py",
+        "sha256": "8d16ebb465d45fef7915b5009bde8daa0299c8176324563e8ec9ab2c683ee1bb"
+      },
+      {
+        "path": "supermix-archimedes/models/supermix-v93/src/science_plan.py",
+        "sha256": "effb37997081491c5f63af595651120b97477ad903dd5b5be8d2bc514b9fe373"
+      }
+    ],
+    "sha256": "20302aa9b0078a404ff46b6a60e5dd22813cf097662a7ecc3754c254024f1860"
+  },
+  "unlocked": false,
+  "lock": {
+    "id": "X-CNS-002",
+    "sha256": "b73e6bf7d786751f718c73679c2dcb3b173e0aeb08250392e51fc29c9211c49e",
+    "locked_utc": "2026-09-26T06:13:30+00:00",
+    "git": {
+      "commit": "71ee4736e43ff56619d7ab18a2a958bf5d63b47d",
+      "dirty": true
+    },
+    "file": "X-CNS-002.json"
+  },
+  "evals": [
+    {
+      "step": 0,
+      "val_replay_nats_per_char": 0.07718757180606618,
+      "val_replay_nats_per_token": 0.19202761766387194,
+      "val_code_nats_per_char": 0.5515947327491195,
+      "val_code_nats_per_token": 2.0088381176152503,
+      "val_bio_nats_per_char": 1.2844535705623825,
+      "val_bio_nats_per_token": 5.618823644065072,
+      "val_connectome_nats_per_char": 0.07691828041474486,
+      "val_connectome_nats_per_token": 0.27543765974242657,
+      "val_fresh_nats_per_char": 0.022766873392834498,
+      "val_fresh_nats_per_token": 0.05497778315602997,
+      "val_nats_per_char_pooled": 0.4311780754137348,
+      "val_nats_per_token_pooled": 1.3609868734178416,
+      "gate_abs_mean": 0.0,
+      "gate_by_source": {},
+      "gate_effective_abs_mean": null,
+      "state_autocorr": null,
+      "mean_rate": null,
+      "fraction_active": null,
+      "write_rms_ratio": null,
+      "write_token_var_frac": null,
+      "eval_seconds": 15.3
+    },
+    {
+      "step": 40,
+      "val_replay_nats_per_char": 0.07474077262130438,
+      "val_replay_nats_per_token": 0.1859404587164158,
+      "val_code_nats_per_char": 0.5376572717155884,
+      "val_code_nats_per_token": 1.9580796507107654,
+      "val_bio_nats_per_char": 1.2739991038224658,
+      "val_bio_nats_per_token": 5.573090729890047,
+      "val_connectome_nats_per_char": 0.07474958634183139,
+      "val_connectome_nats_per_token": 0.26767175524066594,
+      "val_fresh_nats_per_char": 0.022553124432671046,
+      "val_fresh_nats_per_token": 0.05446161900037601,
+      "val_nats_per_char_pooled": 0.424675066212957,
+      "val_nats_per_token_pooled": 1.3404605278899955,
+      "gate_abs_mean": 0.004890803247690201,
+      "gate_by_source": {
+        "replay": 0.33657415211200714,
+        "code": 0.4348610093196233,
+        "bio": 0.40804245074590045,
+        "connectome": 0.38444558282693225,
+        "fresh": 0.3326828454931577
+      },
+      "gate_effective_abs_mean": 0.3793212080995242,
+      "state_autocorr": 0.8241825064023336,
+      "mean_rate": 0.07680322925249736,
+      "fraction_active": 0.7835366408030192,
+      "write_rms_ratio": 0.038000670499765916,
+      "write_token_var_frac": 0.09052975167209884,
+      "eval_seconds": 6.7,
+      "val_nats_per_char_pooled_zero_edges": 0.43117807691350857,
+      "val_nats_per_char_pooled_gate0": 0.4311780754137348,
+      "graph_dependent_gain": 0.0065030107005515925,
+      "core_gain": 0.006503009200777843,
+      "ablation_seconds": 12.5
+    }
+  ],
+  "train_log": [
+    {
+      "step": 1,
+      "loss": 1.668199062347412,
+      "grad_norm": 0.03868763893842697,
+      "gate_abs_mean": 0.0004989458830095828,
+      "s_per_step": 0.9072216000058688
+    },
+    {
+      "step": 10,
+      "loss": 0.15329976379871368,
+      "grad_norm": 0.06736766546964645,
+      "gate_abs_mean": 0.002975311130285263,
+      "s_per_step": 0.9398237600049469
+    },
+    {
+      "step": 20,
+      "loss": 0.2558211088180542,
+      "grad_norm": 0.14717227220535278,
+      "gate_abs_mean": 0.004288525320589542,
+      "s_per_step": 0.8726855699904263
+    },
+    {
+      "step": 30,
+      "loss": 0.22038611769676208,
+      "grad_norm": 0.08855640888214111,
+      "gate_abs_mean": 0.004790081176906824,
+      "s_per_step": 0.9464918900106568
+    },
+    {
+      "step": 40,
+      "loss": 0.7783282399177551,
+      "grad_norm": 0.325086385011673,
+      "gate_abs_mean": 0.004890803247690201,
+      "s_per_step": 0.9466862600005698
+    }
+  ],
+  "code_version": {
+    "git": {
+      "commit": "71ee4736e43ff56619d7ab18a2a958bf5d63b47d",
+      "dirty": true
+    },
+    "torch": "2.11.0+cpu",
+    "threads": 4,
+    "python": "3.12.10"
+  },
+  "graph": {
+    "schema": "supermix-expanse-cns-lab-graph-v1",
+    "config": {
+      "topology": "shuffled",
+      "sign_mode": "dale",
+      "strength_init": "bio",
+      "edge_param": "fixed",
+      "norm": "frac",
+      "activation": "relu",
+      "state": "reset",
+      "microsteps": 4,
+      "gate": "dynamic",
+      "subgraph": 3000,
+      "radius": 0.9,
+      "graph_seed": null,
+      "backend": "csr_slab",
+      "readout": "evoked"
+    },
+    "graph_seed": 31,
+    "base_npz_sha256": "a582ac7da0c86221c654c0793aef78f3049d5fc4fa4f8c264e9a1f3eda2b0271",
+    "n_types": 3000,
+    "n_edges": 629875,
+    "n_in": 326,
+    "n_out": 182,
+    "subgraph": {
+      "n_types": 3000,
+      "n_edges": 629875,
+      "synapse_mass_kept": 0.624317,
+      "selection": "top other types by synapse mass + inputs into / outputs from them"
+    },
+    "topology_info": {
+      "swaps_accepted": 3833599,
+      "swap_attempts": 6275200,
+      "rounds": 20,
+      "accepted_per_round": [
+        196055,
+        191192,
+        191493,
+        191775,
+        191412,
+        191463,
+        191613,
+        191226,
+        191272,
+        191760,
+        191179,
+        191781,
+        191578,
+        191642,
+        191448,
+        191080,
+        191596,
+        191386,
+        191343,
+        191305
+      ],
+      "swaps_per_movable_edge": 6.109,
+      "edges_rewired": 627526,
+      "self_loops_held": 2349
+    },
+    "edge_overlap_with_real": 0.141788,
+    "scale": 0.9,
+    "abs_spectral_radius_before_scale": null,
+    "abs_spectral_radius": 0.8999999999536991,
+    "edge_sign_counts": {
+      "positive": 376247,
+      "negative": 253628
+    },
+    "arrays_sha256": "a6508daccc4e26e60a569e06a36f8d0f2d7fd93d84ed0e4c597b0d5720c06b27",
+    "seconds": 10.85
+  },
+  "trainable_params": {
+    "core": 277920
+  },
+  "data": {
+    "train": 33166,
+    "temporal_train": 0,
+    "dropped": 0,
+    "eval": {
+      "replay": 12,
+      "code": 12,
+      "bio": 12,
+      "connectome": 12,
+      "fresh": 12
+    }
+  },
+  "data_lineage": {
+    "schema": "supermix-expanse-cns-lab-data-v1",
+    "train": {
+      "count": 33166,
+      "sha256": "9b0edb7730389c757d001fd2b7ae5feaafe0181c062325f5cba8bc5dace36eb6"
+    },
+    "temporal_train": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "eval": {
+      "bio": {
+        "count": 12,
+        "sha256": "bb6034c639a6b931dea077638d70ef94e275e7d8890a8b0992811617b8e464e4"
+      },
+      "code": {
+        "count": 12,
+        "sha256": "c5cb961b07a20e8f9a0bc216c0dc16ec070f8aa102dba39829cb4cea8e3492aa"
+      },
+      "connectome": {
+        "count": 12,
+        "sha256": "69ec137d5543d96ec7abac150b38a713b09b4390c276a5f39bc9c9336b2774ae"
+      },
+      "fresh": {
+        "count": 12,
+        "sha256": "3e08554fc7d2e256004de837ced0cc8da54cba31dc4d256b6df66857fbc4ea2d"
+      },
+      "replay": {
+        "count": 12,
+        "sha256": "f163a56e412a771b53b07600242e2daa75e77440d93c75b0f52eb9ecd4268262"
+      }
+    },
+    "temporal_heldout": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "batch_plan": {
+      "count": 40,
+      "sha256": "8beab68c7007d096f1ade68afbba22cdfce37cff5c7dfd2ebfc06af46d7b2bf3"
+    },
+    "sha256": "63456b2955cfffb4f309d9878c409eff973af99d251d3731c8158b4b39038808"
+  },
+  "untrainable": false,
+  "optimizer_eps": {
+    "core": 1e-08
+  },
+  "steps_done": 40,
+  "final_rows": {
+    "replay": [
+      [
+        1.715767,
+        112,
+        41
+      ],
+      [
+        27.884996,
+        70,
+        31
+      ],
+      [
+        0.00839,
+        36,
+        21
+      ],
+      [
+        0.977026,
+        110,
+        39
+      ],
+      [
+        6.911828,
+        123,
+        61
+      ],
+      [
+        0.633223,
+        70,
+        35
+      ],
+      [
+        7.629768,
+        48,
+        24
+      ],
+      [
+        0.003144,
+        86,
+        34
+      ],
+      [
+        5.225788,
+        105,
+        32
+      ],
+      [
+        0.040063,
+        111,
+        37
+      ],
+      [
+        7.561734,
+        79,
+        24
+      ],
+      [
+        17.643865,
+        70,
+        31
+      ]
+    ],
+    "code": [
+      [
+        87.841309,
+        119,
+        28
+      ],
+      [
+        67.324871,
+        127,
+        32
+      ],
+      [
+        27.957352,
+        89,
+        25
+      ],
+      [
+        37.465363,
+        116,
+        32
+      ],
+      [
+        103.627563,
+        119,
+        37
+      ],
+      [
+        36.574926,
+        97,
+        31
+      ],
+      [
+        77.125961,
+        127,
+        34
+      ],
+      [
+        36.569007,
+        79,
+        18
+      ],
+      [
+        74.052237,
+        150,
+        47
+      ],
+      [
+        25.324432,
+        77,
+        19
+      ],
+      [
+        74.456819,
+        102,
+        26
+      ],
+      [
+        62.463059,
+        120,
+        34
+      ]
+    ],
+    "bio": [
+      [
+        139.752127,
+        99,
+        24
+      ],
+      [
+        146.347362,
+        102,
+        23
+      ],
+      [
+        108.0983,
+        78,
+        19
+      ],
+      [
+        123.27111,
+        95,
+        20
+      ],
+      [
+        213.499076,
+        131,
+        33
+      ],
+      [
+        79.165437,
+        69,
+        16
+      ],
+      [
+        101.21492,
+        115,
+        22
+      ],
+      [
+        70.62261,
+        69,
+        15
+      ],
+      [
+        75.628818,
+        66,
+        15
+      ],
+      [
+        166.070732,
+        141,
+        29
+      ],
+      [
+        58.781879,
+        43,
+        13
+      ],
+      [
+        71.808677,
+        55,
+        14
+      ]
+    ],
+    "connectome": [
+      [
+        6.423825,
+        63,
+        22
+      ],
+      [
+        0.156052,
+        69,
+        17
+      ],
+      [
+        6.576197,
+        63,
+        22
+      ],
+      [
+        6.605501,
+        61,
+        19
+      ],
+      [
+        3.040468,
+        70,
+        17
+      ],
+      [
+        2.045932,
+        100,
+        22
+      ],
+      [
+        2.002726,
+        71,
+        15
+      ],
+      [
+        6.498775,
+        61,
+        19
+      ],
+      [
+        0.476627,
+        62,
+        13
+      ],
+      [
+        9.322552,
+        61,
+        19
+      ],
+      [
+        2.590051,
+        100,
+        22
+      ],
+      [
+        18.770189,
+        82,
+        34
+      ]
+    ],
+    "fresh": [
+      [
+        0.174324,
+        169,
+        77
+      ],
+      [
+        0.052919,
+        39,
+        24
+      ],
+      [
+        0.694742,
+        126,
+        39
+      ],
+      [
+        0.163654,
+        35,
+        20
+      ],
+      [
+        0.038606,
+        87,
+        35
+      ],
+      [
+        6.522535,
+        68,
+        27
+      ],
+      [
+        0.273086,
+        37,
+        22
+      ],
+      [
+        7.341424,
+        103,
+        30
+      ],
+      [
+        6.766261,
+        73,
+        32
+      ],
+      [
+        0.002366,
+        87,
+        35
+      ],
+      [
+        0.006624,
+        113,
+        38
+      ],
+      [
+        0.020417,
+        41,
+        26
+      ]
+    ]
+  },
+  "final_rows_sha256": {
+    "replay": "a29074d8448bbf7111cab2a6879b336ce4ab3a612e2ad9e3225ed22cacb916ab",
+    "code": "b61ea39bf8493c77f17decae4b9d68059b7c06f9965cf35cbc2f9e9fd0fd7d4a",
+    "bio": "a81b59fd97eac1f5c1e0e1a48a33826e6890f3097c58707a522e20656be830df",
+    "connectome": "c403b9ad937dff2c81af175d9407cc20fe6984d24582215d5e8eb5087c6b25ae",
+    "fresh": "544e7791ae6c161a3fbf31f44197db3b06239afca10aa415e8ecb5730d8ebb3d"
+  },
+  "throughput": {
+    "s_per_step_mean": 0.92642187000165,
+    "s_per_step_median": 0.9326376000244636,
+    "train_tokens_per_s": 228.4056614505691
+  },
+  "core_report": {
+    "leak_by_superclass": {
+      "ascending_neuron": {
+        "mean": 0.5000765158775005,
+        "std": 0.0013980983782597453,
+        "n": 94
+      },
+      "cb_endocrine": {
+        "mean": 0.5015977621078491,
+        "std": 0.0,
+        "n": 1
+      },
+      "cb_intrinsic": {
+        "mean": 0.5000532975301724,
+        "std": 0.0010576487767011628,
+        "n": 1523
+      },
+      "cb_motor": {
+        "mean": 0.4995787739753723,
+        "std": 0.0007345676422119141,
+        "n": 2
+      },
+      "cb_sensory": {
+        "mean": 0.49983650743961333,
+        "std": 0.0011928305987399504,
+        "n": 60
+      },
+      "descending_neuron": {
+        "mean": 0.4999799980121909,
+        "std": 0.0013615369722191485,
+        "n": 103
+      },
+      "ol_intrinsic": {
+        "mean": 0.49999388591925986,
+        "std": 0.0009571805054214504,
+        "n": 233
+      },
+      "ol_sensory": {
+        "mean": 0.49993012348810834,
+        "std": 0.0011313485740435784,
+        "n": 9
+      },
+      "sensory_ascending": {
+        "mean": 0.5000220239162445,
+        "std": 0.0006407797336578369,
+        "n": 2
+      },
+      "visual_centrifugal": {
+        "mean": 0.4998981465358992,
+        "std": 0.001188653362631284,
+        "n": 74
+      },
+      "visual_projection": {
+        "mean": 0.4999860513668794,
+        "std": 0.0012661931605570719,
+        "n": 104
+      },
+      "vnc_efferent": {
+        "mean": 0.500006914138794,
+        "std": 0.0,
+        "n": 1
+      },
+      "vnc_endocrine": {
+        "mean": 0.5012961626052856,
+        "std": 0.0,
+        "n": 1
+      },
+      "vnc_intrinsic": {
+        "mean": 0.5000571759355753,
+        "std": 0.0011558502329940955,
+        "n": 662
+      },
+      "vnc_motor": {
+        "mean": 0.5001489016655329,
+        "std": 0.001312124252963989,
+        "n": 74
+      },
+      "vnc_sensory": {
+        "mean": 0.5002345003579792,
+        "std": 0.0013720250292810973,
+        "n": 57
+      }
+    },
+    "leak_mean": 0.5000432729721069
+  },
+  "peak_rss_mb": 1950.9,
+  "wall_minutes": 2.02
+}

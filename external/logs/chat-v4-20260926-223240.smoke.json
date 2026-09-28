@@ -1,0 +1,8 @@
+{
+  "url": "http://127.0.0.1:7861",
+  "checkpoint": "expanse/checkpoints/supermix_expanse_v4.pt",
+  "all_components_enabled": true,
+  "prompt": "whats the impulse from 40 N acting for 6 s",
+  "reply": "impulse = force x time, 40 x 6 = 240, 0 x 6 = 0, the impulse is 240 newton seconds, total 240\n\n<sub>Expanse \u00b7 2.7s</sub>",
+  "seconds": 3.65
+}

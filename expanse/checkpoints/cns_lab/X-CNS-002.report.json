@@ -1,0 +1,430 @@
+{
+  "schema": "supermix-expanse-cns-pilot-report-v1",
+  "hypothesis": "X-CNS-002",
+  "hypothesis_sha256": "b73e6bf7d786751f718c73679c2dcb3b173e0aeb08250392e51fc29c9211c49e",
+  "status": "exploratory_only",
+  "promotion_allowed": false,
+  "inputs": [
+    {
+      "arm": "absolute_real",
+      "seed": 31,
+      "run": "4b433d5250e5364e",
+      "metrics_sha256": "f9a4268bc2c6dcc47a2150636fbf6eb35649c8770972c0959e002a9008afc6d6"
+    },
+    {
+      "arm": "evoked_real",
+      "seed": 31,
+      "run": "b0d4ca526a4438aa",
+      "metrics_sha256": "104b8e260f9abef65d6fb1729857b51b32c3c3519a96a1a1b1dca74779dc1395"
+    },
+    {
+      "arm": "evoked_shuffled",
+      "seed": 31,
+      "run": "6ef7a7f21fa9aed0",
+      "metrics_sha256": "bc35c18c2ce28843ed1f71e1203e8689a104282a93c1a08b28e2b563df3bf6f9"
+    },
+    {
+      "arm": "absolute_real",
+      "seed": 32,
+      "run": "98f6374336c748f7",
+      "metrics_sha256": "848d9423e074977abddfaa70d25f79c5fb3f63c86af9fb98dbac3dba419cc03f"
+    },
+    {
+      "arm": "evoked_real",
+      "seed": 32,
+      "run": "a3dd6b3c66195fc4",
+      "metrics_sha256": "58a7b02eb34342fd0fefe576aee5768e0bcfa97d4442f06e257f8d48d1359c46"
+    },
+    {
+      "arm": "evoked_shuffled",
+      "seed": 32,
+      "run": "b2d952ff55b69705",
+      "metrics_sha256": "0c6cf0081bb9a0da13010487878e212118eb234bdc66faad049868c82627c659"
+    }
+  ],
+  "records": [
+    {
+      "arm": "absolute_real",
+      "seed": 31,
+      "run": "4b433d5250e5364e",
+      "initial_pooled": 0.4311780754137348,
+      "final": {
+        "step": 40,
+        "val_replay_nats_per_char": 0.07455277255937165,
+        "val_replay_nats_per_token": 0.18547275124526605,
+        "val_code_nats_per_char": 0.5376999547730416,
+        "val_code_nats_per_token": 1.9582350969971376,
+        "val_bio_nats_per_char": 1.2750906168237006,
+        "val_bio_nats_per_token": 5.577865537792567,
+        "val_connectome_nats_per_char": 0.07419883555636621,
+        "val_connectome_nats_per_token": 0.26569956466864747,
+        "val_fresh_nats_per_char": 0.02366851577973317,
+        "val_fresh_nats_per_token": 0.05715508254957788,
+        "val_nats_per_char_pooled": 0.42498778067515,
+        "val_nats_per_token_pooled": 1.3414475917098898,
+        "gate_abs_mean": 0.005205788649618626,
+        "gate_by_source": {
+          "replay": 0.35227422912915546,
+          "code": 0.4502807930111885,
+          "bio": 0.42296003301938373,
+          "connectome": 0.4002961963415146,
+          "fresh": 0.34798063337802887
+        },
+        "gate_effective_abs_mean": 0.39475837697585425,
+        "state_autocorr": 0.8079069932301839,
+        "mean_rate": 0.07995229760805765,
+        "fraction_active": 0.8140254656473795,
+        "write_rms_ratio": 0.033261603110434274,
+        "write_token_var_frac": 0.09717464029232599,
+        "eval_seconds": 7.8,
+        "val_nats_per_char_pooled_zero_edges": 0.4258031138381202,
+        "val_nats_per_char_pooled_gate0": 0.4311780754137348,
+        "graph_dependent_gain": 0.0008153331629702221,
+        "core_gain": 0.006190294738584845,
+        "ablation_seconds": 14.7
+      },
+      "throughput": {
+        "s_per_step_mean": 0.9020039475013618,
+        "s_per_step_median": 0.9081602499936707,
+        "train_tokens_per_s": 234.58877379212416
+      },
+      "trainable_params": {
+        "core": 277920
+      },
+      "wall_minutes": 1.6
+    },
+    {
+      "arm": "evoked_real",
+      "seed": 31,
+      "run": "b0d4ca526a4438aa",
+      "initial_pooled": 0.4311780754137348,
+      "final": {
+        "step": 40,
+        "val_replay_nats_per_char": 0.0746966979082893,
+        "val_replay_nats_per_token": 0.18583080943037825,
+        "val_code_nats_per_char": 0.5379004543379468,
+        "val_code_nats_per_token": 1.958965291004864,
+        "val_bio_nats_per_char": 1.2748199491599541,
+        "val_bio_nats_per_token": 5.576681505996014,
+        "val_connectome_nats_per_char": 0.07430224236303795,
+        "val_connectome_nats_per_token": 0.2660698554327874,
+        "val_fresh_nats_per_char": 0.02247278821980295,
+        "val_fresh_nats_per_token": 0.05426762192337601,
+        "val_nats_per_char_pooled": 0.4248055395532827,
+        "val_nats_per_token_pooled": 1.3408723589028406,
+        "gate_abs_mean": 0.005030902102589607,
+        "gate_by_source": {
+          "replay": 0.33504441132148105,
+          "code": 0.4254789749781291,
+          "bio": 0.4085455884536107,
+          "connectome": 0.3834843809405963,
+          "fresh": 0.3317653884490331
+        },
+        "gate_effective_abs_mean": 0.37686374882857004,
+        "state_autocorr": 0.7985436042149862,
+        "mean_rate": 0.07421604543924332,
+        "fraction_active": 0.7467605789502462,
+        "write_rms_ratio": 0.03635202062631189,
+        "write_token_var_frac": 0.09639659017102183,
+        "eval_seconds": 6.9,
+        "val_nats_per_char_pooled_zero_edges": 0.4311780754137348,
+        "val_nats_per_char_pooled_gate0": 0.4311780754137348,
+        "graph_dependent_gain": 0.006372535860452111,
+        "core_gain": 0.006372535860452111,
+        "ablation_seconds": 12.5
+      },
+      "throughput": {
+        "s_per_step_mean": 0.905293302499922,
+        "s_per_step_median": 0.9317884499905631,
+        "train_tokens_per_s": 233.7364027941853
+      },
+      "trainable_params": {
+        "core": 277920
+      },
+      "wall_minutes": 1.63
+    },
+    {
+      "arm": "evoked_shuffled",
+      "seed": 31,
+      "run": "6ef7a7f21fa9aed0",
+      "initial_pooled": 0.4311780754137348,
+      "final": {
+        "step": 40,
+        "val_replay_nats_per_char": 0.07474077262130438,
+        "val_replay_nats_per_token": 0.1859404587164158,
+        "val_code_nats_per_char": 0.5376572717155884,
+        "val_code_nats_per_token": 1.9580796507107654,
+        "val_bio_nats_per_char": 1.2739991038224658,
+        "val_bio_nats_per_token": 5.573090729890047,
+        "val_connectome_nats_per_char": 0.07474958634183139,
+        "val_connectome_nats_per_token": 0.26767175524066594,
+        "val_fresh_nats_per_char": 0.022553124432671046,
+        "val_fresh_nats_per_token": 0.05446161900037601,
+        "val_nats_per_char_pooled": 0.424675066212957,
+        "val_nats_per_token_pooled": 1.3404605278899955,
+        "gate_abs_mean": 0.004890803247690201,
+        "gate_by_source": {
+          "replay": 0.33657415211200714,
+          "code": 0.4348610093196233,
+          "bio": 0.40804245074590045,
+          "connectome": 0.38444558282693225,
+          "fresh": 0.3326828454931577
+        },
+        "gate_effective_abs_mean": 0.3793212080995242,
+        "state_autocorr": 0.8241825064023336,
+        "mean_rate": 0.07680322925249736,
+        "fraction_active": 0.7835366408030192,
+        "write_rms_ratio": 0.038000670499765916,
+        "write_token_var_frac": 0.09052975167209884,
+        "eval_seconds": 6.7,
+        "val_nats_per_char_pooled_zero_edges": 0.43117807691350857,
+        "val_nats_per_char_pooled_gate0": 0.4311780754137348,
+        "graph_dependent_gain": 0.0065030107005515925,
+        "core_gain": 0.006503009200777843,
+        "ablation_seconds": 12.5
+      },
+      "throughput": {
+        "s_per_step_mean": 0.92642187000165,
+        "s_per_step_median": 0.9326376000244636,
+        "train_tokens_per_s": 228.4056614505691
+      },
+      "trainable_params": {
+        "core": 277920
+      },
+      "wall_minutes": 2.02
+    },
+    {
+      "arm": "absolute_real",
+      "seed": 32,
+      "run": "98f6374336c748f7",
+      "initial_pooled": 0.4311780754137348,
+      "final": {
+        "step": 40,
+        "val_replay_nats_per_char": 0.07370428010529163,
+        "val_replay_nats_per_token": 0.1833618675790182,
+        "val_code_nats_per_char": 0.5373063541937524,
+        "val_code_nats_per_token": 1.9568016535651256,
+        "val_bio_nats_per_char": 1.279510498046875,
+        "val_bio_nats_per_token": 5.597200244542503,
+        "val_connectome_nats_per_char": 0.07510879445877164,
+        "val_connectome_nats_per_token": 0.2689580482071366,
+        "val_fresh_nats_per_char": 0.023594548000148468,
+        "val_fresh_nats_per_token": 0.05697646405961779,
+        "val_nats_per_char_pooled": 0.42575512446386415,
+        "val_nats_per_token_pooled": 1.3438696648239659,
+        "gate_abs_mean": 0.00498890969902277,
+        "gate_by_source": {
+          "replay": 0.3359151358405749,
+          "code": 0.41903526584307355,
+          "bio": 0.4010528822739919,
+          "connectome": 0.36969976127147675,
+          "fresh": 0.3299046829342842
+        },
+        "gate_effective_abs_mean": 0.37112154563268024,
+        "state_autocorr": 0.8092678586641947,
+        "mean_rate": 0.07699173440535863,
+        "fraction_active": 0.8024185379346211,
+        "write_rms_ratio": 0.02923249665736295,
+        "write_token_var_frac": 0.10765134943696258,
+        "eval_seconds": 7.6,
+        "val_nats_per_char_pooled_zero_edges": 0.4266246484746653,
+        "val_nats_per_char_pooled_gate0": 0.4311780754137348,
+        "graph_dependent_gain": 0.0008695240108011482,
+        "core_gain": 0.005422950949870664,
+        "ablation_seconds": 14.5
+      },
+      "throughput": {
+        "s_per_step_mean": 0.9418024774990045,
+        "s_per_step_median": 0.951392949995352,
+        "train_tokens_per_s": 222.2599801986837
+      },
+      "trainable_params": {
+        "core": 277920
+      },
+      "wall_minutes": 1.73
+    },
+    {
+      "arm": "evoked_real",
+      "seed": 32,
+      "run": "a3dd6b3c66195fc4",
+      "initial_pooled": 0.4311780754137348,
+      "final": {
+        "step": 40,
+        "val_replay_nats_per_char": 0.07429272053288478,
+        "val_replay_nats_per_token": 0.18482579254522558,
+        "val_code_nats_per_char": 0.5370214118899809,
+        "val_code_nats_per_token": 1.955763929803181,
+        "val_bio_nats_per_char": 1.2779624271482537,
+        "val_bio_nats_per_token": 5.590428230693801,
+        "val_connectome_nats_per_char": 0.07483792001098774,
+        "val_connectome_nats_per_token": 0.26798807041279016,
+        "val_fresh_nats_per_char": 0.02340791903146693,
+        "val_fresh_nats_per_token": 0.056525789661172,
+        "val_nats_per_char_pooled": 0.42540469144165993,
+        "val_nats_per_token_pooled": 1.3427635447069484,
+        "gate_abs_mean": 0.004777608904987574,
+        "gate_by_source": {
+          "replay": 0.3326350226998329,
+          "code": 0.4087040175994237,
+          "bio": 0.38528962930043537,
+          "connectome": 0.36535998930533725,
+          "fresh": 0.3270573740204175
+        },
+        "gate_effective_abs_mean": 0.36380920658508936,
+        "state_autocorr": 0.7861072897911072,
+        "mean_rate": 0.06423575952649116,
+        "fraction_active": 0.7489733258883159,
+        "write_rms_ratio": 0.03341773571986861,
+        "write_token_var_frac": 0.11027680664958205,
+        "eval_seconds": 7.6,
+        "val_nats_per_char_pooled_zero_edges": 0.4311780754137348,
+        "val_nats_per_char_pooled_gate0": 0.4311780754137348,
+        "graph_dependent_gain": 0.005773383972074886,
+        "core_gain": 0.005773383972074886,
+        "ablation_seconds": 14.0
+      },
+      "throughput": {
+        "s_per_step_mean": 0.8840464900014922,
+        "s_per_step_median": 0.8740116000117268,
+        "train_tokens_per_s": 236.78053401880106
+      },
+      "trainable_params": {
+        "core": 277920
+      },
+      "wall_minutes": 1.48
+    },
+    {
+      "arm": "evoked_shuffled",
+      "seed": 32,
+      "run": "b2d952ff55b69705",
+      "initial_pooled": 0.4311780754137348,
+      "final": {
+        "step": 40,
+        "val_replay_nats_per_char": 0.07518350563797296,
+        "val_replay_nats_per_token": 0.18704189207495714,
+        "val_code_nats_per_char": 0.5368868644587391,
+        "val_code_nats_per_token": 1.9552739251086864,
+        "val_bio_nats_per_char": 1.277269623577875,
+        "val_bio_nats_per_token": 5.587397571453832,
+        "val_connectome_nats_per_char": 0.0749786505141098,
+        "val_connectome_nats_per_token": 0.2684920140816463,
+        "val_fresh_nats_per_char": 0.02233174693121257,
+        "val_fresh_nats_per_token": 0.053927033330187384,
+        "val_nats_per_char_pooled": 0.42522612358384854,
+        "val_nats_per_token_pooled": 1.3421999063302463,
+        "gate_abs_mean": 0.004920881241559982,
+        "gate_by_source": {
+          "replay": 0.3347410559654236,
+          "code": 0.4224177598953247,
+          "bio": 0.39014678448438644,
+          "connectome": 0.36897871394952136,
+          "fresh": 0.33003389090299606
+        },
+        "gate_effective_abs_mean": 0.3692636410395304,
+        "state_autocorr": 0.7726700623830159,
+        "mean_rate": 0.06194632152716319,
+        "fraction_active": 0.7609034935633342,
+        "write_rms_ratio": 0.03319488902132835,
+        "write_token_var_frac": 0.12496653560388499,
+        "eval_seconds": 7.1,
+        "val_nats_per_char_pooled_zero_edges": 0.4311780754137348,
+        "val_nats_per_char_pooled_gate0": 0.4311780754137348,
+        "graph_dependent_gain": 0.005951951829886282,
+        "core_gain": 0.005951951829886282,
+        "ablation_seconds": 13.8
+      },
+      "throughput": {
+        "s_per_step_mean": 0.9984527625041665,
+        "s_per_step_median": 1.0011517500097398,
+        "train_tokens_per_s": 209.64937737765686
+      },
+      "trainable_params": {
+        "core": 277920
+      },
+      "wall_minutes": 2.15
+    }
+  ],
+  "means": {
+    "absolute_real": {
+      "mean_nats_per_char": 0.42537145256950704,
+      "seed_sd": 0.0005425939965011747
+    },
+    "evoked_real": {
+      "mean_nats_per_char": 0.4251051154974713,
+      "seed_sd": 0.00042366436323226125
+    },
+    "evoked_shuffled": {
+      "mean_nats_per_char": 0.42495059489840276,
+      "seed_sd": 0.0003896564037802533
+    }
+  },
+  "comparisons": [
+    {
+      "reference": "absolute_real",
+      "arm": "absolute_real",
+      "seed": 31,
+      "paired_evidence": {
+        "final_rows_sha256": "matched",
+        "input_manifest": "matched",
+        "data_lineage": "matched"
+      },
+      "delta_nats_per_char": 0.0
+    },
+    {
+      "reference": "absolute_real",
+      "arm": "evoked_real",
+      "seed": 31,
+      "paired_evidence": {
+        "final_rows_sha256": "matched",
+        "input_manifest": "matched",
+        "data_lineage": "matched"
+      },
+      "delta_nats_per_char": 0.00018224112186726593
+    },
+    {
+      "reference": "absolute_real",
+      "arm": "evoked_shuffled",
+      "seed": 31,
+      "paired_evidence": {
+        "final_rows_sha256": "matched",
+        "input_manifest": "matched",
+        "data_lineage": "matched"
+      },
+      "delta_nats_per_char": 0.0003127144621929978
+    },
+    {
+      "reference": "absolute_real",
+      "arm": "absolute_real",
+      "seed": 32,
+      "paired_evidence": {
+        "final_rows_sha256": "matched",
+        "input_manifest": "matched",
+        "data_lineage": "matched"
+      },
+      "delta_nats_per_char": 0.0
+    },
+    {
+      "reference": "absolute_real",
+      "arm": "evoked_real",
+      "seed": 32,
+      "paired_evidence": {
+        "final_rows_sha256": "matched",
+        "input_manifest": "matched",
+        "data_lineage": "matched"
+      },
+      "delta_nats_per_char": 0.0003504330222042218
+    },
+    {
+      "reference": "absolute_real",
+      "arm": "evoked_shuffled",
+      "seed": 32,
+      "paired_evidence": {
+        "final_rows_sha256": "matched",
+        "input_manifest": "matched",
+        "data_lineage": "matched"
+      },
+      "delta_nats_per_char": 0.0005290008800156176
+    }
+  ],
+  "limitations": "Short development pilot; no confirmatory verdict, generation-quality claim, or biological-topology superiority claim. Seed SD is descriptive, not a confidence interval."
+}

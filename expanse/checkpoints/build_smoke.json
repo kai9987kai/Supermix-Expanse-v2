@@ -1,0 +1,187 @@
+{
+  "tag": "smoke",
+  "gate": "dynamic",
+  "steps": 2,
+  "batch": 8,
+  "lr_new": 0.001,
+  "lr_core": 0.0001,
+  "seed": 2026,
+  "train_scope": "core (trunk frozen)",
+  "edges": "fixed",
+  "conversion_exact": true,
+  "evals": [
+    {
+      "step": 0,
+      "val_replay_nats_per_char": 0.0005358126602674786,
+      "val_replay_nats_per_token": 0.001413950075705846,
+      "val_code_nats_per_char": 0.41446721159069744,
+      "val_code_nats_per_token": 1.6185659211257408,
+      "val_bio_nats_per_char": 1.3226558209989017,
+      "val_bio_nats_per_token": 5.519883626302083,
+      "val_connectome_nats_per_char": 0.06863462537634674,
+      "val_connectome_nats_per_token": 0.2677717074541978,
+      "val_fresh_nats_per_char": 0.0007407920027156619,
+      "val_fresh_nats_per_token": 0.0016135641898231945,
+      "val_nats_per_char_pooled": 0.3447508762666044,
+      "val_nats_per_token_pooled": 1.071105308676588,
+      "gate_abs_mean": 0.16587835550308228,
+      "gate_by_source": {
+        "replay": 0.1658783107995987,
+        "code": 0.1658783107995987,
+        "bio": 0.1658783107995987,
+        "connectome": 0.1658783107995987,
+        "fresh": 0.1658783107995987
+      },
+      "state_autocorr": 0.6840547800064087,
+      "mean_rate": 0.036086106300354005,
+      "fraction_active": 0.581479835510254,
+      "write_rms_ratio": 0.0790743274759533,
+      "write_token_var_frac": 0.33947730510595103,
+      "eval_seconds": 3.7
+    },
+    {
+      "step": 2,
+      "val_replay_nats_per_char": 0.0007177163895807768,
+      "val_replay_nats_per_token": 0.0018939738058381611,
+      "val_code_nats_per_char": 0.4166185661130657,
+      "val_code_nats_per_token": 1.6269673314587823,
+      "val_bio_nats_per_char": 1.3437540950104832,
+      "val_bio_nats_per_token": 5.607933756510417,
+      "val_connectome_nats_per_char": 0.06826570145920295,
+      "val_connectome_nats_per_token": 0.2663323845661862,
+      "val_fresh_nats_per_char": 0.0026361486213502907,
+      "val_fresh_nats_per_token": 0.005741955905125059,
+      "val_nats_per_char_pooled": 0.34933666706283667,
+      "val_nats_per_token_pooled": 1.0853528862883304,
+      "gate_abs_mean": 0.16589879989624023,
+      "gate_by_source": {
+        "replay": 0.1848846711218357,
+        "code": 0.19592256098985672,
+        "bio": 0.1996932551264763,
+        "connectome": 0.1942753866314888,
+        "fresh": 0.182028166949749
+      },
+      "state_autocorr": 0.684149968624115,
+      "mean_rate": 0.03593510612845421,
+      "fraction_active": 0.5797963380813599,
+      "write_rms_ratio": 0.10582198935768664,
+      "write_token_var_frac": 0.3388440663806523,
+      "eval_seconds": 2.9
+    }
+  ],
+  "core_report": {
+    "leak_by_superclass": {
+      "ascending_neuron": {
+        "mean": 0.5056583360499217,
+        "std": 0.005895309816386648,
+        "n": 563
+      },
+      "cb_efferent": {
+        "mean": 0.4985257387161255,
+        "std": 0.0,
+        "n": 1
+      },
+      "cb_endocrine": {
+        "mean": 0.5114296734333038,
+        "std": 0.007630765601146069,
+        "n": 10
+      },
+      "cb_intrinsic": {
+        "mean": 0.5017084010616565,
+        "std": 0.005691480103782185,
+        "n": 6605
+      },
+      "cb_motor": {
+        "mean": 0.5115019263223161,
+        "std": 0.01457777195228075,
+        "n": 43
+      },
+      "cb_sensory": {
+        "mean": 0.5076308533360686,
+        "std": 0.005363082118775043,
+        "n": 158
+      },
+      "descending_neuron": {
+        "mean": 0.5082878087336818,
+        "std": 0.015188562799568843,
+        "n": 480
+      },
+      "efferent_ascending": {
+        "mean": 0.5109613955020904,
+        "std": 0.020007472712948865,
+        "n": 5
+      },
+      "efferent_descending": {
+        "mean": 0.5069881081581116,
+        "std": 0.0,
+        "n": 1
+      },
+      "ol_intrinsic": {
+        "mean": 0.5010131069654908,
+        "std": 0.0023225928504782755,
+        "n": 271
+      },
+      "ol_sensory": {
+        "mean": 0.5051485570994291,
+        "std": 0.00320503039370274,
+        "n": 11
+      },
+      "sensory_ascending": {
+        "mean": 0.5050467871702634,
+        "std": 0.006250673417379528,
+        "n": 26
+      },
+      "sensory_descending": {
+        "mean": 0.5030811429023743,
+        "std": 0.0013687333345272902,
+        "n": 4
+      },
+      "visual_centrifugal": {
+        "mean": 0.5016920160916116,
+        "std": 0.004870525018442278,
+        "n": 108
+      },
+      "visual_projection": {
+        "mean": 0.5077768000047331,
+        "std": 0.0054084205803308204,
+        "n": 346
+      },
+      "vnc_efferent": {
+        "mean": 0.5159660710228814,
+        "std": 0.016593714761446055,
+        "n": 27
+      },
+      "vnc_endocrine": {
+        "mean": 0.511588841676712,
+        "std": 0.012051837393957671,
+        "n": 4
+      },
+      "vnc_intrinsic": {
+        "mean": 0.5029331265720997,
+        "std": 0.008544093421348728,
+        "n": 2777
+      },
+      "vnc_motor": {
+        "mean": 0.5128135385227875,
+        "std": 0.013398598721038353,
+        "n": 142
+      },
+      "vnc_sensory": {
+        "mean": 0.5083104322647908,
+        "std": 0.0050627844320078825,
+        "n": 169
+      }
+    },
+    "leak_mean": 0.5030224919319153
+  },
+  "s_per_step_mean": 1.727287299989257,
+  "wall_minutes": 0.7,
+  "delta_pooled_vs_v3": 0.004585790796232281,
+  "delta_by_source_vs_v3": {
+    "val_replay_nats_per_char": 0.0001819037293132982,
+    "val_code_nats_per_char": 0.002151354522368254,
+    "val_bio_nats_per_char": 0.021098274011581486,
+    "val_connectome_nats_per_char": -0.0003689239171437847,
+    "val_fresh_nats_per_char": 0.0018953566186346287
+  }
+}

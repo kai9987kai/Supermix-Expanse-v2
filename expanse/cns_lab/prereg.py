@@ -31,7 +31,7 @@ and is written once to ``verdicts/<id>.verdict.json`` (never overwritten).
 
 Before a run's metric is used, ``evaluate_rule`` checks that the recorded run
 is the one the hypothesis asks for: ``run_key`` equals its directory name, the
-recorded arm / seed (an exact int) / full ``LabConfig`` match, it was not an
+recorded protocol / arm / seed (an exact int) / full ``LabConfig`` match, it was not an
 ``--unlocked`` run, it records a lock and that lock's hash is the hypothesis'
 lock (for a run shared with another hypothesis: that hypothesis' lock, which
 must exist, and its arm has the same config), its ``untrainable`` flag is what
@@ -44,6 +44,14 @@ Any failure, including a malformed metrics.json field, is a problem
 metrics.json read, its sha256 with line endings normalised to LF, as for the
 locks: ``inputs_hash``). Verdict files issued before version 2 are never
 rewritten.
+
+Recorded final-row cohort hashes and input/data lineage receipts, when present,
+must be well-formed and identical between the two arms for each seed. A receipt
+present in only one arm is not evidence of a matched experiment. Both absent
+remains the legacy behavior; ``paired_evidence`` labels those unchecked fields.
+Protocol identity follows ``run_key`` (notes are annotations and base_config is
+already folded into the checked arm config). Shared hypothesis files must still
+match their locks and the requested protocol. Issued verdicts stay immutable.
 
 Runs are keyed by (protocol, full arm config, seed), so an arm shared by two
 hypotheses with the same protocol is trained once.
@@ -129,9 +137,19 @@ def arm_config(h: Dict[str, Any], arm: str) -> "cl.LabConfig":
     return cl.LabConfig.from_dict({**h["protocol"].get("base_config", {}), **h["arms"][arm]})
 
 
+def _protocol_identity(protocol: Dict[str, Any]) -> Dict[str, Any]:
+    return {k: v for k, v in protocol.items() if k not in ("base_config", "notes")}
+
+
+def _same_protocol(recorded: Any, expected: Dict[str, Any]) -> bool:
+    """Compare the exact JSON identity used in run keys, including numeric types."""
+    return isinstance(recorded, dict) and json.dumps(_protocol_identity(recorded), sort_keys=True) == json.dumps(
+        _protocol_identity(expected), sort_keys=True)
+
+
 def run_key(protocol: Dict[str, Any], cfg: "cl.LabConfig", seed: int) -> str:
     """Identity of one run. ``base_config`` is already folded into ``cfg``; notes do not count."""
-    proto = {k: v for k, v in protocol.items() if k not in ("base_config", "notes")}
+    proto = _protocol_identity(protocol)
     blob = json.dumps({"protocol": proto, "config": cfg.to_dict(), "seed": int(seed)}, sort_keys=True)
     return hashlib.sha1(blob.encode()).hexdigest()[:16]
 
@@ -220,6 +238,50 @@ def untrainable_arm(h: Dict[str, Any], arm: str) -> bool:
     return arm_config(h, arm).topology == "none" and h["protocol"].get("train_scope", "core") == "core"
 
 
+def _evidence_problems(m: Dict[str, Any]) -> List[str]:
+    """Validate recorded receipts without requiring them from legacy runs."""
+    probs: List[str] = []
+    if "final_rows_sha256" in m:
+        hashes = m["final_rows_sha256"]
+        if not isinstance(hashes, dict) or not hashes or any(
+            not isinstance(source, str) or not source or not isinstance(digest, str) or len(digest) != 64
+            or any(c not in "0123456789abcdef" for c in digest)
+            for source, digest in (hashes.items() if isinstance(hashes, dict) else [])
+        ):
+            probs.append("final_rows_sha256 must map nonempty source names to lowercase SHA256 digests")
+        elif "final_rows" in m and (
+            not isinstance(m["final_rows"], dict) or set(m["final_rows"]) != set(hashes)
+        ):
+            probs.append("final_rows_sha256 sources differ from final_rows")
+    if "input_manifest" in m or "data_lineage" in m:
+        import lineage
+
+        for field, validator in (("input_manifest", lineage.validate_input_manifest),
+                                 ("data_lineage", lineage.validate_data_lineage)):
+            if field in m:
+                probs += [f"{field}: {p}" for p in validator(m[field])]
+    return probs
+
+
+def _paired_evidence(control: Dict[str, Any], treatment: Dict[str, Any]) -> Tuple[Dict[str, str], List[str]]:
+    """Two valid individual receipts must describe the same inputs and cohorts."""
+    statuses: Dict[str, str] = {}
+    probs: List[str] = []
+    for field in ("final_rows_sha256", "input_manifest", "data_lineage"):
+        present = (field in control, field in treatment)
+        if not any(present):
+            statuses[field] = "legacy_unverified"
+        elif not all(present):
+            statuses[field] = "missing_one_arm"
+            probs.append(f"{field} recorded in only one arm; pairing cannot be verified")
+        elif control[field] != treatment[field]:
+            statuses[field] = "mismatch"
+            probs.append(f"{field} differs between control and treatment")
+        else:
+            statuses[field] = "matched"
+    return statuses, probs
+
+
 def check_run(h: Dict[str, Any], arm: str, seed: int, rdir: Path, m: Dict[str, Any],
               hyp_dir: Path = HYP_DIR) -> List[str]:
     """Why the recorded run ``m`` (read from ``rdir``) is not provably the run ``(h, arm, seed)``; [] if it is.
@@ -237,6 +299,8 @@ def check_run(h: Dict[str, Any], arm: str, seed: int, rdir: Path, m: Dict[str, A
         probs.append(f"run_key {m.get('run_key')!r} != directory {rdir.name}")
     if _exact_int(m.get("seed")) != int(seed):
         probs.append(f"recorded seed {m.get('seed')!r} != {seed}")
+    if not _same_protocol(m.get("protocol"), h["protocol"]):
+        probs.append("recorded protocol differs from the hypothesis protocol")
     want_cfg = arm_config(h, arm).to_dict()
     if m.get("config") != want_cfg:
         probs.append("recorded config differs from the arm's LabConfig")
@@ -250,8 +314,10 @@ def check_run(h: Dict[str, Any], arm: str, seed: int, rdir: Path, m: Dict[str, A
             probs.append(f"recorded arm {m.get('arm')!r} != {arm!r}")
         want_sha = (h.get("_lock") or {}).get("sha256")  # None: an unlocked dict, nothing to compare
     else:  # trained once for another hypothesis with the same protocol
+        other_raw = None
         try:
-            other = json.loads(hyp_path(owner, hyp_dir).read_text(encoding="utf-8"))
+            other_raw = hyp_path(owner, hyp_dir).read_bytes()
+            other = json.loads(other_raw)
             other_cfg = arm_config(other, m.get("arm")).to_dict() if m.get("arm") in (other.get("arms") or {}) else None
         except (OSError, ValueError, KeyError, TypeError, AttributeError):
             other, other_cfg = None, None
@@ -264,6 +330,10 @@ def check_run(h: Dict[str, Any], arm: str, seed: int, rdir: Path, m: Dict[str, A
         want_sha = _lock_sha(owner, hyp_dir)
         if want_sha is None:  # a shared run must trace back to a readable lock
             probs.append(f"recorded for {owner}, which has no readable lock")
+        elif other_raw is not None and sha256_bytes(other_raw) != want_sha:
+            probs.append(f"recorded for {owner}, whose hypothesis changed after its lock")
+        if other is not None and not _same_protocol(other.get("protocol"), h["protocol"]):
+            probs.append(f"recorded for {owner}, whose protocol differs from this hypothesis")
     rec_sha = lock_rec.get("sha256") if lock_rec else None
     if rec_sha is None:
         if want_sha is not None and not unlocked:  # (an --unlocked run is already a problem)
@@ -282,6 +352,7 @@ def check_run(h: Dict[str, Any], arm: str, seed: int, rdir: Path, m: Dict[str, A
     last = evals[-1].get("step") if isinstance(evals, list) and evals and isinstance(evals[-1], dict) else None
     if _exact_int(last) != int(h["protocol"]["steps"]):
         probs.append(f"last eval at step {last}, protocol {h['protocol']['steps']}")
+    probs += _evidence_problems(m)
     return probs
 
 
@@ -310,6 +381,7 @@ def evaluate_rule(h: Dict[str, Any], runs: Path = RUNS, hyp_dir: Path = HYP_DIR)
     inputs: List[Dict[str, Any]] = []
     for seed in h["seeds"]:
         row: Dict[str, Any] = {"seed": int(seed)}
+        accepted: Dict[str, Dict[str, Any]] = {}
         for role in ("control", "treatment"):
             arm = h[f"{role}_arm"]
             d = run_dir(h, arm, seed, runs)
@@ -334,10 +406,16 @@ def evaluate_rule(h: Dict[str, Any], runs: Path = RUNS, hyp_dir: Path = HYP_DIR)
                     except (TypeError, ValueError, KeyError, AttributeError, IndexError, OverflowError) as exc:
                         val, bad = None, [f"malformed metrics.json field ({type(exc).__name__}: {exc})"]
                     problems += [f"{arm} seed {seed}: {p}" for p in bad]
+                    if not bad:
+                        accepted[role] = m
             row[role] = val
             row[f"{role}_run"] = d.name
         if row["control"] is not None and row["treatment"] is not None:
-            row["delta"] = sign * (row["control"] - row["treatment"])  # > 0 favours the treatment
+            pairing, bad = _paired_evidence(accepted["control"], accepted["treatment"])
+            row["paired_evidence"] = pairing
+            problems += [f"paired seed {seed}: {p}" for p in bad]
+            if not bad:
+                row["delta"] = sign * (row["control"] - row["treatment"])  # > 0 favours the treatment
         rows.append(row)
     out: Dict[str, Any] = {"schema": VERDICT_SCHEMA, "verdict_schema_version": VERDICT_SCHEMA_VERSION,
                            "id": h["id"], "claim": h["claim"],

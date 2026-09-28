@@ -27,7 +27,6 @@ import expanse_core as ec  # noqa: E402
 from expanse_core import text_utils  # noqa: E402
 
 LOCK = threading.Lock()
-CTX = 128
 
 
 @contextmanager
@@ -66,8 +65,12 @@ def donors_off(model):
 def stream_reply(model, tok, prompt: str, max_new: int, temperature: float, is_expanse: bool, use_fly: bool = True):
     """Yield the reply text as it grows (KV-cached decode, same kwargs every step)."""
     ids, _ = tok.encode_turn(prompt, None)
-    ids = ids[-(CTX - 8):]
-    max_new = max(1, min(int(max_new), CTX - len(ids)))
+    context = int(model.config.max_position_embeddings)
+    if len(ids) >= context:
+        yield (f"Your message uses {len(ids)} tokens; this model has a {context}-token context. "
+               "Please shorten it to leave room for an answer.")
+        return
+    max_new = max(1, min(int(max_new), context - len(ids)))
     kw = {"omni_features": ec.arch.OmniCore.featurize([prompt]), "use_fly": use_fly}
     if is_expanse and model.omni7 is not None:
         kw["omni7_state"] = model.omni7_state_for([prompt])
@@ -76,7 +79,7 @@ def stream_reply(model, tok, prompt: str, max_new: int, temperature: float, is_e
     out = model(x, use_cache=True, return_mtp=False, past_length=0, **kw)
     past, pos, emitted = out.past_key_values, len(ids), []
     gen = torch.Generator().manual_seed(0)
-    for _ in range(max_new):
+    for step in range(max_new):
         logits = out.logits[0, -1].float()
         if temperature > 0:
             probs = torch.softmax(logits / temperature, -1)
@@ -87,6 +90,8 @@ def stream_reply(model, tok, prompt: str, max_new: int, temperature: float, is_e
             break
         emitted.append(token)
         yield tok.decode(emitted).strip()
+        if step + 1 == max_new:
+            break
         out = model(torch.tensor([[token]]), past_key_values=past, use_cache=True, return_mtp=False,
                     past_length=pos, **kw)
         past, pos = out.past_key_values, pos + 1
@@ -135,7 +140,7 @@ def build_app(E, tokE, A, tokA, receipt):
         f"({n_params:.1f}M params, {tr.get('steps', '?')} training steps"
         + (f" + {v4.get('steps', '?')} core-only steps with the v4 input-dependent CNS gate" if v4 else "")
         + "). Single-turn: each message is answered on its own, "
-        "short answers in the Supermix house style (128-token context). "
+        f"short answers in the Supermix house style ({E.config.max_position_embeddings}-token context). "
         + (f"Base training's final dev loss (nats/token): " if v4 else "Final dev loss: ")
         + f"replay {fin.get('dev_replay', float('nan')):.3f}, code {fin.get('dev_code', float('nan')):.3f}, "
         f"bio {fin.get('dev_bio', float('nan')):.3f}, connectome {fin.get('dev_connectome', float('nan')):.3f}."

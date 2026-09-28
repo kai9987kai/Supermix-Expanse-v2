@@ -23,9 +23,10 @@ type that receives input). Dale's sign belongs to the presynaptic type
 (acetylcholine +1; GABA, glutamate, histamine -1; monoamines +1 and flagged
 modulatory -- the v91 convention in ``malecns_connectome.NT_SIGN``). Because
 ``|W|`` is ``radius`` times a (sub)stochastic matrix, its spectral radius is at
-most ``radius`` (0.9), so the rate dynamics below are contractive on the
-linear part; the receipt measures it by power iteration rather than trusting
-the bound.
+most ``radius`` (0.9). This bounds the fixed wiring at initialization;
+learned per-type gains can increase the effective recurrent operator, so it
+is not a contractivity guarantee throughout training. The receipt also
+measures the fixed wiring's radius by power iteration.
 
 Per token (one column), with ``a = sigmoid(leak_logit)``::
 

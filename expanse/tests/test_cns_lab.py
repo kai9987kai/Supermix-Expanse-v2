@@ -77,7 +77,8 @@ def fake_run(runs: Path, h, arm, seed, value, /, status="done", steps=None, **fi
     m = {"status": status, "steps_done": h["protocol"]["steps"] if steps is None else steps,
          "evals": [{"step": 5, h["primary_metric"]: 9.0}, {"step": 10, h["primary_metric"]: value}],
          "run_key": d.name, "hypothesis": h["id"], "arm": arm, "seed": int(seed),
-         "config": prereg.arm_config(h, arm).to_dict(), "unlocked": False, "lock": h.get("_lock")}
+         "config": prereg.arm_config(h, arm).to_dict(), "protocol": h["protocol"],
+         "unlocked": False, "lock": h.get("_lock")}
     m.update(fields)
     (d / "metrics.json").write_text(json.dumps(m), encoding="utf-8")
     return d

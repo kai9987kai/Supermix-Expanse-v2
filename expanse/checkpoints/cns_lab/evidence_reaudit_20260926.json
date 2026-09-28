@@ -1,0 +1,46 @@
+{
+  "schema": "supermix-expanse-evidence-reaudit-v1",
+  "date": "2026-09-26",
+  "historical_files_modified": false,
+  "results": [
+    {
+      "hypothesis": "H-CNS-001",
+      "historical": "NOT SUPPORTED",
+      "audited": "NOT SUPPORTED",
+      "problems": []
+    },
+    {
+      "hypothesis": "H-CNS-002",
+      "historical": "SUPPORTED",
+      "audited": "SUPPORTED",
+      "problems": []
+    },
+    {
+      "hypothesis": "H-CNS-003",
+      "historical": "NOT SUPPORTED",
+      "audited": "NOT SUPPORTED",
+      "problems": []
+    },
+    {
+      "hypothesis": "H-CNS-004",
+      "historical": "SUPPORTED",
+      "audited": "INCONCLUSIVE",
+      "problems": [
+        "paired seed 2: final_rows_sha256 recorded in only one arm; pairing cannot be verified",
+        "paired seed 3: final_rows_sha256 recorded in only one arm; pairing cannot be verified"
+      ]
+    },
+    {
+      "hypothesis": "H-CNS-005",
+      "historical": "SUPPORTED",
+      "audited": "SUPPORTED",
+      "problems": []
+    },
+    {
+      "hypothesis": "H-CNS-006",
+      "historical": "NOT SUPPORTED",
+      "audited": "NOT SUPPORTED",
+      "problems": []
+    }
+  ]
+}

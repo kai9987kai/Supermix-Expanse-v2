@@ -1,6 +1,8 @@
 *.sh text eol=lf
-*.py text eol=lf
+# Experiment manifests hash exact source, corpus and receipt bytes. Preserve
+# their recorded line endings on every platform instead of normalizing them.
+*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 *.md text eol=lf
-*.jsonl text eol=lf
+*.jsonl -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 *.npz binary
-*.json text eol=lf
+*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
